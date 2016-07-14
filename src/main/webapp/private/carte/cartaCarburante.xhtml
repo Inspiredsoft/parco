@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form id="form">
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.carta.info']}"/>
+					<h:outputText value="(#{bundles.messages['message.removed']})" styleClass="entityRemoved" rendered="#{cartaCarburanteHome.instance.removed}"/>
+				</f:facet>
+				
+					<d:output label="#{bundles.messages['label.id']}" key="MODEL.CARTA.ID.VIEW">
+						<h:outputText value="#{cartaCarburanteHome.instance.id}" />
+					</d:output>
+					
+					<d:output label="#{bundles.messages['label.carta.gestore']}" key="MODEL.CARTA.GESTORE.VIEW">
+						<h:outputText value="#{bundles.messages['gestore.'.concat(cartaCarburanteHome.instance.gestore)]}"/>
+					</d:output>
+					
+					<d:output label="#{bundles.messages['label.carta.numero']}" key="MODEL.CARTA.NUMERO.VIEW">
+						<h:outputText value="#{cartaCarburanteHome.instance.numero}"/>
+					</d:output>
+					
+					<d:output label="#{bundles.messages['label.carta.identificat']}" key="MODEL.CARTA.IDENTIFICATIVO.VIEW">
+						<h:outputText value="#{cartaCarburanteHome.instance.identificativo}"/>
+					</d:output>
+					
+					<d:output label="#{bundles.messages['label.carta.pincode']}" key="MODEL.CARTA.PIN.VIEW">
+						<h:outputText value="#{cartaCarburanteHome.instance.pinCode}"/>
+					</d:output>
+					
+					<d:output label="#{bundles.messages['label.carta.scadenza']}" key="MODEL.CARTA.SCADENZA.VIEW">
+						<h:outputText value="#{cartaCarburanteHome.instance.scadenza}">
+							<f:convertDateTime pattern="#{configManager.shortDateFormat}"/>
+						</h:outputText>
+					</d:output>
+					
+					<d:output label="#{bundles.messages['label.carta.mezzo']}" key="MODEL.CARTA.MEZZO.EDIT">
+						<h:outputText value="#{cartaCarburanteHome.instance.mezzo.targa}"/>
+					</d:output>
+
+					<d:output label="#{bundles.messages['label.carta.note']}" key="MODEL.CARTA.NOTE.VIEW" rendered="#{not empty cartaCarburanteHome.instance.note}">
+						<h:outputText value="#{cartaCarburanteHome.instance.note}"/>
+					</d:output>	
+					
+					<fieldset>
+						<legend>#{bundles.messages['label.status.status']}</legend>
+					
+						<d:output label="#{bundles.messages['label.status.status']}" key="MODEL.CARTA.STATI.VIEW">
+							<h:outputText value="#{bundles.messages['carta.stato.'.concat(cartaCarburanteHome.instance.stato.stato)]}"/>
+						</d:output>
+						
+						<d:output label="#{bundles.messages['label.status.user']}" key="MODEL.CARTA.STATI.VIEW">
+							<h:outputText value="#{cartaCarburanteHome.instance.stato.utenteStato.fullName}"/>
+						</d:output>
+						
+						<d:output label="#{bundles.messages['label.status.date']}" key="MODEL.CARTA.STATI.VIEW">
+							<h:outputText value="#{cartaCarburanteHome.instance.stato.dataStato}">
+								<f:convertDateTime pattern="#{configManager.shortDateFormat}"/>
+							</h:outputText>
+						</d:output>	
+						
+						<d:output label="#{bundles.messages['label.status.note']}" key="MODEL.CARTA.STATI.VIEW">
+							<h:outputText value="#{cartaCarburanteHome.instance.stato.noteStato}" rendered="#{not empty cartaCarburanteHome.instance.stato.noteStato}"/>
+						</d:output>	
+					</fieldset>
+			
+			</rich:panel>
+			
+			<div class="actionButtons">
+
+				<h:button id="bReturn" outcome="/private/carte/cartaCarburanteList.xhtml"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromEdit}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bBack" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromOuterView}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bCancel" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromList}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bEdit" outcome="/private/carte/cartaCarburanteEdit.xhtml"
+					value="#{bundles.messages['button.edit']}" 
+					rendered="#{not cartaCarburanteHome.removed and loggedUser.hasPerm('ACTION.CARTA.EDIT')}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+				
+				<h:commandButton
+					id="bDelete" 
+					rendered="#{not cartaCarburanteHome.removed and loggedUser.hasPerm('ACTION.CARTA.DELETE')}"
+					value="#{bundles.messages['button.delete']}"
+					action="#{cartaCarburanteHome.delete}"/>
+						
+				<h:commandButton
+					id="bUndelete" 
+					rendered="#{cartaCarburanteHome.removed and loggedUser.hasPerm('ACTION.CARTA.DELETE')}"
+					value="#{bundles.messages['button.undelete']}"
+					action="#{cartaCarburanteHome.undelete}"/>
+				
+				<h:button id="bConsegna" outcome="/private/carte/consegnaCarta.xhtml"
+					value="#{bundles.messages['button.consegna']}" 
+					rendered="#{not cartaCarburanteHome.removed and not cartaCarburanteHome.instance.consegnato and loggedUser.hasPerm('ACTION.CARTA.EDIT')}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+				
+				<h:button id="bRiconsegna" outcome="/private/carte/riconsegnaCarta.xhtml"
+					value="#{bundles.messages['button.riconsegna']}" 
+					rendered="#{not cartaCarburanteHome.removed and cartaCarburanteHome.instance.consegnato and loggedUser.hasPerm('ACTION.CARTA.EDIT')}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+				
+				<h:commandButton 
+					value="#{bundles.messages['button.chstatus']}"
+					rendered="#{not cartaCarburanteHome.removed and loggedUser.hasPerm('ACTION.CARTA.EDIT')}"> 
+					<rich:componentControl target="popupstato" operation="show" /> 
+				</h:commandButton>
+			</div>
+			
+			<rich:tabPanel 
+					switchType="client" >
+									
+				<rich:tab 
+				 	header="#{bundles.messages['header.mezzo']}">
+					<ui:include src="/private/common/info-mezzo.xhtml">
+				 		<ui:param name="mezzo" value="#{cartaCarburanteHome.instance.mezzo}" />
+				 	</ui:include>
+				 </rich:tab>
+				
+				 <rich:tab 
+			 		header="#{bundles.messages['header.dotazione.movimenti']}" 
+		 			rendered="#{not empty cartaCarburanteHome.instance.movimenti}"> 
+			 			
+			 			<ui:include src="/private/common/movimentiAsset.xhtml">
+			 				<ui:param name="movimenti" value="#{cartaCarburanteHome.instance.movimenti}" />
+			 				<ui:param name="lastMovimento" value="#{cartaCarburanteHome.instance.lastMovimentoAsset}"/>
+			 				<ui:param name="selectedMovimento" value="#{cartaCarburanteHome.selectedMovimento}"/>
+			 			</ui:include>
+			 			
+			 	 </rich:tab>
+			 	 
+				 <rich:tab 
+			 		header="#{bundles.messages['header.statuses']}" 
+					rendered="#{loggedUser.hasPerm('MODEL.CARTA.STATI.VIEW') and not empty cartaCarburanteHome.instance.stati}"> 
+		
+					<ui:include src="/private/common/statusInfoList.xhtml">
+					 	<ui:param name="statuses" value="#{cartaCarburanteHome.instance.stati}" />
+					 	<ui:param name="bundlePrefix" value="carta.stato." />
+					 	<ui:param name="showStatus" value="true"/>
+					 	<ui:param name="showStart" value="true" />
+					 	<ui:param name="showEnd" value="true"/>
+					 	<ui:param name="showUser" value="true"/>
+					 	<ui:param name="showNote" value="true"/>
+					 </ui:include>
+					 
+ 				</rich:tab>
+ 				
+ 				 <rich:tab 
+			 		header="#{bundles.messages['header.rifornimenti']}" 
+					rendered="#{loggedUser.hasPerm('MODEL.CARTA.RIFORNIMENTI.VIEW') and not rifornimentiCarta.isEmpty}"> 
+					
+					<ui:include src="/private/common/rifornimenti.xhtml">
+					 	<ui:param name="rifornimenti" 	value="#{rifornimentiCarta}" />
+					 	<ui:param name="showId"	value="false" />
+					</ui:include>
+					
+				</rich:tab>
+ 				
+			</rich:tabPanel>
+			
+			<p:confirmDialog  
+				widgetVar="confirmDeleteMov" 
+				message="#{bundles.messages['message.movasset.confirmdelete']}">  
+		              
+		        <p:commandButton 
+		        	id="confirm" 
+		        	value="#{bundles.messages['button.confirm']}" 
+		        	oncomplete="confirmDeleteMov.hide()"  
+		            actionListener="#{cartaCarburanteHome.rimuoviMovimento}"
+		            update="form" />  
+				
+				<p:commandButton 
+					id="decline" 
+					value="#{bundles.messages['button.calcel']}" 
+					onclick="confirmDeleteMov.hide()"
+		   			 type="button" />   
+		              
+		    </p:confirmDialog >
+			
+			<ui:decorate template="/private/common/changeStatusPopup.xhtml">
+				<ui:param name="statusInfo" value="#{cartaCarburanteHome.newStatus}" />
+				<ui:param name="mindate"	value="#{cartaCarburanteHome.minStatusDate}" />
+				<ui:param name="statuses" value="#{cartaCarburanteHome.statiDisponibili}" />
+				<ui:param name="bundlePrefix" value="carta.stato." />
+				<ui:define name="okbutton">
+					<h:commandButton value="#{bundles.messages['button.chstatus']}" action="#{cartaCarburanteHome.changeStatus}" />
+				</ui:define>
+			</ui:decorate>
+			
+		</h:form>
+	</ui:define>
+</ui:composition>

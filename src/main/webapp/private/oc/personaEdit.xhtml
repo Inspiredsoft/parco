@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.persona.edit']}"	rendered="#{personaHome.managed}" />
+					<h:outputText value="#{bundles.messages['header.persona.new']}"   rendered="#{not personaHome.managed}" />
+				</f:facet>
+				
+				<h:panelGrid columns="2" styleClass="panelColumns">
+					
+					<h:panelGroup>
+				
+						<d:output label="#{bundles.messages['label.id']}" key="MODEL.PERSONA.ID.VIEW" rendered="#{personaHome.managed}">
+							<h:outputText value="#{personaHome.instance.id}" />
+						</d:output>
+						
+						<d:input label="#{bundles.messages['label.persona.matricola']}" key="MODEL.PERSONA.MATRICOLA.EDIT">
+							<h:inputText value="#{personaHome.instance.matricola}" required="true">
+								<f:converter converterId="upperCaseConverter"/>
+							</h:inputText>
+						</d:input>
+						
+						<d:input label="#{bundles.messages['label.persona.cognome']}" key="MODEL.PERSONA.COGNOME.EDIT">
+							<h:inputText value="#{personaHome.instance.cognome}" />
+						</d:input>
+						
+						<d:input label="#{bundles.messages['label.persona.nome']}" key="MODEL.PERSONA.NOME.EDIT">
+							<h:inputText value="#{personaHome.instance.nome}" />
+						</d:input>
+						
+						<d:input label="#{bundles.messages['label.persona.postazione']}" key="MODEL.PERSONA.POSTAZIONE.EDIT">
+							<p:selectOneMenu value="#{personaHome.instance.postazione}" required="true">
+								<f:selectItems value="#{personaHome.allowedPostazioni}" var="ps" itemValue="#{ps}" itemLabel="#{ps.nome}"/>
+								<s:objectConverter/>
+							</p:selectOneMenu>
+						</d:input>
+						
+						<d:input label="#{bundles.messages['label.persona.qualifica']}" key="MODEL.PERSONA.QUALIFICA.EDIT">
+							<h:inputText value="#{personaHome.instance.qualifica}" />
+						</d:input>	
+						
+					</h:panelGroup>
+				
+				</h:panelGrid>
+			
+			</rich:panel>
+			
+			<div class="actionButtons">
+				<h:button id="bCancel" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.calcel']}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:commandButton id="bSave"
+					value="#{bundles.messages['button.save']}"
+					action="#{personaHome.save}" 
+					rendered="#{loggedUser.hasPerm('ACTION.PERSONA.EDIT')}"
+					/>
+			</div>
+			
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<title>#{bundles.messages['header.title']}</title>
+	<link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet library="css" name="specific.css" />
+	<h:outputStylesheet library="css" name="common.css" />
+	<h:outputStylesheet library="css" name="crumbs.css" />
+	<h:outputScript library="js" name="inspired.js" />
+</h:head>
+
+<h:body>
+	<div class="waiting" id="id_waitDiv"></div>
+	<div id="mainContentCntCenter">
+		<table cellspacing="4" cellpadding="0" width="100%">
+			<tr>
+				<td align="left">
+					<!--  h:graphicImage url="/resources/img/logo.png"/-->
+				</td>
+				<td align="right">
+					<!--  h:graphicImage url="/resources/img/banner-topdx.png"/-->
+				</td>
+			</tr>
+			<tr align="left">
+				<td colspan="2">
+					<ui:include src="menu.xhtml" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" valign="middle">
+					<ui:include src="crumbs.xhtml" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" valign="middle">
+					<ui:insert name="content" />
+				</td>
+			</tr>
+		</table>
+		
+		<a4j:log mode="popup" />
+		<!-- p:log /-->
+		
+	</div>
+</h:body>
+</html>

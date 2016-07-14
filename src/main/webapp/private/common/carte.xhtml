@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	xmlns:p="http://primefaces.org/ui">
+		<p:dataTable
+			rowStyleClass="#{carta.removed ? 'rowRemoved' : ''}"
+		 	id="tlbCarte" 
+		 	var="carta"
+			value="#{carte.dataModel}" 
+			paginator="true" 
+			rows="10"
+			rowsPerPageTemplate="10,15,20" 
+			draggableColumns="false"
+			rendered="#{not carte.isEmpty}"
+			lazy="true"
+			emptyMessage="#{bundles.messages['message.search.empty']}">
+			
+			<p:column sortBy="#{carta.id}" rendered="#{showId and loggedUser.hasPerm('MODEL.CARTA.ID.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.id']}"/></f:facet>
+	   			<h:outputText value="#{carta.id}"/>
+			</p:column>
+			
+			<p:column sortBy="#{carta.gestore}" rendered="#{loggedUser.hasPerm('MODEL.CARTA.GESTORE.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.carta.gestore']}"/></f:facet>
+	   			<h:outputText value="#{bundles.messages['gestore.'.concat(carta.gestore)]}"/>
+			</p:column>
+			
+			<p:column sortBy="#{carta.numero}" rendered="#{loggedUser.hasPerm('MODEL.CARTA.NUMERO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.carta.numero']}"/></f:facet>
+	   			<h:outputText value="#{carta.numero}"/>
+			</p:column>
+			
+			<p:column sortBy="#{carta.identificativo}" rendered="#{loggedUser.hasPerm('MODEL.CARTA.IDENTIFICATIVO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.carta.identificat']}"/></f:facet>
+	   			<h:outputText value="#{carta.identificativo}"/>
+			</p:column>
+						
+			<p:column sortBy="#{carta.mezzo.targa}" rendered="#{loggedUser.hasPerm('MODEL.CARTA.MEZZO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.carta.mezzo']}"/></f:facet>
+	   			<h:outputText value="#{carta.mezzo.targa}"/>
+			</p:column>
+			
+			<p:column 
+				rendered="#{loggedUser.hasPerm('MODEL.MEZZO.ASSEGNZIONE.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.mezzo.assegnazione']}"/></f:facet>
+	   			<h:outputText value="#{carta.mezzo.assegnazione.postazione.nome}" rendered="#{not empty carta.mezzo.assegnazione}"/>
+			</p:column>
+			
+			<p:column sortBy="#{carta.scadenza}" rendered="#{loggedUser.hasPerm('MODEL.CARTA.SCADENZA.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.carta.scadenza']}"/></f:facet>
+	   			<h:outputText value="#{carta.scadenza}">
+	   				<f:convertDateTime pattern="#{configManager.shortDateFormat}"/>
+	   			</h:outputText>
+			</p:column>
+			
+			<p:column sortBy="#{carta.stato.stato}" rendered="#{loggedUser.hasPerm('MODEL.CARTA.STATO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.status.status']}"/></f:facet>
+	   			<h:outputText value="#{bundles.messages['carta.stato.'.concat(carta.stato.stato)]}"/>
+			</p:column>
+				
+    		<p:column style="width:40px" exportable="false">  
+  				<h:commandLink action="/private/carte/cartaCarburante.xhtml" actionListener="#{cartaCarburanteHome.clearInstance}">
+  					<h:graphicImage value="/resources/img/search.png" atl="#{bundles.messages['image.title.open']}" title="#{bundles.messages['image.title.open']}"/>
+  					<f:param name="id" value="#{carta.id}" />
+  				</h:commandLink>
+    		</p:column> 
+		</p:dataTable>
+</ui:composition>
+
+					
+			

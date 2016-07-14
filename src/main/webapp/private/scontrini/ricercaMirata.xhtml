@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form id="form">
+		
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+			
+			<rich:panel>
+				<f:facet name="header">#{bundles.messages['label.search.criteria']}</f:facet>
+			
+				<d:input label="#{bundles.messages['label.scontrino.mezzo']}" key="MODEL.SCONTRINO.MEZZO.VIEW">
+						<h:inputText value="#{scontrinoMiratoList.targa}" required="true"/>
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.scontrino.numero']}" key="MODEL.SCONTRINO.NUMERO.VIEW">
+						<h:inputText value="#{scontrinoMiratoList.scontrino}" required="true"/>
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.rifornimento.data']}" key="MODEL.RIFORNIMENTO.DATA.VIEW">
+					<rich:calendar value="#{scontrinoMiratoList.data}" datePattern="#{configManager.shortDateFormat}" required="true"/>
+				</d:input>
+				
+			</rich:panel>
+			
+			<div class="actionButtons">
+				<h:button id="bBack" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromOuterView}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+				
+				<h:commandButton
+					action="#{scontrinoMiratoList.refresh}" 
+					value="#{bundles.messages['button.search']}" />
+			</div>
+			
+			<rich:panel id="grid">
+				<f:facet name="header">#{bundles.messages['label.search.result']}: #{scontrinoMiratoList.rowCount}</f:facet>
+				
+				<div class="myCenter">
+			
+					<ui:include src="/private/common/scontrini.xhtml">
+					 	<ui:param name="scontrini" 	value="#{scontrinoMiratoList}" />
+					 	<ui:param name="showId"	value="true" />
+					</ui:include>
+					
+					<ui:include src="/private/common/export.xhtml">
+						<ui:param name="rendered" 		value="#{not scontrinoMiratoList.isEmpty}" />
+						<ui:param name="target" 		value="tblScontrini" />
+						<ui:param name="fileName" 		value="#{bundles.messages['file.name.rifornimenti']}" />
+					</ui:include>
+					
+				</div>
+			</rich:panel>
+			
+		</h:form>
+		
+	</ui:define>
+
+</ui:composition>

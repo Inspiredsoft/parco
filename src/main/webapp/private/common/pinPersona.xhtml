@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<p:dataTable
+	 	id="tlbPin" 
+	 	var="mov"
+		value="#{movimenti}" 
+		paginator="true" 
+		rows="10"
+		rowsPerPageTemplate="10,15,20" 
+		draggableColumns="false"
+		rendered="#{not empty movimenti}"
+		emptyMessage="#{bundles.messages['message.search.empty']}">
+	
+		<p:column sortBy="#{mov.asset.id}">
+			<f:facet name="header"><h:outputText value="#{bundles.messages['label.asset.id']}" /></f:facet>
+			<h:outputText value="#{mov.asset.id}"/>
+		</p:column>
+		
+		<p:column sortBy="#{mov.data}">
+			<f:facet name="header"><h:outputText value="#{bundles.messages['label.dotazione.cons.date']}" /></f:facet>
+			<h:outputText value="#{mov.data}">
+				<f:convertDateTime pattern="#{configManager.shortDateFormat}"/>
+			</h:outputText>
+		</p:column>
+		
+		<p:column sortBy="#{mov.asset.codiceOperatore}">
+			<f:facet name="header"><h:outputText value="#{bundles.messages['label.pincard.codiceOperatore']}" /></f:facet>
+			<h:outputText value="#{mov.asset.codiceOperatore}"/>
+		</p:column>
+		
+		<p:column sortBy="#{mov.asset.codiceBusta}">
+			<f:facet name="header"><h:outputText value="#{bundles.messages['label.pincard.codiceBusta']}" /></f:facet>
+			<h:outputText value="#{mov.asset.codiceBusta}"/>
+		</p:column>
+		
+		<p:column sortBy="#{mov.consegnatario}">
+			<f:facet name="header"><h:outputText value="#{bundles.messages['label.dotazione.consegnatario']}" /></f:facet>
+			<h:outputText value="#{mov.consegnatario.nomeCompleto}"/>
+		</p:column>
+		
+		<p:column sortBy="#{mov.note}">
+			<f:facet name="header"><h:outputText value="#{bundles.messages['label.dotazione.consnote']}" /></f:facet>
+			<h:outputText value="#{mov.note}"/>
+		</p:column>
+		
+		<p:column style="width:40px">
+			<h:commandLink action="#{stampaConsegnaDotazione.stampa}">
+				<f:setPropertyActionListener value="#{mov}" target="#{stampaConsegnaDotazione.selectedMovimento}" /> 
+				<h:graphicImage value="/resources/img/document.png" atl="#{bundles.messages['image.title.stampa']}" title="#{bundles.messages['image.title.stampa']}"/>
+			</h:commandLink> 
+   		</p:column>
+		
+		<p:column style="width:40px">
+			<h:commandLink action="/private/pin/pinCarta.xhtml" actionListener="#{pinCartaHome.clearInstance}" rendered="#{mov.asset.pinCard}">
+				<h:graphicImage value="/resources/img/search.png" atl="#{bundles.messages['image.title.open']}" title="#{bundles.messages['image.title.open']}"/>
+				<f:param name="id" value="#{mov.asset.id}" />
+			</h:commandLink>
+   		</p:column> 
+		
+	</p:dataTable>
+	
+</ui:composition>

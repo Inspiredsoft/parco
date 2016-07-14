@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.polizza.info']}"/>
+				</f:facet>
+				
+				<d:output label="#{bundles.messages['label.id']}" key="MODEL.POLIZZA.ID.VIEW">
+					<h:outputText value="#{polizzaHome.instance.id}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.polizza.assicurazione']}" key="MODEL.POLIZZA.ASSICURAZIONE.VIEW">
+					<h:outputText value="#{polizzaHome.instance.compagnia.nome}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.polizza.numero']}" key="MODEL.POLIZZA.NUMERO.VIEW">
+					<h:outputText value="#{polizzaHome.instance.numero}"/>
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.polizza.mezzo']}" key="MODEL.POLIZZA.MEZZO.VIEW">
+					<h:outputText value="#{polizzaHome.instance.mezzo.targa}"/>
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.polizza.decorrenza']}" key="MODEL.POLIZZA.DECORRENZA.VIEW">
+					<h:outputText value="#{polizzaHome.instance.dataDecorrenza}">
+						<f:convertDateTime pattern="#{configManager.shortDateFormat}"/>					
+					</h:outputText>
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.polizza.scadenza']}" key="MODEL.POLIZZA.SCADENZA.VIEW">
+					<h:outputText value="#{polizzaHome.instance.dataScadenza}">
+						<f:convertDateTime pattern="#{configManager.shortDateFormat}"/>					
+					</h:outputText>
+				</d:output>
+				
+			</rich:panel>
+			
+			<div class="actionButtons">
+				<h:button
+					id="bReturn"
+					outcome="/private/assicurazioni/polizzaList.xhtml"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromEdit}">
+						<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+				
+				<h:button
+					id="bBack"
+					outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromOuterView}">
+						<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+					
+				<h:button
+					id="bCalcel"
+					outcome="#{viewChain.backPage}" 
+					value="#{bundles.messages['button.back']}" 
+					rendered="#{viewChain.fromList}">
+						<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+			
+				<h:button
+					id="bEdit"
+					outcome="/private/assicurazioni/polizzaEdit.xhtml" 
+					value="#{bundles.messages['button.edit']}"
+					rendered="#{loggedUser.hasPerm('ACTION.POLIZZA.EDIT')}">
+						<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+				
+				<h:commandButton
+					id="bDelete"
+					value="#{bundles.messages['button.delete']}"
+					action="#{polizzaHome.delete}" 
+					rendered="#{loggedUser.hasPerm('ACTION.POLIZZA.EDIT')}"/>
+				
+				<h:commandButton 
+					id="bRenew"
+					value="#{bundles.messages['button.polizza.rinnova']}"
+					action="#{polizzaHome.rinnova}" 
+					rendered="#{loggedUser.hasPerm('ACTION.POLIZZA.EDIT')}"/>
+			</div>
+			
+			<rich:tabPanel switchType="client" rendered="#{polizzaHome.managed}">
+				<rich:tab 
+				 	header="#{bundles.messages['header.mezzo']}"
+				 	rendered="#{polizzaHome.managed}">
+					
+					<ui:include src="/private/common/info-mezzo.xhtml">
+				 		<ui:param name="mezzo" value="#{polizzaHome.instance.mezzo}" />
+				 	</ui:include>
+				 					 		
+				 </rich:tab>
+			</rich:tabPanel> 
+			
+		</h:form>
+	</ui:define>
+</ui:composition>

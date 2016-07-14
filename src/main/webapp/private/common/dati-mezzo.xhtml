@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org"
+	xmlns:d="http://java.sun.com/jsf/composite/components">
+	
+	<d:output label="#{bundles.messages['label.id']}" key="MODEL.MEZZO.ID.VIEW">
+		<h:outputText value="#{mezzo.id}" />
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.mezzo.targa']}" key="MODEL.MEZZO.TARGA.VIEW">
+		<h:outputText value="#{mezzo.targa}" />
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.mezzo.codiceradio']}" key="MODEL.MEZZO.CODICE_RADIO.VIEW">
+		<h:outputText value="#{mezzo.codiceRadio}" />
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.mezzo.tipo']}" key="MODEL.MEZZO.TIPO.VIEW">
+		<h:outputText value="#{mezzo.tipoMezzo.descrizione}" />
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.mezzo.scadenzabol']}" key="MODEL.MEZZO.SCADENZA_BOLLO.VIEW">
+		<h:outputText value="#{mezzo.scadenzaBollo}">
+			<f:convertDateTime pattern="#{configManager.shortDateFormat}"/>
+		</h:outputText>
+	</d:output>	
+	
+	<d:output label="#{bundles.messages['label.mezzo.scadenzarev']}" key="MODEL.MEZZO.SCADENZA_REVISIONE.VIEW">
+		<h:outputText value="#{mezzo.scadenzaRevisione}">
+			<f:convertDateTime pattern="#{configManager.shortDateFormat}"/>
+		</h:outputText>
+	</d:output>
+		
+	<d:output label="#{bundles.messages['label.mezzo.note']}" key="MODEL.MEZZO.NOTE.VIEW" rendered="#{not empty mezzo.note}">
+		<h:outputText value="#{mezzo.note}" />
+	</d:output>
+					
+</ui:composition>

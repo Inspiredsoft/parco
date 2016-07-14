@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.job.info']} "/>
+				</f:facet>
+				
+				<d:output label="#{bundles.messages['label.id']}" key="MODEL.JOB.ID.VIEW">
+					<h:outputText value="#{jobHome.instance.id}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.job.user']}" key="MODEL.JOB.USER.VIEW">
+					<h:outputText value="#{jobHome.instance.user.fullName}"/>
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.job.class']}" key="MODEL.JOB.JAVACLASS.VIEW">
+					<h:outputText value="#{bundles.messages[jobHome.instance.javaClass]}"/>
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.job.status']}" key="MODEL.JOB.STATUS.VIEW">
+					<h:outputText value="#{bundles.messages['job.status.'.concat(jobHome.instance.status)]}"/>
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.job.adddate']}" key="MODEL.JOB.ADDDATE.VIEW">
+					<h:outputText value="#{jobHome.instance.addDate}">
+						<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+					</h:outputText>
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.job.startdate']}" key="MODEL.JOB.STARTDATE.VIEW" rendered="#{not empty jobHome.instance.startDate}">
+					<h:outputText value="#{jobHome.instance.startDate}">
+						<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+					</h:outputText>
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.job.enddate']}" key="MODEL.JOB.ENDDATE.VIEW" rendered="#{not empty jobHome.instance.endDate}">
+					<h:outputText value="#{jobHome.instance.endDate}">
+						<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+					</h:outputText>
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.job.exetime']}" key="MODEL.JOB.EXETIME.VIEW" rendered="#{not empty jobHome.instance.exeTime}">
+					<h:outputText value="#{jobHome.instance.exeTimeStr}"/>
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.job.tries']}" key="MODEL.JOB.TRIES.VIEW">
+					<h:outputText value="#{jobHome.instance.tries}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.job.parent']}" key="MODEL.JOB.PARENT.VIEW" rendered="#{not empty jobHome.instance.parent}">
+					<h:outputText value="#{jobHome.instance.parent}" />
+				</d:output>
+
+			</rich:panel>
+			
+			<div class="actionButtons">
+			
+				<h:button
+					id="bReturn"
+					outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}">
+						<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+				
+				<h:commandButton
+					id="bRedo" 
+					rendered="#{loggedUser.hasPerm('ACTION.JOB.REPEAT') and jobHome.repeatable}"
+					value="#{bundles.messages['button.redo']}"
+					action="#{jobHome.redo}"/>
+					
+				<h:commandButton
+					id="bStop" 
+					rendered="#{loggedUser.hasPerm('ACTION.JOB.STOP') and jobHome.stoppable}"
+					value="#{bundles.messages['button.stop']}"
+					action="#{jobHome.stop}"/>
+				
+			</div>
+			
+			<rich:tabPanel switchType="client" 
+					rendered="#{ ( loggedUser.hasPerm('MODEL.JOB.EXCEPTION.VIEW') and (jobHome.instance.error or jobHome.instance.delayed) ) or
+								 ( loggedUser.hasPerm('MODEL.JOB.MESSAGES.VIEW') and not empty jobHome.instance.messages) or
+								 ( loggedUser.hasPerm('MODEL.JOB.PARAMS.VIEW') and not empty jobHome.instance.parameters ) }">
+				
+				 <rich:tab header="#{bundles.messages['label.job.messages']}" 
+				 		rendered="#{loggedUser.hasPerm('MODEL.JOB.MESSAGES.VIEW') and not empty jobHome.instance.messages}">
+					<p:dataTable 
+			 			id="tlbMessages"
+			 			var="msg" 
+			 			value="#{jobHome.instance.messages}" 
+			 			paginator="true" 
+						rows="10"
+						rowsPerPageTemplate="10,15,20"
+						draggableColumns="false"
+						emptyMessage="#{bundles.messages['message.search.empty']}">
+						
+						<p:column>
+							<f:facet name="header"><h:outputText value="#{bundles.messages['label.jmessage.level']}"/></f:facet>
+							<div class="myCenter">
+			       				<h:graphicImage value="/resources/img/info.png" rendered="#{msg.isInfo()}" title="INFO" styleClass="dataRowPic"/>
+			       				<h:graphicImage value="/resources/img/warning.png" rendered="#{msg.isWarning()}" title="WARN" styleClass="dataRowPic"/>
+			       				<h:graphicImage value="/resources/img/error.png" rendered="#{msg.isError()}" title="ERROR" styleClass="dataRowPic"/>
+		      				</div>
+						</p:column>
+						
+						<p:column>
+							<f:facet name="header"><h:outputText value="#{bundles.messages['label.jmessage.date']}"/></f:facet>
+							<h:outputText value="#{msg.date}">
+								<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+							</h:outputText>
+						</p:column>
+						
+						<p:column>
+							<f:facet name="header"><h:outputText value="#{bundles.messages['label.jmessage.message']}"/></f:facet>
+							<h:outputText value="#{msg.message}"/>
+						</p:column>
+						
+					</p:dataTable>
+		         </rich:tab>
+		         
+		         <rich:tab header="#{bundles.messages['label.job.parameters']}"
+		         		rendered="#{loggedUser.hasPerm('MODEL.JOB.PARAMS.VIEW') and not empty jobHome.instance.parameters}">
+		         		
+		         	<p:dataTable 
+			 			id="tlbParams"
+			 			var="par" 
+			 			value="#{jobHome.instance.parameters}" 
+						emptyMessage="#{bundles.messages['message.search.empty']}">
+						
+						<p:column>
+							<f:facet name="header"><h:outputText value="#{bundles.messages['label.jparam.label']}"/></f:facet>
+							<h:outputText value="#{par.label}"/>
+						</p:column>
+						
+						<p:column>
+							<f:facet name="header"><h:outputText value="#{bundles.messages['label.jparam.value']}"/></f:facet>
+							<h:outputText value="#{par.value}"/>
+						</p:column>
+					</p:dataTable>
+					
+		         </rich:tab>
+		         
+		         <rich:tab header="#{bundles.messages['label.job.exception']}" 
+		         		rendered="#{loggedUser.hasPerm('MODEL.JOB.EXCEPTION.VIEW') and (jobHome.instance.error or jobHome.instance.delayed)}">
+					
+					<pre>#{jobHome.instance.exception}</pre>
+					
+		         </rich:tab>
+		         
+			</rich:tabPanel>
+		</h:form>
+		
+	</ui:define>
+	
+</ui:composition>

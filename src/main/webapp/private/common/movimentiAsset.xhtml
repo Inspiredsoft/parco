@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<p:dataTable
+		rowStyleClass="#{ mov == lastMovimento ? 'rowEmphasis' : ''}"
+	 	id="tlbMovimenti" 
+	 	var="mov"
+		value="#{movimenti}" 
+		paginator="true" 
+		rows="10"
+		rowsPerPageTemplate="10,15,20" 
+		draggableColumns="false"
+		rendered="#{not empty movimenti}"
+		emptyMessage="#{bundles.messages['message.search.empty']}">
+	
+		<p:column sortBy="#{mov.id}">
+			<f:facet name="header"><h:outputText value="#{bundles.messages['label.id']}" /></f:facet>
+			<h:outputText value="#{mov.id}"/>
+		</p:column>
+		
+		<p:column sortBy="#{mov.data}">
+			<f:facet name="header"><h:outputText value="#{bundles.messages['label.dotazione.cons.date']}" /></f:facet>
+			<h:outputText value="#{mov.data}">
+				<f:convertDateTime pattern="#{configManager.shortDateFormat}"/>
+			</h:outputText>
+		</p:column>
+		
+		<p:column sortBy="#{mov.tipo}">
+			<f:facet name="header"><h:outputText value="#{bundles.messages['label.dotazione.tipo']}" /></f:facet>
+			<h:outputText value="#{bundles.messages['asset.movimento.tipo.'.concat(mov.tipo)]}"/>
+		</p:column>
+		
+		<p:column sortBy="#{mov.assegnatario}">
+			<f:facet name="header"><h:outputText value="#{bundles.messages['label.dotazione.assegnatario.mat']}" /></f:facet>
+			<h:outputText value="#{mov.assegnatario.matricola}"/>
+		</p:column>
+		
+		<p:column sortBy="#{mov.assegnatario}">
+			<f:facet name="header"><h:outputText value="#{bundles.messages['label.dotazione.assegnatario']}" /></f:facet>
+			<h:outputText value="#{mov.assegnatario.nomeCompleto}"/>
+		</p:column>
+		
+		<p:column sortBy="#{mov.consegnatario}">
+			<f:facet name="header"><h:outputText value="#{bundles.messages['label.dotazione.consegnatario']}" /></f:facet>
+			<h:outputText value="#{mov.consegnatario.nomeCompleto}"/>
+		</p:column>
+		
+		<p:column sortBy="#{mov.note}">
+			<f:facet name="header"><h:outputText value="#{bundles.messages['label.dotazione.consnote']}" /></f:facet>
+			<h:outputText value="#{mov.note}"/>
+		</p:column>
+		
+		<p:column style="width:40px">
+			<h:commandLink action="#{stampaConsegnaDotazione.stampa}">
+				<f:setPropertyActionListener value="#{mov}" target="#{stampaConsegnaDotazione.selectedMovimento}" /> 
+				<h:graphicImage value="/resources/img/document.png" atl="#{bundles.messages['image.title.stampa']}" title="#{bundles.messages['image.title.stampa']}"/>
+			</h:commandLink> 
+   		</p:column>
+		
+		<p:column style="width:40px">
+			<p:commandLink oncomplete="confirmDeleteMov.show()" rendered="#{mov == lastMovimento}">
+				<f:setPropertyActionListener value="#{mov}" target="#{selectedMovimento}" /> 
+				<h:graphicImage value="/resources/img/trash.png" atl="#{bundles.messages['image.title.delete']}" title="#{bundles.messages['image.title.delete']}"/>
+			</p:commandLink> 
+   		</p:column> 
+		
+	</p:dataTable>
+	
+</ui:composition>

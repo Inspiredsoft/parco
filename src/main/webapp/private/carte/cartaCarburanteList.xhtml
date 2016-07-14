@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form id="form">
+		
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+			
+			<rich:panel>
+				<f:facet name="header">#{bundles.messages['label.search.criteria']}</f:facet>
+				
+				<d:input label="#{bundles.messages['label.report.postazione']}" key="MODEL.POSTAZIONE.NOME.VIEW" rendered="#{loggedUser.hasMoreVisiblePostazioni()}">
+					<h:selectOneMenu value="#{cartaCarburanteList.postazione}">
+						<f:selectItem noSelectionOption="true" itemLabel="#{bundles.messages['label.search.select']}" />
+						<f:selectItems  value="#{loggedUser.visiblePostazioni}" var="pos" itemLabel="#{pos.nome}" itemValue="#{pos}"/>
+						<s:objectConverter />
+					</h:selectOneMenu>
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.carta.numero']}" key="MODEL.CARTA.NUMERO.VIEW">
+					<h:inputText value="#{cartaCarburanteList.numero}" />
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.carta.identificat']}" key="MODEL.CARTA.IDENTIFICATIVO.VIEW">
+					<h:inputText value="#{cartaCarburanteList.identificativo}" />
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.carta.mezzo']}" key="MODEL.CARTA.MEZZO.VIEW">
+					<h:inputText value="#{cartaCarburanteList.targa}" />
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.carta.gestore']}" key="MODEL.CARTA.GESTORE.VIEW">
+					<h:selectOneMenu value="#{cartaCarburanteList.gestore}">
+						<f:selectItem noSelectionOption="true"/>
+						<f:selectItems value="#{cartaCarburanteList.gestori}" var="gest" itemValue="#{gest}" itemLabel="#{bundles.messages['gestore.'.concat(gest)]}"/>
+					</h:selectOneMenu>
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.showremoved']}" rendered="#{loggedUser.hasViewAll}">
+					<h:selectBooleanCheckbox value="#{cartaCarburanteList.showRemoved}" />
+				</d:input>
+			</rich:panel>
+			
+			<div class="actionButtons">
+				<h:commandButton
+					action="#{cartaCarburanteList.refresh}" 
+					value="#{bundles.messages['button.search']}" />
+					
+				<h:commandButton value="#{bundles.messages['button.new']}"
+					action="/private/carte/cartaCarburanteEdit.xhtml"
+					actionListener="#{cartaCarburanteHome.clearInstance}" 
+					rendered="#{loggedUser.hasPerm('ACTION.CARTA.EDIT')}"/>
+			</div>
+			
+			<rich:panel id="grid">
+				<f:facet name="header">
+					<table class="panelColumns">
+						<tr>
+							<td align="left">
+								#{bundles.messages['label.search.result']}: #{cartaCarburanteList.rowCount}
+							</td>
+							<td align="right">
+								<h:commandLink 
+									action="#{cartaCarburanteList.download}" 
+									rendered="#{not cartaCarburanteList.isEmpty and loggedUser.hasFullAccess}">
+										<h:graphicImage 
+											value="/resources/img/dbexport.png" 
+											atl="#{bundles.messages['image.title.export']}" 
+											title="#{bundles.messages['image.title.export']}"
+											width="12px"/>
+								</h:commandLink>
+							</td>
+						</tr>
+					</table>
+				</f:facet>
+				
+				<div class="myCenter">
+			
+					<ui:include src="/private/common/carte.xhtml">
+					 	<ui:param name="carte" 	value="#{cartaCarburanteList}" />
+					 	<ui:param name="showId"	value="true" />
+					</ui:include>
+					
+					<ui:include src="/private/common/export.xhtml">
+						<ui:param name="rendered" 		value="#{not cartaCarburanteList.isEmpty}" />
+						<ui:param name="target" 		value="tlbCarte" />
+						<ui:param name="fileName" 		value="#{bundles.messages['file.name.carte']}" />
+					</ui:include>
+					
+				</div>
+			</rich:panel>
+			
+		</h:form>
+		
+	</ui:define>
+
+</ui:composition>

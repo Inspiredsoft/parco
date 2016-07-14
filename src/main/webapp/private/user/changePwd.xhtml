@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+			
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.newpwd']}"/>
+				</f:facet>
+				
+				<d:output label="#{bundles.messages['label.id']}">
+					<h:outputText value="#{userHome.instance.id}" />
+				</d:output>
+				
+				<d:input label="#{bundles.messages['label.user.username']}">
+					<h:outputText value="#{userHome.instance.username}" />
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.user.password']}" rendered="#{userHome.managed}">
+					<h:inputSecret id="password" value="#{userHome.instance.password}" required="true" >
+						<f:validator validatorId="passwordValidator"/>
+						<f:attribute name="confirm" value="#{confirm}" />
+					</h:inputSecret>
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.user.confirm']}" rendered="#{userHome.managed}">
+					<h:inputSecret id="confirm" required="true" binding="#{confirm}"/>
+				</d:input>
+			</rich:panel>
+		
+			<div class="actionButtons">
+				<h:button
+					id="bCalcel"
+					outcome="#{viewChain.backPage}" 
+					value="#{bundles.messages['button.calcel']}">
+						<f:param name="cid" value="#{conversation.id}" />
+			</h:button>
+
+			<h:commandButton
+				id="bSave"
+				value="#{bundles.messages['button.save']}" 
+				action="#{userHome.savePwd}"/>
+					
+			</div>
+		</h:form>		
+	</ui:define>
+	
+</ui:composition>

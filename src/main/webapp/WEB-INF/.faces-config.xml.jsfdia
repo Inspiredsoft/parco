@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROCESS model-entity="JSFProcess">
+ <PROCESS-ITEM NAME="rules:#private#*" PATH="/private/*"
+  SHAPE="32,273,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#private#*:0" NAME="item" PATH="/private/*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="saved::#{viewChain.backPage}" NAME="output"
+    PATH="#{viewChain.backPage}" TARGET="rules:#{viewChain.backPage}"
+    TITLE="saved" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#{viewChain.backPage}"
+  PATH="/{viewChain.backPage}" SHAPE="240,625,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#private#*:1" PATH="/private/*"
+  SHAPE="32,497,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#private#*:1" NAME="item" PATH="/private/*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="deleted::#{viewChain.listPage}"
+    NAME="output" PATH="#{viewChain.listPage}"
+    TARGET="rules:#{viewChain.listPage}" TITLE="deleted" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#{viewChain.listPage}"
+  PATH="/{viewChain.listPage}" SHAPE="240,737,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#private#home.xhtml"
+  PATH="/private/home.xhtml" SHAPE="240,817,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#public#login.xhtml"
+  PATH="/public/login.xhtml" SHAPE="32,577,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#public#login.xhtml:0" NAME="item"
+   PATH="/public/login.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT
+    ID="success:#{identity.login}:#private#home.xhtml" NAME="output"
+    PATH="/private/home.xhtml" TARGET="rules:#private#home.xhtml"
+    TITLE="#{identity.login}:success" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#*" PATH="/*" SHAPE="32,801,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#*:0" NAME="item" PATH="/*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="logout::#public#login.xhtml" NAME="output"
+    PATH="/public/login.xhtml" TARGET="rules:#public#login.xhtml"
+    TITLE="logout" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+</PROCESS>

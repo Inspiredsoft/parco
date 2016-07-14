@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form id="form">
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.dotazione.info']}"/>
+					<h:outputText value="(#{bundles.messages['message.removed']})" styleClass="entityRemoved" rendered="#{dotazioneHome.instance.removed}"/>
+				</f:facet>
+				
+				<d:output label="#{bundles.messages['label.id']}" key="MODEL.DOTAZIONE.ID.VIEW">
+					<h:outputText value="#{dotazioneHome.instance.id}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.dotazione.mezzo']}" key="MODEL.MEZZO.TARGA.VIEW" rendered="#{dotazioneHome.instance.dotazioneMezzo}">
+					<h:outputText value="#{dotazioneHome.instance.mezzo.targa}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.dotazione.postazione']}" key="MODEL.POSTAZIONE.NOME.VIEW" rendered="#{dotazioneHome.instance.dotazionePostazione}">
+					<h:outputText value="#{dotazioneHome.instance.postazione.nome}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.dotazione.genere']}" key="MODEL.DOTAZIONE.GENERE.VIEW">
+					<h:outputText value="#{dotazioneHome.instance.genere.descrizione}" />
+				</d:output>
+								
+				<d:output label="#{bundles.messages['label.dotazione.matricola']}" key="MODEL.DOTAZIONE.MATRICOLA.VIEW">
+					<h:outputText value="#{dotazioneHome.instance.matricola}" />
+				</d:output>
+
+				<fieldset>
+					<legend>#{bundles.messages['label.status.status']}</legend>
+					
+					<d:output label="#{bundles.messages['label.status.status']}" key="MODEL.DOTAZIONE.STATI.VIEW">
+						<h:outputText value="#{bundles.messages['dotazione.stato.'.concat(dotazioneHome.instance.stato.stato)]}"/>
+					</d:output>
+					
+					<d:output label="#{bundles.messages['label.status.user']}" key="MODEL.DOTAZIONE.STATI.VIEW">
+						<h:outputText value="#{dotazioneHome.instance.stato.utenteStato.fullName}"/>
+					</d:output>
+					
+					<d:output label="#{bundles.messages['label.status.date']}" key="MODEL.DOTAZIONE.STATI.VIEW">
+						<h:outputText value="#{dotazioneHome.instance.stato.dataStato}">
+							<f:convertDateTime pattern="#{configManager.shortDateFormat}"/>
+						</h:outputText>
+					</d:output>	
+					
+					<d:output label="#{bundles.messages['label.status.note']}" key="MODEL.DOTAZIONE.STATI.VIEW">
+						<h:outputText value="#{dotazioneHome.instance.stato.noteStato}" rendered="#{not empty dotazioneHome.instance.stato.noteStato}"/>
+					</d:output>	
+					
+				</fieldset>
+
+			</rich:panel>
+			
+			<div class="actionButtons">
+			
+				<h:button id="bReturn1" outcome="/private/mezzi/mezzo.xhtml"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromEdit and dotazioneHome.instance.dotazioneMezzo}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bReturn2" outcome="/private/oc/postazione.xhtml"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromEdit and dotazioneHome.instance.dotazionePostazione}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bBack" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromOuterView}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bCancel" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromList}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+				
+				<h:commandButton
+					id="bDelete" 
+					rendered="#{not dotazioneHome.removed and loggedUser.hasPerm('ACTION.MEZZO.DOTAZIONE.EDIT')}"
+					value="#{bundles.messages['button.delete']}"
+					action="#{dotazioneHome.delete}"/>
+					
+				<h:commandButton
+					id="bUndelete" 
+					rendered="#{dotazioneHome.removed and loggedUser.hasPerm('ACTION.MEZZO.DOTAZIONE.EDIT')}"
+					value="#{bundles.messages['button.undelete']}"
+					action="#{dotazioneHome.undelete}"/>
+
+				<h:button id="bEdit" outcome="/private/mezzi/dotazioneEdit.xhtml"
+					value="#{bundles.messages['button.edit']}" 
+					rendered="#{not dotazioneHome.removed and loggedUser.hasPerm('ACTION.MEZZO.DOTAZIONE.EDIT')}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+				
+				<h:button id="bConsegna" outcome="/private/mezzi/consegnaDotazione.xhtml"
+					value="#{bundles.messages['button.consegna']}" 
+					rendered="#{not dotazioneHome.removed and not dotazioneHome.instance.consegnato and loggedUser.hasPerm('ACTION.MEZZO.DOTAZIONE.EDIT')}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+				
+				<h:button id="bRiconsegna" outcome="/private/mezzi/riconsegnaDotazione.xhtml"
+					value="#{bundles.messages['button.riconsegna']}" 
+					rendered="#{not dotazioneHome.removed and dotazioneHome.instance.consegnato and loggedUser.hasPerm('ACTION.MEZZO.DOTAZIONE.EDIT')}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+				
+				<h:commandButton 
+					value="#{bundles.messages['button.chstatus']}"
+					rendered="#{not dotazioneHome.removed and loggedUser.hasPerm('ACTION.MEZZO.DOTAZIONE.EDIT')}"> 
+					<rich:componentControl target="popupstato" operation="show" /> 
+				</h:commandButton>
+			</div>
+			
+			<rich:tabPanel 
+					switchType="client">
+				
+				<rich:tab
+					rendered="#{dotazioneHome.instance.dotazioneMezzo}" 
+				 	header="#{bundles.messages['header.mezzo']}">
+					<ui:include src="/private/common/info-mezzo.xhtml">
+				 		<ui:param name="mezzo" value="#{dotazioneHome.instance.mezzo}" />
+				 	</ui:include>				 		
+				 </rich:tab>
+				 
+				 <rich:tab 
+				 	rendered="#{dotazioneHome.instance.dotazionePostazione}"
+				 	header="#{bundles.messages['header.postazione']}">
+					<ui:include src="/private/common/info-postazione.xhtml">
+				 		<ui:param name="postazione" value="#{dotazioneHome.instance.postazione}" />
+				 	</ui:include>				 		
+				 </rich:tab>
+				
+				<rich:tab 
+				 		header="#{bundles.messages['header.dotazione.movimenti']}" 
+			 			rendered="#{not empty dotazioneHome.instance.movimenti}"> 	
+			 			
+						<ui:include src="/private/common/movimentiAsset.xhtml">
+			 				<ui:param name="movimenti" value="#{dotazioneHome.instance.movimenti}" />
+			 				<ui:param name="lastMovimento" value="#{dotazioneHome.instance.lastMovimentoAsset}"/>
+			 				<ui:param name="selectedMovimento" value="#{dotazioneHome.selectedMovimento}"/>
+			 			</ui:include>
+			 			
+				</rich:tab>
+					
+				<rich:tab 
+			 		header="#{bundles.messages['header.statuses']}" 
+					rendered="#{not empty dotazioneHome.instance.stati and loggedUser.hasPerm('MODEL.DOTAZIONE.STATI.VIEW')}"> 
+		
+					<ui:include src="/private/common/statusInfoList.xhtml">
+					 	<ui:param name="statuses" value="#{dotazioneHome.instance.stati}" />
+					 	<ui:param name="bundlePrefix" value="dotazione.stato." />
+					 	<ui:param name="showStatus" value="true"/>
+					 	<ui:param name="showStart" value="true" />
+					 	<ui:param name="showEnd" value="true"/>
+					 	<ui:param name="showUser" value="true"/>
+					 	<ui:param name="showNote" value="true"/>
+					 </ui:include>
+					 
+ 				</rich:tab>
+					
+			</rich:tabPanel>
+			
+			<p:confirmDialog  
+				widgetVar="confirmDeleteMov" 
+				message="#{bundles.messages['message.movasset.confirmdelete']}">  
+		              
+		        <p:commandButton 
+		        	id="confirm" 
+		        	value="#{bundles.messages['button.confirm']}" 
+		        	oncomplete="confirmDeleteMov.hide()"  
+		            actionListener="#{dotazioneHome.rimuoviMovimento}"
+		            update="form" />  
+				
+				<p:commandButton 
+					id="decline" 
+					value="#{bundles.messages['button.calcel']}" 
+					onclick="confirmDeleteMov.hide()"
+		   			 type="button" />   
+		              
+		    </p:confirmDialog >
+			
+			<ui:decorate template="/private/common/changeStatusPopup.xhtml">
+				<ui:param name="statusInfo" value="#{dotazioneHome.newStatus}" />
+				<ui:param name="mindate"	value="#{dotazioneHome.minStatusDate}" />
+				<ui:param name="statuses" value="#{dotazioneHome.statiDisponibili}" />
+				<ui:param name="bundlePrefix" value="dotazione.stato." />
+				<ui:define name="okbutton">
+					<h:commandButton value="#{bundles.messages['button.chstatus']}" action="#{dotazioneHome.changeStatus}" />
+				</ui:define>
+			</ui:decorate>
+			
+		</h:form>
+		
+	</ui:define>
+	
+</ui:composition>

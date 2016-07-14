@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.dotazione.consegna']}"/>
+				</f:facet>
+				
+				<d:output label="#{bundles.messages['label.id']}" key="MODEL.PINCARD.ID.VIEW">
+					<h:outputText value="#{pinCartaHome.instance.id}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.pincard.codiceOperatore']}" key="MODEL.PINCARD.CODICE.OPERATORE.VIEW">
+					<h:outputText value="#{pinCartaHome.instance.codiceOperatore}"/>
+				</d:output>
+								
+				<d:output label="#{bundles.messages['label.pincard.codiceBusta']}" key="MODEL.PINCARD.CODICE.BUSTA.VIEW">
+					<h:outputText value="#{pinCartaHome.instance.codiceBusta}"/>
+				</d:output>
+				
+				<d:input label="#{bundles.messages['label.dotazione.assegnatario']}">
+					<rich:autocomplete 
+						required="true"
+						mode="cachedAjax" 
+						minChars="1" 
+						autocompleteMethod="#{pinCartaHome.autocompletePersona}"
+						value="#{pinCartaHome.movimento.assegnatario}"
+						var="assegnatario"
+						fetchValue="#{assegnatario.nomeMatricola}"
+						layout="table"
+					 	selectFirst="true">
+					 	 <rich:column>
+					 	 	<f:facet name="header">
+								<h:outputText value="#{bundles.messages['label.persona.nome']}" />
+							</f:facet>
+							<b>#{assegnatario.nome}</b>
+			            </rich:column>
+			            <rich:column>
+					 	 	<f:facet name="header">
+								<h:outputText value="#{bundles.messages['label.persona.cognome']}" />
+							</f:facet>
+							<b>#{assegnatario.cognome}</b>
+			            </rich:column>
+						<rich:column>
+					 	 	<f:facet name="header">
+								<h:outputText value="#{bundles.messages['label.persona.matricola']}" />
+							</f:facet>
+							<b>(#{assegnatario.matricola})</b>
+			            </rich:column>
+			            <f:validator validatorId="personaValidator"/>
+			            <f:converter converterId="personaConverter"/>
+					</rich:autocomplete>
+				</d:input>
+		
+				<d:input label="#{bundles.messages['label.dotazione.consegnatario']}">
+					<rich:autocomplete 
+						required="false"
+						mode="cachedAjax" 
+						minChars="1" 
+						autocompleteMethod="#{pinCartaHome.autocompletePersona}"
+						value="#{pinCartaHome.movimento.consegnatario}"
+						var="consegnatario"
+						fetchValue="#{consegnatario.nomeMatricola}"
+						layout="table"
+					 	selectFirst="true">
+					 	<rich:column>
+					 	 	<f:facet name="header">
+								<h:outputText value="#{bundles.messages['label.persona.nome']}" />
+							</f:facet>
+							<b>#{consegnatario.nome}</b>
+			            </rich:column>
+			            <rich:column>
+					 	 	<f:facet name="header">
+								<h:outputText value="#{bundles.messages['label.persona.cognome']}" />
+							</f:facet>
+							<b>#{consegnatario.cognome}</b>
+			            </rich:column>
+						<rich:column>
+					 	 	<f:facet name="header">
+								<h:outputText value="#{bundles.messages['label.persona.matricola']}" />
+							</f:facet>
+							<b>(#{consegnatario.matricola})</b>
+			            </rich:column>
+			            <f:validator validatorId="personaValidator"/>
+			            <f:converter converterId="personaConverter"/>
+					</rich:autocomplete>
+				</d:input>
+		
+				<d:input label="#{bundles.messages['label.dotazione.cons.date']}">
+					<p:calendar 
+						required="true"
+						value="#{pinCartaHome.movimento.data}" 
+						mindate="#{pinCartaHome.minDataMovimento}"
+						pattern="#{configManager.shortDateFormat}"
+						showButtonPanel="true"/>
+			    </d:input>
+			    
+			    <d:input label="#{bundles.messages['label.dotazione.consnote']}">
+					<p:inputTextarea value="#{pinCartaHome.movimento.note}" rows="5" />
+				</d:input>
+				
+			</rich:panel>
+			
+			<div class="actionButtons">
+			
+				<h:button id="bCancel" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.calcel']}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+				
+				<h:commandButton 
+					value="#{bundles.messages['button.consegna']}" 
+					action="#{pinCartaHome.consegna}" />
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org"
+	xmlns:d="http://java.sun.com/jsf/composite/components">
+	
+	<d:output label="#{bundles.messages['label.id']}" key="MODEL.MEZZO.ID.VIEW">
+		<h:outputText value="#{mezzo.id}" />
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.mezzo.targa']}" key="MODEL.MEZZO.TARGA.VIEW">
+		<h:outputText value="#{mezzo.targa}" />
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.mezzo.tipo']}" key="MODEL.MEZZO.TIPO.VIEW">
+		<h:outputText value="#{mezzo.tipoMezzo.descrizione}" />
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.mezzo.assegnazione']}" key="MODEL.MEZZO.ASSEGNAZIONI.VIEW">
+		<h:outputText value="#{mezzo.assegnazione.postazione.nome}" rendered="#{not empty mezzo.assegnazione}" />
+	</d:output>	
+	
+	<d:output label="#{bundles.messages['label.status.status']}" key="MODEL.MEZZO.STATI.VIEW">
+		<h:outputText value="#{bundles.messages['mezzo.stato.'.concat(mezzo.stato.stato)]}"/>
+	</d:output>
+					
+</ui:composition>

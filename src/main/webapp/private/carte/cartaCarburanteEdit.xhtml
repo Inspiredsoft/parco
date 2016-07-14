@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.carta.edit']}"	rendered="#{cartaCarburanteHome.managed}" />
+					<h:outputText value="#{bundles.messages['header.carta.new']}"   rendered="#{not cartaCarburanteHome.managed}" />
+				</f:facet>
+				
+					<d:output label="#{bundles.messages['label.id']}" key="MODEL.CARTA.ID.VIEW" rendered="#{cartaCarburanteHome.managed}">
+						<h:outputText value="#{cartaCarburanteHome.instance.id}" />
+					</d:output>
+					
+					<d:input label="#{bundles.messages['label.carta.gestore']}" key="MODEL.CARTA.GESTORE.EDIT">
+						<h:selectOneMenu value="#{cartaCarburanteHome.instance.gestore}" required="true">
+							<f:selectItems value="#{cartaCarburanteHome.gestori}" var="gestore" itemValue="#{gestore}" itemLabel="#{bundles.messages['gestore.'.concat(gestore)]}"/>
+							<s:objectConverter />
+						</h:selectOneMenu>
+					</d:input>
+					
+					<d:input label="#{bundles.messages['label.carta.numero']}" key="MODEL.CARTA.NUMERO.EDIT">
+						<h:inputText value="#{cartaCarburanteHome.instance.numero}" required="true"/>
+					</d:input>
+					
+					<d:input label="#{bundles.messages['label.carta.identificat']}" key="MODEL.CARTA.IDENTIFICATIVO.EDIT">
+						<h:inputText value="#{cartaCarburanteHome.instance.identificativo}"/>
+					</d:input>
+					
+					<d:input label="#{bundles.messages['label.carta.pincode']}" key="MODEL.CARTA.PIN.EDIT">
+						<h:inputText value="#{cartaCarburanteHome.instance.pinCode}"/>
+					</d:input>
+					
+					<d:input label="#{bundles.messages['label.carta.scadenza']}" key="MODEL.CARTA.SCADENZA.EDIT">
+						<rich:calendar
+							value="#{cartaCarburanteHome.instance.scadenza}"
+							datePattern="#{configManager.shortDateFormat}"/>
+					</d:input>
+					
+					<d:input label="#{bundles.messages['label.carta.mezzo']}" key="MODEL.CARTA.MEZZO.EDIT">
+						<rich:autocomplete 
+							required="true"
+							mode="cachedAjax" 
+							minChars="1" 
+							autocompleteMethod="#{cartaCarburanteHome.autocompleteMezzo}"
+							value="#{cartaCarburanteHome.targa}"
+							var="mezzo"
+							fetchValue="#{mezzo.targa}"
+							layout="table"
+						 	selectFirst="true">
+							<rich:column>
+						 	 	<f:facet name="header">
+									<h:outputText value="#{bundles.messages['label.mezzo.targa']}" />
+								</f:facet>
+								<b>#{mezzo.targa}</b>
+				            </rich:column>
+				            <f:validator validatorId="targaValidator"/>
+						</rich:autocomplete>
+					</d:input>
+					
+					<d:input label="#{bundles.messages['label.carta.note']}" key="MODEL.CARTA.NOTE.EDIT">
+						<h:inputTextarea value="#{cartaCarburanteHome.instance.note}" rows="5" />
+					</d:input>
+					
+					<d:input label="#{bundles.messages['label.carta.datattiva']}" key="MODEL.CARTA.DATAATT.EDIT" rendered="#{cartaCarburanteHome.attiva}">
+						<rich:calendar
+							value="#{cartaCarburanteHome.instance.stato.dataStato}"
+							datePattern="#{configManager.shortDateFormat}"/>
+					</d:input>
+			
+			</rich:panel>
+			
+			<div class="actionButtons">
+				<h:button id="bCancel" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.calcel']}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:commandButton id="bSave"
+					value="#{bundles.messages['button.save']}"
+					action="#{cartaCarburanteHome.save}" 
+					rendered="#{loggedUser.hasPerm('ACTION.CARTA.EDIT')}"
+					/>
+			</div>
+			
+		</h:form>
+	</ui:define>
+</ui:composition>

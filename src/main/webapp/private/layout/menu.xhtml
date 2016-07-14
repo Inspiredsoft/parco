@@ -1,0 +1,315 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/seam/faces">
+    
+	<h:form rendered="#{identity.loggedIn}">
+		<rich:toolbar>
+			<rich:toolbarGroup>
+				<rich:menuItem 
+					icon="/resources/img/menu/home_1liv.png" 
+					action="#{viewChain.goTo('/private/home.xhtml')}"
+					actionListener="#{viewChain.end}" 
+					label="#{bundles.messages['menu.home']}"
+					styleClass="menuItem1L">
+				</rich:menuItem>
+			</rich:toolbarGroup>
+			
+			<rich:dropDownMenu rendered="#{loggedUser.verifyPermission('MENU.REPORT')}">
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/resources/img/menu/chart.png" styleClass="pic_1liv" />
+						<h:outputText value="#{bundles.messages['menu.report']}" />
+					</h:panelGroup>
+				</f:facet>
+				
+				<rich:menuItem 
+					label="#{bundles.messages['menu.scadenze']}"
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/report/scadenzeReport.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.REPORT.SCADENZE')}" />
+					
+				<rich:menuItem 
+					label="#{bundles.messages['menu.rep.mezzi']}"
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/report/mezziReport.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.REPORT.MEZZI')}" />
+				
+				<rich:menuItem 
+					label="#{bundles.messages['menu.rep.post']}"
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/report/postazioniReport.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.REPORT.POSTAZIONI')}" />
+					
+				<rich:menuItem 
+					label="#{bundles.messages['menu.rep.cons']}"
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/report/consumiReport.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.REPORT.CONSUMI')}" />
+				
+			</rich:dropDownMenu>
+			
+			<rich:dropDownMenu rendered="#{loggedUser.verifyPermission('MENU.MEZZI')}">
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/resources/img/menu/car.png" styleClass="pic_1liv" />
+						<h:outputText value="#{bundles.messages['menu.mezzi']}" />
+					</h:panelGroup>
+				</f:facet>
+				
+				<rich:menuItem 
+					label="#{bundles.messages['menu.tipimezzo']}"
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/mezzi/tipoMezzoList.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.MEZZI.TIPOMEZZO')}" />
+				
+				<rich:menuItem 
+					label="#{bundles.messages['menu.assicurazioni']}"
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/assicurazioni/assicurazioneList.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.MEZZI.ASSICURAZIONE')}" />
+					
+				<rich:menuItem 
+					label="#{bundles.messages['menu.polizze']}"
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/assicurazioni/polizzaList.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.MEZZI.POLIZZA')}" />
+					
+					
+				<rich:menuItem 
+					label="#{bundles.messages['menu.mezzi']}"
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/mezzi/mezzoList.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.MEZZI.MEZZO')}" />
+					
+				<rich:menuItem 
+					label="#{bundles.messages['menu.soccorsi']}"
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/soccorsi/soccorsoList.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.MEZZI.SOCCORSI')}" />
+					
+				<rich:menuItem 
+					label="#{bundles.messages['menu.dotazioni']}"
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/dotazioni/dotazioneList.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.MEZZI.DOTAZIONI')}" />
+					
+			</rich:dropDownMenu>
+			
+			<rich:dropDownMenu rendered="#{loggedUser.verifyPermission('MENU.RIFORNIMENTI')}">
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/resources/img/menu/gas.png" styleClass="pic_1liv" />
+						<h:outputText value="#{bundles.messages['menu.rifornimenti']}" />
+					</h:panelGroup>
+				</f:facet>
+				
+				<rich:menuItem 
+					label="#{bundles.messages['menu.carburanti']}"
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/rifornimenti/carburanteList.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.RIFORNIMENTI.CARBURANTI')}" />
+				
+				<rich:menuItem 
+					label="#{bundles.messages['menu.pin']}"
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/pin/pinCartaList.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.RIFORNIMENTI.PINCARD')}" />
+					
+				<rich:menuItem 
+					label="#{bundles.messages['menu.carta']}"
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/carte/cartaCarburanteList.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.RIFORNIMENTI.CARTE')}" />
+				
+				<rich:menuItem 
+					label="#{bundles.messages['menu.rifornimenti']}"
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/rifornimenti/rifornimentoList.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.RIFORNIMENTI.RIFORNIMENTI')}" />
+					
+				<rich:menuItem 
+					label="#{bundles.messages['menu.scontrini']}"
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/scontrini/scontrinoList.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.RIFORNIMENTI.SCONTRINI')}" />
+					
+				<rich:menuItem 
+					label="#{bundles.messages['menu.anomalie']}"
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/anomalie/anomaliaList.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.RIFORNIMENTI.ANOMALIE')}" />
+					
+			</rich:dropDownMenu>
+			
+			
+			<rich:dropDownMenu rendered="#{loggedUser.verifyPermission('MENU.ANAGRAFICA')}">
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/resources/img/menu/tree.png" styleClass="pic_1liv" />
+						<h:outputText value="#{bundles.messages['menu.anagrafica']}" />
+					</h:panelGroup>
+				</f:facet>
+				
+				<rich:menuItem 
+					label="#{bundles.messages['menu.province']}"
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/oc/provinciaList.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.ANAGRAFICA.PROVINCE')}" />
+					
+				<rich:menuItem 
+					label="#{bundles.messages['menu.aree']}"
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/oc/areaList.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.ANAGRAFICA.AREE')}" />
+					
+				<rich:menuItem 
+					label="#{bundles.messages['menu.postazioni']}"
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/oc/postazioneList.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.ANAGRAFICA.POSTAZIONI')}" />
+					
+				<rich:menuItem 
+					action="#{viewChain.goTo('/private/oc/personaList.xhtml')}"
+					actionListener="#{viewChain.end}" 
+					label="#{bundles.messages['menu.persone']}"
+					rendered="#{loggedUser.verifyPermission('MENU.ANAGRAFICA.PERSONE')}"/>
+					
+			</rich:dropDownMenu>
+			
+			
+			<rich:dropDownMenu rendered="#{loggedUser.verifyPermission('MENU.SYSTEM')}">
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/resources/img/menu/system.png" styleClass="pic_1liv" />
+						<h:outputText value="#{bundles.messages['menu.system']}" />
+					</h:panelGroup>
+				</f:facet>
+				
+ 				<rich:menuGroup label="#{bundles.messages['menu.users']}" icon="/resources/img/menu/utenti.png" 
+ 									rendered="#{loggedUser.verifyPermission('MENU.SYSTEM.USERGROUP')}">
+ 				
+                    <rich:menuItem 
+						label="#{bundles.messages['menu.user']}"
+						icon="/resources/img/menu/user.png" 
+						styleClass="menubar"
+						action="#{viewChain.goTo('/private/user/userList.xhtml')}"
+						actionListener="#{viewChain.end}"
+						rendered="#{loggedUser.verifyPermission('MENU.SYSTEM.USERGROUP.USER')}" />
+					
+                    <rich:menuItem 
+						label="#{bundles.messages['menu.group']}"
+						icon="/resources/img/menu/groups.png" 
+						styleClass="menubar"
+						action="#{viewChain.goTo('/private/group/groupList.xhtml')}"
+						actionListener="#{viewChain.end}"
+						rendered="#{loggedUser.verifyPermission('MENU.SYSTEM.USERGROUP.GROUP')}" />
+										
+					 <rich:menuItem 
+						label="#{bundles.messages['menu.permission']}"
+						icon="/resources/img/menu/key.png" 
+						styleClass="menubar"
+						action="#{viewChain.goTo('/private/permission/permissionList.xhtml')}"
+						actionListener="#{viewChain.end}"
+						rendered="#{loggedUser.verifyPermission('MENU.SYSTEM.USERGROUP.PERMISSION')}" />
+						
+					<rich:menuItem 
+						label="#{bundles.messages['menu.event']}"
+						icon="/resources/img/menu/event.png" 
+						styleClass="menubar"
+						action="#{viewChain.goTo('/private/event/eventList.xhtml')}"
+						actionListener="#{viewChain.end}"
+						rendered="#{loggedUser.verifyPermission('MENU.SYSTEM.USERGROUP.EVENT')}" />
+						
+                </rich:menuGroup>
+              					
+				<rich:menuItem 
+					label="#{bundles.messages['menu.config']}"
+					icon="/resources/img/menu/config.png" 
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/conf/config.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.SYSTEM.CONFIG')}" />
+					
+				<rich:menuItem 
+					label="#{bundles.messages['menu.dgeneri']}"
+					icon="/resources/img/menu/genere.png" 
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/dotazioni/genereAssetList.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.SYSTEM.GENERI')}" />
+					
+				<!--rich:menuItem 
+					label="#{bundles.messages['menu.manage']}"
+					icon="/resources/img/menu/manage.png" 
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/conf/manage.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.SYSTEM.MANAGE')}" /-->
+					
+				<rich:menuItem 
+					label="#{bundles.messages['menu.job']}"
+					icon="/resources/img/menu/workflow.png" 
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/job/jobList.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.SYSTEM.JOB')}" />
+					
+				<!--  rich:menuItem 
+					label="#{bundles.messages['menu.mail']}"
+					icon="/resources/img/menu/mail.png" 
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/mail/mailList.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.SYSTEM.MAIL')}" /-->
+					
+                <rich:menuItem 
+					label="#{bundles.messages['menu.info']}"
+					icon="/resources/img/menu/info.png" 
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/conf/info.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.SYSTEM.INFO')}" />
+					
+				<rich:menuItem 
+					label="#{bundles.messages['menu.import']}"
+					icon="/resources/img/menu/import.png" 
+					styleClass="menubar"
+					action="#{viewChain.goTo('/private/import/importList.xhtml')}"
+					actionListener="#{viewChain.end}"
+					rendered="#{loggedUser.verifyPermission('MENU.SYSTEM.IMPORT')}" />
+						
+			</rich:dropDownMenu>
+			
+			<rich:toolbarGroup location="right">
+				<rich:menuItem 
+					icon="/resources/img/menu/logout_1liv.png" 
+					action="#{loggedUser.logout}" 
+					label="#{bundles.messages['menu.logout']}"
+					styleClass="menuItem1L"
+					actionListener="#{viewChain.end}" />
+			</rich:toolbarGroup>
+		</rich:toolbar>
+	</h:form>
+</ui:composition>

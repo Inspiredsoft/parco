@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+
+		<h:messages id="messages" globalOnly="true" styleClass="message" />
+
+		<h:form>
+
+			<rich:panel>
+				<f:facet name="header">#{bundles.messages['label.search.criteria']}</f:facet>
+			
+				<d:input label="#{bundles.messages['label.user.username']}">
+					<h:inputText value="#{userList.username}" />
+				</d:input>
+				<d:input label="#{bundles.messages['label.user.name']}">
+					<h:inputText value="#{userList.name}" />
+				</d:input>
+				<d:input label="#{bundles.messages['label.user.surname']}">
+					<h:inputText value="#{userList.surname}" />
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.showremoved']}" rendered="#{loggedUser.hasViewAll}">
+					<h:selectBooleanCheckbox value="#{userList.showRemoved}" />
+				</d:input>
+
+			</rich:panel>
+			
+			<div class="actionButtons">
+				<h:commandButton
+					action="#{userList.refresh}" 
+					value="#{bundles.messages['button.search']}" />
+				
+				<h:commandButton 
+					value="#{bundles.messages['button.new']}" 
+					action="/private/user/userEdit.xhtml" 
+					actionListener="#{userHome.clearInstance}"/>
+			</div>
+			
+			<rich:panel>
+				<f:facet name="header">#{bundles.messages['label.search.result']}: #{userList.resultCount}</f:facet>
+				
+				<div class="myCenter">
+					
+					<h:outputText value="#{bundles.messages['message.search.empty']}" rendered="#{userList.isEmpty}"/>
+				
+					<p:dataTable 
+							rowStyleClass="#{user.removed ? 'rowRemoved' : ''}"
+							rendered="#{not userList.isEmpty}"
+							id="tbl" 
+							value="#{userList.dataModel}" 
+							var="user" 
+							paginator="true" 
+							rows="10" 
+							lazy="true" 
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="10,15,20"
+							draggableColumns="false"
+							emptyMessage="#{bundles.messages['message.search.empty']}">
+					
+						<p:column sortBy="#{user.id}">
+		        			<f:facet name="header"><h:outputText value="#{bundles.messages['label.id']}"/></f:facet>
+		        			<h:outputText value="#{user.id}"/>
+		    			</p:column>
+		    			
+						<p:column sortBy="#{user.username}">
+		        			<f:facet name="header"><h:outputText value="#{bundles.messages['label.user.username']}"/></f:facet>
+		        			<h:outputText value="#{user.username}"/>
+		    			</p:column>
+		    			
+		    			<p:column sortBy="#{user.name}">
+		        			<f:facet name="header"><h:outputText value="#{bundles.messages['label.user.name']}"/></f:facet>
+		        			<h:outputText value="#{user.name}"/>
+		    			</p:column>
+						
+						<p:column sortBy="#{user.surname}">
+		        			<f:facet name="header"><h:outputText value="#{bundles.messages['label.user.surname']}"/></f:facet>
+		        			<h:outputText value="#{user.surname}"/>
+		    			</p:column>
+		    			
+		    			<p:column sortBy="#{user.email}">
+		        			<f:facet name="header"><h:outputText value="#{bundles.messages['label.user.email']}"/></f:facet>
+		        			<h:outputText value="#{user.email}"/>
+		    			</p:column>
+		    			
+		    			<p:column sortBy="#{user.phone}">
+		        			<f:facet name="header"><h:outputText value="#{bundles.messages['label.user.phone']}"/></f:facet>
+		        			<h:outputText value="#{user.phone}"/>
+		    			</p:column>
+		    			
+		    			<p:column style="width:40px" exportable="false">
+		    				<h:commandLink action="/private/user/user.xhtml" actionListener="#{userHome.clearInstance}">
+		    					<h:graphicImage value="/resources/img/search.png" atl="#{bundles.messages['image.title.open']}" title="#{bundles.messages['image.title.open']}"/>
+		    					<f:param name="id" value="#{user.id}" />
+		    				</h:commandLink> 
+        				</p:column> 
+		    			
+					</p:dataTable>
+					
+					<ui:include src="/private/common/export.xhtml">
+						<ui:param name="rendered" 		value="#{not userList.isEmpty}" />
+						<ui:param name="target" 		value="tbl" />
+						<ui:param name="fileName" 		value="#{bundles.messages['file.name.users']}" />
+					</ui:include>
+					
+				</div>
+			</rich:panel>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

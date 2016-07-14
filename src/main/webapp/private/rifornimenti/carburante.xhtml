@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form id="form">
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+			
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.codcar.info']}"/>
+				</f:facet>
+				
+				<d:output label="#{bundles.messages['label.id']}" key="MODEL.CODCARB.ID.VIEW">
+					<h:outputText value="#{codificaCarburanteHome.instance.id}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.codcarb.valore']}" key="MODEL.CODCARB.VALORE.VIEW">
+					<h:outputText value="#{codificaCarburanteHome.instance.valore}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.codcarb.tipo']}" key="MODEL.CODCARB.TIPO.VIEW">
+					<h:outputText value="#{bundles.messages['carburante.tipo.'.concat(codificaCarburanteHome.instance.tipo)]}" rendered="#{not empty codificaCarburanteHome.instance.tipo}"/>
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.codcarb.cons']}" key="MODEL.CODCARB.CONSENTITO.VIEW">
+					<h:outputText value="#{bundles.messages['label.yes']}" rendered="#{codificaCarburanteHome.instance.consentito}"/>
+					<h:outputText value="#{bundles.messages['label.no']}" rendered="#{not codificaCarburanteHome.instance.consentito}"/>
+				</d:output>
+			</rich:panel>
+			
+			<div class="actionButtons">
+			
+				<h:button id="bReturn" outcome="/private/rifornimenti/carburanteList.xhtml"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromEdit}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bBack" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromOuterView}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bCancel" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromList}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+				
+				<h:button id="bEdit" outcome="/private/rifornimenti/carburanteEdit.xhtml"
+					value="#{bundles.messages['button.edit']}" 
+					rendered="#{loggedUser.hasPerm('ACTION.CODCARB.EDIT')}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+			</div>
+		</h:form>
+		
+	</ui:define>
+	
+</ui:composition>

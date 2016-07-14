@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.pincard.edit']}"	rendered="#{pinCartaHome.managed}" />
+					<h:outputText value="#{bundles.messages['header.pincard.new']}"   rendered="#{not pinCartaHome.managed}" />
+				</f:facet>
+				
+				<d:output label="#{bundles.messages['label.id']}" key="MODEL.PINCARD.ID.VIEW" rendered="#{pinCartaHome.managed}">
+					<h:outputText value="#{pinCartaHome.instance.id}" />
+				</d:output>
+				
+				<d:input label="#{bundles.messages['label.pincard.codiceOperatore']}" key="MODEL.PINCARD.CODICE.OPERATORE.EDIT">
+					<h:inputText value="#{pinCartaHome.instance.codiceOperatore}" required="true"/>
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.pincard.codiceBusta']}" key="MODEL.PINCARD.CODICE.BUSTA.EDIT">
+					<h:inputText value="#{pinCartaHome.instance.codiceBusta}"/>
+				</d:input>
+
+				<d:input label="#{bundles.messages['label.pincard.gestore']}" key="MODEL.PINCARD.GESTORE.EDIT">
+					<h:selectOneMenu value="#{pinCartaHome.instance.gestore}" required="true">
+						<f:selectItems value="#{pinCartaHome.gestori}" var="gestore" itemValue="#{gestore}" itemLabel="#{bundles.messages['gestore.'.concat(gestore)]}"/>
+						<s:objectConverter />
+					</h:selectOneMenu>
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.pincard.note']}" key="MODEL.PINCARD.NOTE.EDIT">
+					<h:inputTextarea value="#{pinCartaHome.instance.note}" rows="5" />
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.pincard.datattiva']}" key="MODEL.PINCARD.DATAATT.EDIT" rendered="#{pinCartaHome.attiva}">
+					<rich:calendar
+						value="#{pinCartaHome.instance.stato.dataStato}"
+						datePattern="#{configManager.shortDateFormat}"/>
+				</d:input>
+					
+			</rich:panel>
+			
+			<div class="actionButtons">
+				<h:button id="bCancel" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.calcel']}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:commandButton id="bSave"
+					value="#{bundles.messages['button.save']}"
+					action="#{pinCartaHome.save}" 
+					rendered="#{loggedUser.hasPerm('ACTION.PINCARTA.EDIT')}"
+					/>
+			</div>
+			
+		</h:form>
+	</ui:define>
+</ui:composition>

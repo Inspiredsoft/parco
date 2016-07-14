@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org"
+	xmlns:d="http://java.sun.com/jsf/composite/components">
+	
+	<d:output label="#{bundles.messages['label.id']}" key="MODEL.PINCARD.ID.VIEW">
+		<h:outputText value="#{pincard.id}" />
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.pincard.codiceOperatore']}" key="MODEL.PINCARD.CODICE.OPERATORE.VIEW">
+		<h:outputText value="#{pincard.codiceOperatore}"/>
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.pincard.gestore']}" key="MODEL.PINCARD.GESTORE.VIEW" rendered="#{not empty pincard}">
+		<h:outputText value="#{bundles.messages['gestore.'.concat(pincard.gestore)]}"/>
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.persona.matricola']}" key="MODEL.PINCARD.ASSEGNAZIONI.VIEW">
+		<h:outputText value="#{pincard.assegnazione.matricola}" rendered="#{not empty pincard.assegnazione}" />
+	</d:output>	
+	
+	<d:output label="#{bundles.messages['label.persona.nome']}" key="MODEL.PINCARD.ASSEGNAZIONI.VIEW">
+		<h:outputText value="#{pincard.assegnazione.nome}" rendered="#{not empty pincard.assegnazione}" />
+	</d:output>	
+	
+	<d:output label="#{bundles.messages['label.persona.cognome']}" key="MODEL.PINCARD.ASSEGNAZIONI.VIEW">
+		<h:outputText value="#{pincard.assegnazione.cognome}" rendered="#{not empty pincard.assegnazione}" />
+	</d:output>	
+	
+	<d:output label="#{bundles.messages['label.persona.postazione']}" key="MODEL.PINCARD.ASSEGNAZIONI.VIEW">
+		<h:outputText value="#{pincard.assegnazione.postazione.nome}" rendered="#{not empty pincard.assegnazione.postazione}" />
+	</d:output>	
+	
+	<d:output label="#{bundles.messages['label.status.status']}" key="MODEL.PINCARD.STATO.VIEW" rendered="#{not empty pincard}">
+		<h:outputText value="#{bundles.messages['pin.stato.'.concat(pincard.stato.stato)]}"/>
+	</d:output>
+					
+</ui:composition>

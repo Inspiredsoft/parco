@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="consegna" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="parco_direttore" class="java.lang.String"/>
+	<parameter name="parco_postazione" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="parco_area" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="parco_provincia" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="parco_centrocosto" class="java.lang.String"/>
+	<parameter name="parco_dataconsegna" class="java.lang.String"/>
+	<parameter name="parco_assegnatario" class="java.lang.String"/>
+	<parameter name="parco_operazione" class="java.lang.String"/>
+	<parameter name="parco_tipo" class="java.lang.String"/>
+	<parameter name="parco_matricola" class="java.lang.String"/>
+	<parameter name="parco_note" class="java.lang.String"/>
+	<parameter name="parco_ricevente" class="java.lang.String"/>
+	<parameter name="parco_datacorrente" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="108" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="79"/>
+				<textElement verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[
+U.O. Sistema Informatico e Comunicazioni
+Direttore
+]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="62" y="57" width="338" height="20"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{parco_direttore}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="114" splitType="Stretch">
+			<textField>
+				<reportElement x="367" y="4" width="174" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{parco_postazione}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="367" y="24" width="174" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{parco_area}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="367" y="44" width="174" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{parco_provincia}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="367" y="64" width="174" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{parco_centrocosto}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="42" splitType="Stretch">
+			<textField evaluationTime="Auto">
+				<reportElement x="0" y="0" width="555" height="42"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Con la presente, in data " + $P{parco_dataconsegna} + ", si " + $P{parco_operazione} + " " + $P{parco_assegnatario} + " il seguente materiale:"]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="231" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="165" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{parco_tipo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="165" y="0" width="390" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{parco_matricola}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="59" width="555" height="48" isRemoveLineWhenBlank="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{parco_note}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="39" width="100" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOTE:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="171" width="555" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Roma li, " + $P{parco_datacorrente}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="38" y="191" width="100" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[per Ricevuta]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="211" width="180" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$P{parco_ricevente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="346" y="193" width="150" height="38"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA["per il Responsabile della U.O." +
+"Dott " + $P{parco_direttore}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="25" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="24" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="19" splitType="Stretch"/>
+	</summary>
+</jasperReport>

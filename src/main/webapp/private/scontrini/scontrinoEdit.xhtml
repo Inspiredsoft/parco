@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.scontrino.info']} "/>
+				</f:facet>
+				
+				<d:output label="#{bundles.messages['label.id']}" key="MODEL.SCONTRINO.ID.VIEW">
+					<h:outputText value="#{scontrinoHome.instance.id}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.scontrino.mezzo']}" key="MODEL.SCONTRINO.MEZZO.VIEW">
+					<h:outputText value="#{scontrinoHome.instance.rifornimento.mezzo.targa}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.scontrino.gestore']}" key="MODEL.SCONTRINO.GESTORE.VIEW">
+					<h:outputText value="#{bundles.messages['gestore.'.concat(scontrinoHome.instance.rifornimento.gestore)]}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.scontrino.carta']}" key="MODEL.SCONTRINO.CARTA.VIEW">
+					<h:outputText value="#{scontrinoHome.instance.rifornimento.carta.numero}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.rifornimento.codiceOperatore']}" key="MODEL.SCONTRINO.PINCARD.VIEW">
+					<h:outputText value="#{scontrinoHome.instance.rifornimento.pinCard.codiceOperatore}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.rifornimento.codiceBusta']}" key="MODEL.SCONTRINO.PINCARD.VIEW">
+					<h:outputText value="#{scontrinoHome.instance.rifornimento.pinCard.codiceBusta}" />
+				</d:output>
+				
+				<d:input label="#{bundles.messages['label.scontrino.prob']}" key="MODEL.SCONTRINO.NUMERO.EDIT">
+					<h:selectOneMenu value="#{scontrinoHome.stato}">
+						<f:selectItem noSelectionOption="true" itemLabel="[SELEZIONA POSSIBILI PROBLEMI]"/>
+						<f:selectItems value="#{scontrinoHome.statiAmmessi}" var="st" itemValue="#{st}" itemLabel="#{bundles.messages['scontrino.stato.'.concat(st)]}"/>
+						<s:objectConverter />
+						<a4j:ajax execute="@this" render="inputScontrino,inputNote" />
+					</h:selectOneMenu>
+				</d:input>
+				
+				<h:panelGroup id="inputScontrino">
+				
+					<d:input label="#{bundles.messages['label.scontrino.numero']}" key="MODEL.SCONTRINO.NUMERO.EDIT" rendered="#{empty scontrinoHome.stato}">
+						<h:inputText value="#{scontrinoHome.instance.numero}" required="true">
+							<f:validator validatorId="numeroScontrinoValidator"/>
+							<f:attribute name="numeroScontrinoRichiesta" value="#{scontrinoHome.instance.rifornimento.numeroScontrino}" />
+						</h:inputText>
+					</d:input>
+				
+				</h:panelGroup>
+			
+				<d:input label="#{bundles.messages['label.scontrino.kmret']}" key="MODEL.SCONTRINO.KMRET.EDIT">
+					<h:inputText value="#{scontrinoHome.instance.chilometraggioRettificato}" >
+						<a4j:ajax event="keyup" execute="@this" render="inputNote" />
+					</h:inputText>
+				</d:input>	
+				
+				<d:input label="#{bundles.messages['label.scontrino.mezzoret']}" key="MODEL.SCONTRINO.MEZZORET.EDIT">
+					<rich:autocomplete
+						mode="cachedAjax" 
+						minChars="1" 
+						autocompleteMethod="#{scontrinoHome.autocompleteMezzo}"
+						value="#{scontrinoHome.targa}"
+						var="mezzo"
+						fetchValue="#{mezzo.targa}"
+						layout="table"
+					 	selectFirst="true">
+						<rich:column>
+					 	 	<f:facet name="header">
+								<h:outputText value="#{bundles.messages['label.mezzo.targa']}" />
+							</f:facet>
+							<b>#{mezzo.targa}</b>
+			            </rich:column>
+			            <f:validator validatorId="targaValidator"/>
+			            <a4j:ajax execute="@this" render="inputNote" />
+					</rich:autocomplete>
+				</d:input>	
+				
+				<h:panelGroup id="inputNote">
+					<d:input label="#{bundles.messages['label.scontrino.note']}" key="MODEL.SCONTRINO.NOTE.EDIT">
+						<h:inputTextarea value="#{scontrinoHome.instance.note}" rows="5" 
+							required="#{not empty scontrinoHome.stato or 
+										not empty scontrinoHome.instance.chilometraggioRettificato or 
+										not empty scontrinoHome.targa or
+										scontrinoHome.instance.anomalo}">
+							<a4j:ajax execute="@this"/>
+						</h:inputTextarea>
+					</d:input>
+				</h:panelGroup>
+				
+			</rich:panel>
+			
+			<div class="actionButtons">
+
+				<h:button id="bCancel" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.calcel']}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+				
+				<h:commandButton id="bSave"
+					value="#{bundles.messages['button.save']}"
+					action="#{scontrinoHome.save}" 
+					rendered="#{loggedUser.hasPerm('ACTION.SCONTRINO.EDIT')}"
+					/>
+					
+			</div>
+			
+			<rich:tabPanel switchType="client" >
+			
+			 	<rich:tab
+			 		header="#{bundles.messages['header.scontrino.ano']}"
+			 		rendered="#{not empty scontrinoHome.instance.anomalie}">
+				 	
+					 	<p:dataTable
+						 	var="anomalia"
+							value="#{scontrinoHome.instance.anomalie}" 
+							paginator="true" 
+							rows="10"
+							rowsPerPageTemplate="10,15,20" 
+							draggableColumns="false"
+							rendered="#{not empty scontrinoHome.instance.anomalie}"
+							emptyMessage="#{bundles.messages['message.search.empty']}">
+					 		
+					 		<p:column sortBy="#{anomalia.tipo}" rendered="#{loggedUser.hasPerm('MODEL.ANOMALIA.TIPO.VIEW')}">
+					   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.anomalia.tipo']}"/></f:facet>
+					   			<h:outputText value="#{bundles.messages['anomalia.tipo.'.concat(anomalia.tipo)]}"/>
+							</p:column>
+							
+							<p:column sortBy="#{anomalia.descrizione}" rendered="#{loggedUser.hasPerm('MODEL.ANOMALIA.DESCRIZIONE.VIEW')}">
+					   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.anomalia.descrizione']}"/></f:facet>
+					   			<h:outputText value="#{anomalia.descrizione}"/>
+							</p:column>
+							
+							<p:column rendered="#{loggedUser.hasPerm('MODEL.ANOMALIA.NOTA.EDIT')}" style="width:300px">
+					   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.anomalia.nota']}"/></f:facet>
+					   			<span class="value"><h:inputText value="#{anomalia.nota}"/></span>
+							</p:column>
+					 	
+					 	</p:dataTable>
+					 </rich:tab>
+					
+				 <rich:tab
+			 		header="#{bundles.messages['header.scontrino.rif']}">
+				 	
+					 	<ui:include src="/private/common/dati-rifornimento.xhtml">
+							<ui:param name="rifornimento" value="#{scontrinoHome.instance.rifornimento}" />
+							<ui:param name="showNumeroScontrino" value="true" />
+						</ui:include>
+				 </rich:tab>
+				 
+				 <rich:tab
+			 		header="#{bundles.messages['header.scontrino.mezzo']}">
+					 	<ui:include src="/private/common/dati-mezzo.xhtml">
+							<ui:param name="mezzo" value="#{scontrinoHome.instance.rifornimento.mezzo}" />
+						</ui:include>
+				 </rich:tab>
+				 
+				 <rich:tab
+			 		header="#{bundles.messages['header.scontrino.tmezzo']}">
+					 	<ui:include src="/private/common/dati-tipoMezzo.xhtml">
+				 			<ui:param name="tipoMezzo" value="#{scontrinoHome.instance.rifornimento.mezzo.tipoMezzo}" />
+				 		</ui:include>
+				 </rich:tab>
+				 
+			  	 <rich:tab
+			 		header="#{bundles.messages['header.scontrino.consumi']}"
+			 		rendered="#{not consumiScontrino.isEmpty}">
+					 	<ui:include src="/private/common/consumi.xhtml">
+				 			<ui:param name="consumi" value="#{consumiScontrino}" />
+				 		</ui:include>
+				 </rich:tab>
+				 
+			</rich:tabPanel>
+			
+		</h:form>
+	</ui:define>
+</ui:composition>

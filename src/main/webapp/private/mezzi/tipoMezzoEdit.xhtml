@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.tipomezzo.edit']}"	rendered="#{tipoMezzoHome.managed}" />
+					<h:outputText value="#{bundles.messages['header.tipomezzo.new']}"   rendered="#{not tipoMezzoHome.managed}" />
+				</f:facet>
+				
+				<d:output label="#{bundles.messages['label.id']}" key="MODEL.TIPOMEZZO.ID.VIEW" rendered="#{tipoMezzoHome.managed}">
+					<h:outputText value="#{tipoMezzoHome.instance.id}" />
+				</d:output>
+				
+				<d:input label="#{bundles.messages['label.tipomezzo.descrizione']}" key="MODEL.TIPOMEZZO.DESCRIZIONE.EDIT">
+					<h:inputText value="#{tipoMezzoHome.instance.descrizione}" required="true" >
+						<f:converter converterId="upperCaseConverter"/>
+					</h:inputText>
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.tipomezzo.serbatoio']}" key="MODEL.TIPOMEZZO.SERBATOIO.EDIT">
+					<h:inputText value="#{tipoMezzoHome.instance.serbatoio}" >
+						<f:validator validatorId="decimalValidator"/>
+					</h:inputText>
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.tipomezzo.consumo.urb']}" key="MODEL.TIPOMEZZO.CONSUMO_URBANO.EDIT">
+					<h:inputText value="#{tipoMezzoHome.instance.consumoUrbano}" >
+						<f:validator validatorId="decimalValidator"/>
+					</h:inputText>
+				</d:input>
+			
+				<d:input label="#{bundles.messages['label.tipomezzo.consumo.ex']}" key="MODEL.TIPOMEZZO.CONSUMO_EXTRAURBANO.EDIT">
+					<h:inputText value="#{tipoMezzoHome.instance.consumoExtraurbano}" >
+						<f:validator validatorId="decimalValidator"/>
+					</h:inputText>
+				</d:input>	
+				
+				<d:input label="#{bundles.messages['label.tipomezzo.carbutante']}" key="MODEL.TIPOMEZZO.TIPO_CARBURANTE.EDIT">
+					<h:selectOneMenu value="#{tipoMezzoHome.instance.tipoCarburante}">
+						<f:selectItem noSelectionOption="true"/>
+						<!--  f:selectItem value="#{tipoMezzoHome.instance.tipoCarburante}" var="tipo" itemValue="#{tipo}" itemLabel="#{bundles.messages['carburante.tipo.'.concat(tipo)]}"/-->
+						<f:selectItems value="#{tipoMezzoHome.tipiCarburante}" var="tipo" itemValue="#{tipo}" itemLabel="#{bundles.messages['carburante.tipo.'.concat(tipo)]}"/>
+					</h:selectOneMenu>
+				</d:input>	
+			</rich:panel>
+			
+			<div class="actionButtons">
+				<h:button id="bCancel" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.calcel']}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:commandButton id="bSave"
+					value="#{bundles.messages['button.save']}"
+					action="#{tipoMezzoHome.save}" 
+					rendered="#{loggedUser.hasPerm('ACTION.TIPOMEZZO.EDIT')}"
+					/>
+			</div>
+			
+		</h:form>
+	</ui:define>
+</ui:composition>

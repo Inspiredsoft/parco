@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+
+		<h:messages id="messages" globalOnly="true" styleClass="message" />
+
+		<h:form>
+
+			<rich:panel>
+				<f:facet name="header">#{bundles.messages['label.search.criteria']}</f:facet>
+			
+				<d:input label="#{bundles.messages['label.event.name']}">
+					<h:inputText value="#{eventList.name}" />
+				</d:input>
+			</rich:panel>
+			
+			<div class="actionButtons">
+				<h:commandButton
+					action="#{eventList.refresh}" 
+					value="#{bundles.messages['button.search']}" />
+				
+				<h:commandButton 
+					value="#{bundles.messages['button.new']}" 
+					action="/private/event/eventEdit.xhtml" 
+					actionListener="#{eventHome.clearInstance}"/>
+			</div>
+			
+			<rich:panel>
+				<f:facet name="header">#{bundles.messages['label.search.result']}: #{eventList.resultCount}</f:facet>
+				
+				<div class="myCenter">
+					
+					<h:outputText value="#{bundles.messages['message.search.empty']}" rendered="#{eventList.isEmpty}"/>
+				
+					<p:dataTable 
+							rendered="#{not eventList.isEmpty}"
+							id="tbl" 
+							value="#{eventList.dataModel}" 
+							var="event" 
+							paginator="true" 
+							rows="10" 
+							lazy="true" 
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="10,15,20"
+							draggableColumns="false"
+							emptyMessage="#{bundles.messages['message.search.empty']}">
+					
+						<p:column sortBy="#{event.id}">
+		        			<f:facet name="header"><h:outputText value="#{bundles.messages['label.id']}"/></f:facet>
+		        			<h:outputText value="#{event.id}"/>
+		    			</p:column>
+		    			
+		    			<p:column sortBy="#{event.name}">
+		        			<f:facet name="header"><h:outputText value="#{bundles.messages['label.event.name']}"/></f:facet>
+		        			<h:outputText value="#{event.name}"/>
+		    			</p:column>
+						
+						<p:column sortBy="#{event.description}">
+		        			<f:facet name="header"><h:outputText value="#{bundles.messages['label.event.description']}"/></f:facet>
+		        			<h:outputText value="#{bundles.messages['event.description.'.concat(event.name)]}"/>
+		    			</p:column>
+		    			
+						<p:column style="width:40px" exportable="false">
+		    				<h:commandLink action="/private/event/event.xhtml" actionListener="#{eventHome.clearInstance}">
+		    					<h:graphicImage value="/resources/img/search.png" atl="#{bundles.messages['image.title.open']}" title="#{bundles.messages['image.title.open']}"/>
+		    					<f:param name="id" value="#{event.id}" />
+		    				</h:commandLink> 
+        				</p:column> 
+		    			
+					</p:dataTable>
+					
+					<ui:include src="/private/common/export.xhtml">
+						<ui:param name="rendered" 		value="#{not eventList.isEmpty}" />
+						<ui:param name="target" 		value="tbl" />
+						<ui:param name="fileName" 		value="#{bundles.messages['file.name.events']}" />
+					</ui:include>
+					
+				</div>
+			</rich:panel>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

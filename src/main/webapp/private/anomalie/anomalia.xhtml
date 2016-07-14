@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.anomalia.info']}"/>
+				</f:facet>
+				
+				<d:output label="#{bundles.messages['label.id']}" key="MODEL.ANOMALIA.ID.VIEW">
+					<h:outputText value="#{anomaliaHome.instance.id}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.rifornimento.mezzo']}" key="MODEL.RIFORNIMENTO.MEZZO.VIEW">
+					<h:outputText value="#{anomaliaHome.instance.rifornimento.mezzo.targa}"/>
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.anomalia.tipo']}" key="MODEL.ANOMALIA.TIPO.VIEW">
+					<h:outputText value="#{bundles.messages['anomalia.tipo.'.concat(anomaliaHome.instance.tipo)]}"/>
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.anomalia.stato']}" key="MODEL.ANOMALIA.STATO.VIEW">
+					<h:outputText value="#{bundles.messages['anomalia.stato.'.concat(anomaliaHome.instance.stato)]}"/>
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.anomalia.descrizione']}" key="MODEL.ANOMALIA.DESCRIZIONE.VIEW">
+					<h:outputText value="#{anomaliaHome.instance.descrizione}"/>
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.anomalia.nota']}" key="MODEL.ANOMALIA.NOTA.VIEW">
+					<h:outputText value="#{anomaliaHome.instance.nota}"/>
+				</d:output>
+				
+			</rich:panel>
+			
+			<div class="actionButtons">
+
+				<h:button id="bReturn" outcome="/private/anomalie/anomaliaList.xhtml"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromEdit}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bBack" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromOuterView}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bCancel" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromList}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+				
+			</div>
+			
+			<rich:tabPanel 
+					switchType="client" 
+					rendered="#{( loggedUser.hasPerm('MODEL.ANOMALIA.RIFORNIMENTO.VIEW') )}">
+							
+				<rich:tab
+			 		header="#{bundles.messages['header.anomalia.rif']}">
+				 	
+					 	<ui:include src="/private/common/dati-rifornimento.xhtml">
+							<ui:param name="rifornimento" value="#{anomaliaHome.instance.rifornimento}" />
+						</ui:include>
+				 </rich:tab>	
+				 
+				 <rich:tab
+			 		header="#{bundles.messages['header.anomalia.pred']}"
+			 		rendered="#{not empty anomaliaHome.instance.rifornimentoPrecedente}">
+				 	
+					 	<ui:include src="/private/common/dati-rifornimento.xhtml">
+							<ui:param name="rifornimento" value="#{anomaliaHome.instance.rifornimentoPrecedente}" />
+						</ui:include>
+				 </rich:tab>	
+				 
+				 <rich:tab
+			 		header="#{bundles.messages['header.anomalia.coll']}"
+			 		rendered="#{not empty anomaliaHome.anomalieCollegate}">
+				 	
+					 	<p:dataTable
+						 	var="anomalia"
+							value="#{anomaliaHome.anomalieCollegate}" 
+							paginator="true" 
+							rows="10"
+							rowsPerPageTemplate="10,15,20" 
+							draggableColumns="false"
+							rendered="#{not empty anomaliaHome.anomalieCollegate}"
+							emptyMessage="#{bundles.messages['message.search.empty']}">
+					 		
+					 		<p:column sortBy="#{anomalia.tipo}" rendered="#{loggedUser.hasPerm('MODEL.ANOMALIA.TIPO.VIEW')}">
+					   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.anomalia.tipo']}"/></f:facet>
+					   			<h:outputText value="#{bundles.messages['anomalia.tipo.'.concat(anomalia.tipo)]}"/>
+							</p:column>
+							
+							<p:column sortBy="#{anomalia.descrizione}" rendered="#{loggedUser.hasPerm('MODEL.ANOMALIA.DESCRIZIONE.VIEW')}">
+					   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.anomalia.descrizione']}"/></f:facet>
+					   			<h:outputText value="#{anomalia.descrizione}"/>
+							</p:column>
+							
+							<p:column style="width:40px" exportable="false">  
+				  				<h:commandLink action="/private/anomalie/anomalia.xhtml" actionListener="#{anomaliaHome.clearInstance}">
+				  					<h:graphicImage value="/resources/img/search.png" atl="#{bundles.messages['image.title.open']}" title="#{bundles.messages['image.title.open']}"/>
+				  					<f:param name="id" value="#{anomalia.id}" />
+				  				</h:commandLink>
+				    		</p:column> 
+					 	
+					 	</p:dataTable>
+				 </rich:tab>	
+				 
+				 <rich:tab 
+				 	header="#{bundles.messages['header.mezzo']}">
+					<ui:include src="/private/common/info-mezzo.xhtml">
+				 		<ui:param name="mezzo" value="#{anomaliaHome.instance.rifornimento.mezzo}" />
+				 	</ui:include>				 		
+				 </rich:tab>
+				 
+				 <rich:tab header="#{bundles.messages['header.pincard']}">
+				 	<ui:include src="/private/common/info-pincard.xhtml">
+				 		<ui:param name="pincard" value="#{anomaliaHome.instance.rifornimento.pinCard}" />
+				 	</ui:include>	
+				 </rich:tab>
+				 
+			</rich:tabPanel>
+			
+		</h:form>
+		
+	</ui:define>
+</ui:composition>

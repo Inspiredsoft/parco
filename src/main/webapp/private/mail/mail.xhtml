@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.mail.info']} "/>
+				</f:facet>
+				
+				<d:output label="#{bundles.messages['label.id']}" key="MODEL.MAIL.ID.VIEW">
+					<h:outputText value="#{mailHome.instance.id}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.mail.class']}" key="MODEL.MAIL.JAVACLASS.VIEW">
+					<h:outputText value="#{bundles.messages[mailHome.instance.javaClass]}"/>
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.mail.status']}" key="MODEL.MAIL.STATUS.VIEW">
+					<h:outputText value="#{bundles.messages['mail.status.'.concat(mailHome.instance.status)]}"/>
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.mail.adddate']}" key="MODEL.MAIL.ADDDATE.VIEW">
+					<h:outputText value="#{mailHome.instance.addDate}">
+						<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+					</h:outputText>
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.mail.startdate']}" key="MODEL.MAIL.STARTDATE.VIEW" rendered="#{not empty mailHome.instance.startDate}">
+					<h:outputText value="#{mailHome.instance.startDate}">
+						<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+					</h:outputText>
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.mail.enddate']}" key="MODEL.MAIL.ENDDATE.VIEW" rendered="#{not empty mailHome.instance.endDate}">
+					<h:outputText value="#{mailHome.instance.endDate}">
+						<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+					</h:outputText>
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.mail.exetime']}" key="MODEL.MAIL.EXETIME.VIEW" rendered="#{not empty mailHome.instance.exeTime}">
+					<h:outputText value="#{mailHome.instance.exeTimeStr}"/>
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.mail.tries']}" key="MODEL.MAIL.TRIES.VIEW">
+					<h:outputText value="#{mailHome.instance.tries}" />
+				</d:output>
+
+			</rich:panel>
+			
+			<div class="actionButtons">
+			
+				<h:button
+					id="bReturn"
+					outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}">
+						<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+				
+				<h:commandButton
+					id="bRedo" 
+					rendered="#{loggedUser.hasPerm('ACTION.MAIL.RESEND') and not mailHome.instance.running and not mailHome.instance.waiting}"
+					value="#{bundles.messages['button.redo']}"
+					action="#{mailHome.redo}"/>
+					
+				<h:commandButton
+					id="bStop" 
+					rendered="#{loggedUser.hasPerm('ACTION.MAIL.STOP') and not mailHome.instance.stopped and not mailHome.instance.ended}"
+					value="#{bundles.messages['button.stop']}"
+					action="#{mailHome.stop}"/>
+				
+			</div>
+			
+			<rich:tabPanel switchType="client" 
+					rendered="#{ ( loggedUser.hasPerm('MODEL.MAIL.EXCEPTION.VIEW') and (mailHome.instance.error or mailHome.instance.delayed) ) or
+								 ( loggedUser.hasPerm('MODEL.MAIL.MESSAGES.VIEW') and not empty mailHome.instance.messages) or
+								 ( loggedUser.hasPerm('MODEL.MAIL.PARAMS.VIEW') and not empty mailHome.instance.parameters ) }">
+				
+				 <rich:tab header="#{bundles.messages['label.mail.messages']}" 
+				 		rendered="#{loggedUser.hasPerm('MODEL.MAIL.MESSAGES.VIEW') and not empty mailHome.instance.messages}">
+					<p:dataTable 
+			 			id="tlbMessages"
+			 			var="msg" 
+			 			value="#{mailHome.instance.messages}" 
+			 			paginator="true" 
+						rows="10"
+						rowsPerPageTemplate="10,15,20"
+						draggableColumns="false"
+						emptyMessage="#{bundles.messages['message.search.empty']}">
+						
+						<p:column>
+							<f:facet name="header"><h:outputText value="#{bundles.messages['label.jmessage.level']}"/></f:facet>
+							<div class="myCenter">
+			       				<h:graphicImage value="/resources/img/info.png" rendered="#{msg.isInfo()}" title="INFO" styleClass="dataRowPic"/>
+			       				<h:graphicImage value="/resources/img/warning.png" rendered="#{msg.isWarning()}" title="WARN" styleClass="dataRowPic"/>
+			       				<h:graphicImage value="/resources/img/error.png" rendered="#{msg.isError()}" title="ERROR" styleClass="dataRowPic"/>
+		      				</div>
+						</p:column>
+						
+						<p:column>
+							<f:facet name="header"><h:outputText value="#{bundles.messages['label.mmessage.date']}"/></f:facet>
+							<h:outputText value="#{msg.date}">
+								<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+							</h:outputText>
+						</p:column>
+						
+						<p:column>
+							<f:facet name="header"><h:outputText value="#{bundles.messages['label.mmessage.message']}"/></f:facet>
+							<h:outputText value="#{msg.message}"/>
+						</p:column>
+						
+					</p:dataTable>
+		         </rich:tab>
+		         
+		         <rich:tab header="#{bundles.messages['label.mail.parameters']}"
+		         		rendered="#{loggedUser.hasPerm('MODEL.MAIL.PARAMS.VIEW') and not empty mailHome.instance.parameters}">
+		         		
+		         	<p:dataTable 
+			 			id="tlbParams"
+			 			var="par" 
+			 			value="#{mailHome.instance.parameters}" 
+						emptyMessage="#{bundles.messages['message.search.empty']}">
+						
+						<p:column>
+							<f:facet name="header"><h:outputText value="#{bundles.messages['label.mparam.label']}"/></f:facet>
+							<h:outputText value="#{par.label}"/>
+						</p:column>
+						
+						<p:column>
+							<f:facet name="header"><h:outputText value="#{bundles.messages['label.mparam.value']}"/></f:facet>
+							<h:outputText value="#{par.value}"/>
+						</p:column>
+					</p:dataTable>
+					
+		         </rich:tab>
+		         
+		         <rich:tab header="#{bundles.messages['label.mail.exception']}" 
+		         		rendered="#{loggedUser.hasPerm('MODEL.MAIL.EXCEPTION.VIEW') and (mailHome.instance.error or mailHome.instance.delayed)}">
+					
+					<pre>#{mailHome.instance.exception}</pre>
+					
+		         </rich:tab>
+		         
+			</rich:tabPanel>
+		</h:form>
+		
+	</ui:define>
+	
+</ui:composition>

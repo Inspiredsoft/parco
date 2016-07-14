@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components">
+
+	<d:output 
+		label="#{bundles.messages['label.mese']}">
+		
+		<h:selectOneMenu value="#{period.month}">
+			<f:selectItem noSelectionOption="true"/>
+			<f:selectItems  value="#{period.months}" var="month" itemLabel="#{bundles.messages['calendar.month.'.concat(month)]}" itemValue="#{month}"/>
+		</h:selectOneMenu>
+	</d:output>
+	
+	<d:output 
+		label="#{bundles.messages['label.anno']}">
+		
+		<h:inputText value="#{period.year}"  />
+	</d:output>
+	
+	
+</ui:composition>

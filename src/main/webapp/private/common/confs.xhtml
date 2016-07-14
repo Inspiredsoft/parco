@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<p:dataTable 
+		id="tlbConfig"
+		var="config" 
+		value="#{confs}" 
+		paginator="true" 
+		rows="10"
+		rowsPerPageTemplate="10,15,20"
+		draggableColumns="false"
+		emptyMessage="#{bundles.messages['message.search.empty']}">
+
+			<p:column sortBy="#{config.name}">
+   				<f:facet name="header"><h:outputText value="#{bundles.messages['label.name']}"/></f:facet>
+   				<h:outputText value="#{config.name}"/>
+			</p:column>
+			
+			<p:column sortBy="#{config.value}">
+   				<f:facet name="header"><h:outputText value="#{bundles.messages['label.value']}"/></f:facet>
+   				<h:outputText value="#{config.value}"/>
+			</p:column>
+			
+			<p:column style="width:40px" exportable="false">  
+  				<h:commandLink action="/private/safe/confEdit.xhtml" actionListener="#{safeConfHome.clearInstance}" rendered="#{config.editable}">
+  					<h:graphicImage value="/resources/img/search.png" atl="#{bundles.messages['image.title.open']}" title="#{bundles.messages['image.title.open']}"/>
+  					<f:param name="id" value="#{config.id}" />
+  				</h:commandLink>
+			</p:column> 
+			
+	</p:dataTable>
+	
+</ui:composition>

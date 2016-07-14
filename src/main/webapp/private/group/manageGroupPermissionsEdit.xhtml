@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	xmlns:s="http://jboss.org/seam/faces"
+	template="/private/layout/basic.xhtml">
+
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+
+		<h:messages id="messages" globalOnly="true" styleClass="message" />
+
+		<h:form>
+
+			<rich:tabPanel switchType="client">
+       			
+       			<rich:tab header="#{bundles.messages['header.group.manage.permissions']}">
+
+					<div class="myCenter">
+					
+						<rich:pickList
+								styleClass="picklist"
+								value="#{manageGroupPermissionsHome.assignedPermissions}" 
+								var="permission"
+								listWidth="100%" 
+								listHeight="350px"
+								addText="#{bundles.messages['label.add']}"
+								addAllText="#{bundles.messages['label.addAll']}"
+								removeAllText="#{bundles.messages['label.removeAll']}"
+								removeText="#{bundles.messages['label.remove']}"
+								switchByDblClick="true"
+								>
+			               
+			               	<f:selectItems value="#{manageGroupPermissionsHome.assignablePermissions}" />
+	        			    <s:objectConverter />
+								
+			                <rich:column>
+			                    <f:facet name="header">#{bundles.messages['label.id']}</f:facet>
+			                    #{permission.id}
+			                </rich:column>
+			                
+			                <rich:column>
+			                    <f:facet name="header">#{bundles.messages['label.permission.name']}</f:facet>
+			                    #{permission.name}
+			                </rich:column>
+			                
+			                 <rich:column>
+			                    <f:facet name="header">#{bundles.messages['label.permission.description']}</f:facet>
+			                    <h:outputText value="#{bundles.messages['permission.description.'.concat(permission.name)]}" />
+			                </rich:column>
+			               
+	            		</rich:pickList>	
+	            		
+					</div>
+					
+				</rich:tab>
+				
+			</rich:tabPanel>
+			
+			<div class="actionButtons">
+				<h:button 
+					id="bBack" 
+					outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:commandButton 
+					id="bSave"
+					value="#{bundles.messages['button.save']}"
+					action="#{manageGroupPermissionsHome.save}" />
+			</div>
+			
+		</h:form>
+		
+	</ui:define>
+	
+</ui:composition>

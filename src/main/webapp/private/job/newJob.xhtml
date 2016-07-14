@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.job.anomalie']} "/>
+				</f:facet>
+				
+				<h:panelGrid  columns="5">
+				
+					<h:outputLabel value="#{bundles.messages['label.from']}" />
+					
+					<rich:calendar 
+						required="true"
+						value="#{newJob.anomaliePeriod.periodFrom}" 
+						popup="true" 
+						datePattern="#{configManager.shortDateFormat}">
+			        </rich:calendar>
+	
+					<h:outputLabel value="#{bundles.messages['label.to']}" />
+					
+					<rich:calendar 
+						required="true"
+						value="#{newJob.anomaliePeriod.periodTo}" 
+						popup="true" 
+						datePattern="#{configManager.shortDateFormat}">
+			        </rich:calendar>
+				
+					<h:commandButton 
+						value="#{bundles.messages['button.apply']}"
+						action="#{newJob.anomalieJob}"
+						/>	
+				</h:panelGrid>
+								
+			</rich:panel>
+			
+			<div class="vspace10px"/>
+			
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.job.soccorsi']} "/>
+				</f:facet>
+				
+				<h:panelGrid  columns="4">
+				
+					<h:outputLabel value="#{bundles.messages['label.periodo']}" />
+					
+					<h:selectOneMenu value="#{newJob.soccorsiPeriod.month}" required="true">
+						<f:selectItems  value="#{newJob.months}" var="month" itemLabel="#{bundles.messages['calendar.month.'.concat(month)]}" itemValue="#{month}"/>
+					</h:selectOneMenu>
+						
+					<rich:inputNumberSpinner value="#{newJob.soccorsiPeriod.year}" minValue="1900" maxValue="3000" enableManualInput="false" styleClass="middle"/>
+					
+					<h:commandButton 
+						value="#{bundles.messages['button.apply']}"
+						action="#{newJob.soccorsiJob()}"
+						/>	
+					
+				</h:panelGrid>
+				
+			</rich:panel>
+			
+			<div class="vspace10px"/>
+			
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.job.riepilghi']} "/>
+				</f:facet>
+				
+				<h:panelGrid  columns="4">
+				
+					<h:outputLabel value="#{bundles.messages['label.periodo']}" />
+					
+					<h:selectOneMenu value="#{newJob.riepiloghiPeriod.month}" required="true">
+						<f:selectItems  value="#{newJob.months}" var="month" itemLabel="#{bundles.messages['calendar.month.'.concat(month)]}" itemValue="#{month}"/>
+					</h:selectOneMenu>
+						
+					<rich:inputNumberSpinner value="#{newJob.riepiloghiPeriod.year}" minValue="1900" maxValue="3000" enableManualInput="false" styleClass="middle"/>
+					
+					<h:commandButton 
+						value="#{bundles.messages['button.apply']}"
+						action="#{newJob.riepilogoJob}"
+						/>	
+					
+				</h:panelGrid>
+				
+			</rich:panel>
+			
+			<div class="vspace10px"/>
+			
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.job.consumi']} "/>
+				</f:facet>
+				
+				<h:panelGrid  columns="5">
+				
+					<h:outputLabel value="#{bundles.messages['label.from']}" />
+					
+					<rich:calendar 
+						required="true"
+						value="#{newJob.consumiPeriod.periodFrom}" 
+						popup="true" 
+						datePattern="#{configManager.shortDateFormat}">
+			        </rich:calendar>
+	
+					<h:outputLabel value="#{bundles.messages['label.to']}" />
+					
+					<rich:calendar 
+						required="true"
+						value="#{newJob.consumiPeriod.periodTo}" 
+						popup="true" 
+						datePattern="#{configManager.shortDateFormat}">
+			        </rich:calendar>
+				
+					<h:commandButton 
+						value="#{bundles.messages['button.apply']}"
+						action="#{newJob.consumiJob}"
+						/>	
+				</h:panelGrid>
+								
+			</rich:panel>
+			
+			<div class="actionButtons">
+			
+				<h:button
+					id="bReturn"
+					outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}">
+						<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+			</div>
+			
+		</h:form>
+		
+	</ui:define>
+	
+</ui:composition>

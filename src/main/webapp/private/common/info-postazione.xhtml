@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org"
+	xmlns:d="http://java.sun.com/jsf/composite/components">
+	
+	<d:output label="#{bundles.messages['label.id']}" key="MODEL.POSTAZIONE.ID.VIEW">
+		<h:outputText value="#{postazione.id}" />
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.postazione.area']}" key="MODEL.POSTAZIONE.AREA.VIEW">
+		<h:outputText value="#{postazione.area.nome}" />
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.postazione.nome']}" key="MODEL.POSTAZIONE.NOME.VIEW">
+		<h:outputText value="#{postazione.nome}" />
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.postazione.descrizione']}" key="MODEL.POSTAZIONE.DESCRIZIONE.VIEW">
+		<h:outputText value="#{postazione.descrizione}" />
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.postazione.centrocosto']}" key="MODEL.POSTAZIONE.CENTROCOSTO.VIEW">
+		<h:outputText value="#{postazione.centroCosto}" />
+	</d:output>
+				
+</ui:composition>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+		
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+			
+
+			<rich:panel>
+				<f:facet name="header">#{bundles.messages['label.search.criteria']}</f:facet>
+				
+				<d:input label="#{bundles.messages['label.postazione.nome']}" key="MODEL.POSTAZIONE.NOME.VIEW">
+						<h:inputText value="#{postazioneList.nome}" />
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.postazione.area']}" key="MODEL.POSTAZIONE.AREA.VIEW">
+					<h:selectOneMenu value="#{postazioneList.area}" required="false">
+						<f:selectItem noSelectionOption="true" itemLabel="#{bundles.messages['label.search.select']}"/>
+						<f:selectItems  value="#{postazioneList.aree}" var="area" itemLabel="#{area.nome}" itemValue="#{area}"/>
+						<s:objectConverter />
+					</h:selectOneMenu>
+				</d:input>
+				
+			</rich:panel>
+			
+			<div class="actionButtons">
+				<h:commandButton
+					action="#{areaList.refresh}" 
+					value="#{bundles.messages['button.search']}" />
+					
+				<h:commandButton value="#{bundles.messages['button.new']}"
+					action="/private/oc/postazioneEdit.xhtml"
+					actionListener="#{postazioneHome.clearInstance}" 
+					rendered="#{loggedUser.hasPerm('ACTION.POSTAZIONE.EDIT')}"/>
+			</div>
+			
+			<rich:panel id="grid">
+				<f:facet name="header">#{bundles.messages['label.search.result']}: #{postazioneList.resultCount}</f:facet>
+				
+				<div class="myCenter">
+			
+					<p:dataTable
+					 	id="tlb" 
+					 	var="pos"
+						value="#{postazioneList.dataModel}" 
+						paginator="true" 
+						rows="10"
+						rowsPerPageTemplate="10,15,20" 
+						draggableColumns="false"
+						rendered="#{not postazioneList.isEmpty}"
+						lazy="true"
+						emptyMessage="#{bundles.messages['message.search.empty']}">
+						
+						<p:column sortBy="#{pos.id}" rendered="#{loggedUser.hasPerm('MODEL.POSTAZIONE.ID.VIEW')}">
+				   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.id']}"/></f:facet>
+				   			<h:outputText value="#{pos.id}"/>
+						</p:column>
+						
+						<p:column sortBy="#{pos.nome}" rendered="#{loggedUser.hasPerm('MODEL.POSTAZIONE.NOME.VIEW')}">
+				   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.postazione.nome']}"/></f:facet>
+				   			<h:outputText value="#{pos.nome}"/>
+						</p:column>
+						
+						<p:column sortBy="#{pos.descrizione}" rendered="#{loggedUser.hasPerm('MODEL.POSTAZIONE.DESCRIZIONE.VIEW')}">
+				   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.postazione.descrizione']}"/></f:facet>
+				   			<h:outputText value="#{pos.descrizione}"/>
+						</p:column>
+						
+						<p:column sortBy="#{pos.area.nome}" rendered="#{loggedUser.hasPerm('MODEL.POSTAZIONE.AREA.VIEW')}">
+				   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.postazione.area']}"/></f:facet>
+				   			<h:outputText value="#{pos.area.nome}"/>
+						</p:column>
+						<p:column style="width:40px" exportable="false">
+			  				<h:commandLink action="/private/oc/postazione.xhtml" actionListener="#{postazioneHome.clearInstance}">
+			  					<h:graphicImage value="/resources/img/search.png" atl="#{bundles.messages['image.title.open']}" title="#{bundles.messages['image.title.open']}"/>
+			  					<f:param name="id" value="#{pos.id}" />
+			  				</h:commandLink>
+			    		</p:column> 
+					</p:dataTable>	
+				</div>
+			</rich:panel>
+		</h:form>	
+	</ui:define>
+</ui:composition>

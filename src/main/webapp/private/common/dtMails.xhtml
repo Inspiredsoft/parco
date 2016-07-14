@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dataTable
+		 	id="tlbMail" 
+		 	var="mail"
+			value="#{mails.dataModel}" 
+			paginator="true" 
+			rows="10"
+			rowsPerPageTemplate="10,15,20" 
+			draggableColumns="false"
+			rendered="#{not mails.isEmpty}"
+			lazy="true"
+			emptyMessage="#{bundles.messages['message.search.empty']}">
+
+		<p:column sortBy="#{mail.id}" rendered="#{showId}">
+			<f:facet name="header">
+				<h:outputText value="#{bundles.messages['label.id']}" />
+			</f:facet>
+			<h:outputText value="#{mail.id}" />
+		</p:column>
+		
+		<p:column sortBy="#{mail.javaClass}" rendered="#{loggedUser.hasPerm('MODEL.MAIL.JAVACLASS.VIEW')}">
+			<f:facet name="header"><h:outputText value="#{bundles.messages['label.mail.class']}"/></f:facet>
+			<h:outputText value="#{bundles.messages[mail.javaClass]}"/>
+		</p:column>
+		
+		<p:column sortBy="#{mail.addDate}" rendered="#{loggedUser.hasPerm('MODEL.MAIL.ADDDATE.VIEW')}">
+			<f:facet name="header"><h:outputText value="#{bundles.messages['label.mail.adddate']}" /></f:facet>
+			<h:outputText value="#{mail.addDate}">
+				<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+			</h:outputText>
+		</p:column>
+		
+		<p:column sortBy="#{mail.exeTime}" rendered="#{loggedUser.hasPerm('MODEL.MAIL.EXETIME.VIEW')}">
+			<f:facet name="header"><h:outputText value="#{bundles.messages['label.mail.exetime']}" /></f:facet>
+			<h:outputText value="#{mail.exeTimeStr}"/>
+		</p:column>
+		
+		<p:column sortBy="#{mail.status}" rendered="#{loggedUser.hasPerm('MODEL.MAIL.STATUS.VIEW')}">
+			<f:facet name="header">
+				<h:outputText value="#{bundles.messages['label.mail.status']}" />
+			</f:facet>
+			<h:outputText value="#{bundles.messages['mail.status.'.concat(mail.status)]}" />
+		</p:column>
+
+		<p:column style="width:40px">
+			<h:commandLink action="/private/mail/mail.xhtml"
+				actionListener="#{mailHome.clearInstance}">
+				<h:graphicImage value="/resources/img/search.png" atl="#{bundles.messages['image.title.open']}" title="#{bundles.messages['image.title.open']}"/>
+				<f:param name="id" value="#{mail.id}" />
+			</h:commandLink>
+		</p:column>
+	</p:dataTable>
+
+</ui:composition>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<rich:popupPanel 
+		id="popupstato" 
+		modal="true" 
+		onmaskclick="#{rich:component('popupstato')}.hide()"
+		domElementAttachment="form"
+		autosized="true"> 
+		
+		<f:facet name="header"> 
+			<h:outputText value="#{bundles.messages['header.status.select']}" /> 
+		</f:facet> 
+		<f:facet name="controls"> 
+			<h:outputLink value="#" onclick="#{rich:component('popupstato')}.hide(); return false;"> X </h:outputLink> 
+		</f:facet>
+		
+		<d:input label="#{bundles.messages['label.status.status']}">
+			<p:selectOneMenu value="#{statusInfo.stato}" required="true">
+				<f:selectItems value="#{statuses}" var="st" itemValue="#{st}" itemLabel="#{bundles.messages[bundlePrefix.concat(st)]}"/>
+			</p:selectOneMenu>
+		</d:input>
+		
+		<d:input label="#{bundles.messages['label.status.date']}">
+			<p:calendar 
+				required="true"
+				value="#{statusInfo.dataStato}" 
+				mindate="#{mindate}"
+				pattern="#{configManager.shortDateFormat}"
+				showButtonPanel="true"/>
+	    </d:input>
+
+		<d:input label="#{bundles.messages['label.status.note']}">
+			<p:inputTextarea value="#{statusInfo.noteStato}" rows="5" />
+		</d:input>
+		
+		<ui:insert name="okbutton"/>
+	
+</rich:popupPanel>
+	
+	
+</ui:composition>

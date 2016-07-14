@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.persona.info']} "/>
+					<h:outputText value="(#{bundles.messages['message.removed']})" styleClass="entityRemoved" rendered="#{personaHome.instance.removed}"/>
+				</f:facet>
+				
+				<h:panelGrid columns="2" styleClass="panelColumns">
+					
+					<h:panelGroup>
+				
+						<d:output label="#{bundles.messages['label.id']}" key="MODEL.PERSONA.ID.VIEW">
+							<h:outputText value="#{personaHome.instance.id}" />
+						</d:output>
+						
+						<d:output label="#{bundles.messages['label.persona.matricola']}" key="MODEL.PERSONA.MATRICOLA.VIEW">
+							<h:outputText value="#{personaHome.instance.matricola}" />
+						</d:output>
+						
+						<d:output label="#{bundles.messages['label.persona.cognome']}" key="MODEL.PERSONA.COGNOME.VIEW">
+							<h:outputText value="#{personaHome.instance.cognome}" />
+						</d:output>
+						
+						<d:output label="#{bundles.messages['label.persona.nome']}" key="MODEL.PERSONA.NOME.VIEW">
+							<h:outputText value="#{personaHome.instance.nome}" />
+						</d:output>
+						
+						<d:output label="#{bundles.messages['label.persona.postazione']}" key="MODEL.PERSONA.POSTAZIONE.VIEW" 
+										rendered="#{not empty personaHome.instance.postazione.nome}">
+							<h:outputText value="#{personaHome.instance.postazione.nome}" />
+						</d:output>
+						
+						<d:output label="#{bundles.messages['label.persona.qualifica']}" key="MODEL.PERSONA.QUALIFICA.VIEW">
+							<h:outputText value="#{personaHome.instance.qualifica}" />
+						</d:output>
+						
+					</h:panelGroup>
+				
+				</h:panelGrid>
+				
+			</rich:panel>
+			
+			<div class="actionButtons">
+
+				<h:button id="bReturn" outcome="/private/oc/personaList.xhtml"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromEdit}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bBack" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromOuterView}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bCancel" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromList}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bEdit" outcome="/private/oc/personaEdit.xhtml"
+					value="#{bundles.messages['button.edit']}" 
+					rendered="#{not personaHome.removed and loggedUser.hasPerm('ACTION.PERSONA.EDIT')}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:commandButton
+					id="bDelete" 
+					rendered="#{not personaHome.removed and loggedUser.hasPerm('ACTION.PERSONA.DELETE')}"
+					value="#{bundles.messages['button.delete']}"
+					action="#{personaHome.delete}"/>
+						
+				<h:commandButton
+					id="bUndelete" 
+					rendered="#{personaHome.removed and loggedUser.hasPerm('ACTION.PERSONA.DELETE')}"
+					value="#{bundles.messages['button.undelete']}"
+					action="#{personaHome.undelete}"/>
+				
+			</div>
+			
+			<rich:tabPanel 
+					switchType="client" 
+					rendered="#{ (not empty personaHome.carteCorrenti) or
+								(not empty personaHome.pinCorrenti)}">
+				
+				<rich:tab 
+				 		header="#{bundles.messages['header.persona.carte']}"
+				 		rendered="#{not empty personaHome.carteCorrenti}">
+				 		
+				 		<ui:include src="/private/common/cartePersona.xhtml">
+			 				<ui:param name="movimenti" value="#{personaHome.carteCorrenti}" />
+			 			</ui:include>			 		
+				</rich:tab>
+				
+				<rich:tab 
+				 		header="#{bundles.messages['header.persona.pin']}"
+				 		rendered="#{not empty personaHome.pinCorrenti}">
+				 		
+				 		<ui:include src="/private/common/pinPersona.xhtml">
+			 				<ui:param name="movimenti" value="#{personaHome.pinCorrenti}" />
+			 			</ui:include>	
+			 			
+				 </rich:tab>
+				
+			</rich:tabPanel>	
+			
+		</h:form>
+	</ui:define>
+</ui:composition>

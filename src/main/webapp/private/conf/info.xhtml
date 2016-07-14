@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+			
+			<rich:tabPanel>
+			
+				<rich:tab>	
+					<f:facet name="header">
+						<h:outputText value="#{bundles.messages['header.info']} "/>
+					</f:facet>
+					
+					<d:output label="#{bundles.messages['label.version']}">
+						<h:outputText value="#{infoManager.version}" />
+					</d:output>
+					
+					<d:output label="JAVA">
+						<h:outputText value="#{infoManager.javaVersion}" />
+					</d:output>
+					
+					<d:output label="#{bundles.messages['label.host']}">
+						<h:outputText value="#{infoManager.hostName}" />
+					</d:output>
+					
+					<d:output label="#{bundles.messages['label.address']}">
+						<h:outputText value="#{infoManager.hostAddress}" />
+					</d:output>	
+				</rich:tab>
+
+				<rich:tab>	
+					<f:facet name="header">
+						<h:outputText value="#{bundles.messages['header.interface']} "/>
+					</f:facet>
+					
+					<p:dataTable
+						var="nic"
+						value="#{infoManager.interfaces}"
+						emptyMessage="#{bundles.messages['message.search.empty']}"
+						>
+						
+						<p:column sortBy="#{nic.name}">
+							<f:facet name="header">Name</f:facet>
+							<h:outputText value="#{nic.name}" />
+						</p:column>
+						
+						<p:column sortBy="#{nic.displayName}">
+							<f:facet name="header">Display Name</f:facet>
+							<h:outputText value="#{nic.displayName}" />
+						</p:column>
+						
+						<p:column>
+							<f:facet name="header">Inet Address</f:facet>
+							
+							<p:dataTable
+								var="int"
+								value="#{nic.interfaceAddresses}"
+								emptyMessage="#{bundles.messages['message.search.empty']}">
+						
+								<p:column sortBy="#{int.address.hostName}">
+									<f:facet name="header">Host Name</f:facet>
+									<h:outputText value="#{int.address.hostName}" />
+								</p:column>
+								
+								<p:column sortBy="#{int.address.hostAddress}">
+									<f:facet name="header">Host Address</f:facet>
+									<h:outputText value="#{int.address.hostAddress}" />
+								</p:column>
+						
+						</p:dataTable>
+							
+						</p:column>
+						
+					</p:dataTable>
+					
+					
+				</rich:tab>
+								
+			</rich:tabPanel>
+			
+			
+		</h:form>
+	
+	</ui:define>
+	
+</ui:composition>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+		
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+			
+
+			<rich:panel>
+				<f:facet name="header">#{bundles.messages['label.search.criteria']}</f:facet>
+				
+				<d:input label="#{bundles.messages['label.assicurazione.nome']}" key="MODEL.ASSICURAZIONE.NOME.VIEW">
+						<h:inputText value="#{assicurazioneList.nome}" />
+				</d:input>
+				
+			</rich:panel>
+			
+			<div class="actionButtons">
+				<h:commandButton
+					action="#{assicurazioneList.refresh}" 
+					value="#{bundles.messages['button.search']}" />
+					
+			<h:commandButton value="#{bundles.messages['button.new']}"
+					action="/private/assicurazioni/assicurazioneEdit.xhtml"
+					actionListener="#{assicurazioneHome.clearInstance}" 
+					rendered="#{loggedUser.hasPerm('ACTION.ASSICURAZIONE.EDIT')}"/>
+			</div>
+			
+			<rich:panel id="grid">
+				<f:facet name="header">#{bundles.messages['label.search.result']}: #{assicurazioneList.resultCount}</f:facet>
+				
+				<div class="myCenter">
+			
+					<p:dataTable
+					 	id="tlb" 
+					 	var="ass"
+						value="#{assicurazioneList.dataModel}" 
+						paginator="true" 
+						rows="10"
+						rowsPerPageTemplate="10,15,20" 
+						draggableColumns="false"
+						rendered="#{not assicurazioneList.isEmpty}"
+						lazy="true"
+						emptyMessage="#{bundles.messages['message.search.empty']}">
+						
+						<p:column sortBy="#{ass.id}" rendered="#{loggedUser.hasPerm('MODEL.ASSICURAZIONE.ID.VIEW')}">
+				   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.id']}"/></f:facet>
+				   			<h:outputText value="#{ass.id}"/>
+						</p:column>
+						
+						<p:column sortBy="#{ass.nome}" rendered="#{loggedUser.hasPerm('MODEL.ASSICURAZIONE.NOME.VIEW')}">
+				   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.assicurazione.nome']}"/></f:facet>
+				   			<h:outputText value="#{ass.nome}"/>
+						</p:column>
+						
+						<p:column style="width:40px" exportable="false">  
+			  				<h:commandLink action="/private/assicurazioni/assicurazione.xhtml" actionListener="#{assicurazioneHome.clearInstance}">
+			  					<h:graphicImage value="/resources/img/search.png" atl="#{bundles.messages['image.title.open']}" title="#{bundles.messages['image.title.open']}"/>
+			  					<f:param name="id" value="#{ass.id}" />
+			  				</h:commandLink>
+			    		</p:column> 
+				
+					</p:dataTable>
+					
+				</div>
+			</rich:panel>
+		</h:form>
+		
+	</ui:define>
+	
+</ui:composition>

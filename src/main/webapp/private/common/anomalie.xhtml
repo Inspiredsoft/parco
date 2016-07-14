@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui">
+		
+		<p:dataTable
+		 	id="tlbAnomalie" 
+		 	var="anomalia"
+			value="#{anomalie.dataModel}" 
+			paginator="true" 
+			rows="10"
+			rowsPerPageTemplate="10,15,20" 
+			draggableColumns="false"
+			rendered="#{not anomalie.isEmpty}"
+			lazy="true"
+			emptyMessage="#{bundles.messages['message.search.empty']}">
+			
+			<p:column style="width:2%" rendered="#{loggedUser.hasPerm('MODEL.ANOMALIA.RIFORNIMENTO.VIEW')}" exportable="false">  
+	            <p:rowToggler />  
+	        </p:column> 
+	        
+	        <p:rowExpansion>
+				<h:panelGrid columns="2" cellpadding="4">
+					
+					<h:panelGroup>
+					
+						<ui:include src="/private/common/dati-rifornimento.xhtml">
+							<ui:param name="rifornimento" value="#{anomalia.rifornimento}" />
+						</ui:include>
+					
+					</h:panelGroup>
+					
+					<h:panelGroup rendered="#{not empty anomalia.rifornimentoPrecedente}">
+						
+						<ui:include src="/private/common/dati-rifornimento.xhtml">
+							<ui:param name="rifornimento" value="#{anomalia.rifornimentoPrecedente}" />
+						</ui:include>
+					
+					</h:panelGroup>
+					
+				</h:panelGrid> 
+			</p:rowExpansion>
+			
+			<p:column sortBy="#{anomalia.id}" rendered="#{showId and loggedUser.hasPerm('MODEL.ANOMALIA.ID.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.id']}"/></f:facet>
+	   			<h:outputText value="#{anomalia.id}"/>
+			</p:column>
+			
+			<p:column sortBy="#{anomalia.rifornimento.gestore}" rendered="#{loggedUser.hasPerm('MODEL.ANOMALIA.GESTORE.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.scontrino.gestore']}"/></f:facet>
+	   			<h:outputText value="#{bundles.messages['gestore.'.concat(anomalia.rifornimento.gestore)]}"/>
+			</p:column>
+			
+			<p:column sortBy="#{anomalia.rifornimento.data}" rendered="#{showTarga and loggedUser.hasPerm('MODEL.RIFORNIMENTO.DATA.VIEW')}">
+				<f:facet name="header"><h:outputText value="#{bundles.messages['label.rifornimento.data']}"/></f:facet>
+	   			<h:outputText value="#{anomalia.rifornimento.data}">
+	   				<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+	   			</h:outputText>
+			</p:column>
+			
+			<p:column sortBy="#{anomalia.rifornimento.mezzo.targa}" rendered="#{showTarga and loggedUser.hasPerm('MODEL.RIFORNIMENTO.MEZZO.VIEW')}">
+				<f:facet name="header"><h:outputText value="#{bundles.messages['label.rifornimento.mezzo']}"/></f:facet>
+	   			<h:outputText value="#{anomalia.rifornimento.mezzo.targa}"/>
+			</p:column>
+			
+			<p:column sortBy="#{anomalia.rifornimento.carta.numero}" rendered="#{showCarta and loggedUser.hasPerm('MODEL.RIFORNIMENTO.CARTA.VIEW')}">
+				<f:facet name="header"><h:outputText value="#{bundles.messages['label.rifornimento.carta']}"/></f:facet>
+	   			<h:outputText value="#{anomalia.rifornimento.carta.numero}"/>
+			</p:column>
+			
+			<p:column sortBy="#{anomalia.rifornimento.pinCard.codiceOperatore}" rendered="#{showPincard and loggedUser.hasPerm('MODEL.RIFORNIMENTO.PINCARD.VIEW')}">
+				<f:facet name="header"><h:outputText value="#{bundles.messages['label.rifornimento.codiceOperatore']}"/></f:facet>
+	   			<h:outputText value="#{anomalia.rifornimento.pinCard.codiceOperatore}"/>
+			</p:column>
+			
+			<p:column rendered="#{loggedUser.hasPerm('MODEL.RIFORNIMENTO.POSTAZIONE.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.rifornimento.competenza']}"/></f:facet>
+	   			<h:outputText value="#{anomalia.rifornimento.assegnazione.postazione.nome}"/>
+			</p:column>
+			
+			<p:column sortBy="#{anomalia.tipo}" rendered="#{loggedUser.hasPerm('MODEL.ANOMALIA.TIPO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.anomalia.tipo']}"/></f:facet>
+	   			<h:outputText value="#{bundles.messages['anomalia.tipo.'.concat(anomalia.tipo)]}"/>
+			</p:column>
+			
+			<p:column sortBy="#{anomalia.stato}" rendered="#{loggedUser.hasPerm('MODEL.ANOMALIA.STATO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.anomalia.stato']}"/></f:facet>
+	   			<h:outputText value="#{bundles.messages['anomalia.stato.'.concat(anomalia.stato)]}"/>
+			</p:column>
+			
+			<p:column sortBy="#{anomalia.descrizione}" rendered="#{loggedUser.hasPerm('MODEL.ANOMALIA.DESCRIZIONE.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.anomalia.descrizione']}"/></f:facet>
+	   			<h:outputText value="#{anomalia.descrizione}"/>
+			</p:column>
+			
+			<p:column style="width:40px" exportable="false">  
+  				<h:commandLink action="/private/anomalie/anomalia.xhtml" actionListener="#{anomaliaHome.clearInstance}">
+  					<h:graphicImage value="/resources/img/search.png" atl="#{bundles.messages['image.title.open']}" title="#{bundles.messages['image.title.open']}"/>
+  					<f:param name="id" value="#{anomalia.id}" />
+  				</h:commandLink>
+    		</p:column> 
+			
+		</p:dataTable>
+</ui:composition>

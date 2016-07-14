@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui">
+		<p:dataTable
+			rowStyleClass="#{ass.current ? 'rowEmphasis' : ''}"
+		 	id="tlbAssegnazioni" 
+		 	var="ass"
+			value="#{assegnazioni}" 
+			paginator="true" 
+			rows="10"
+			rowsPerPageTemplate="10,15,20" 
+			draggableColumns="false"
+			rendered="#{not empty assegnazioni}"
+			emptyMessage="#{bundles.messages['message.search.empty']}">
+			
+			<p:column sortBy="#{ass.id}" rendered="#{showId and loggedUser.hasPerm('MODEL.ASSMEZZO.ID.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.id']}"/></f:facet>
+	   			<h:outputText value="#{ass.id}"/>
+			</p:column>
+			
+			<p:column sortBy="#{ass.mezzo.targa}" rendered="#{showMezzo and loggedUser.hasPerm('MODEL.ASSMEZZO.MEZZO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.assmezzo.mezzo']}"/></f:facet>
+	   			<h:outputText value="#{ass.mezzo.targa}"/>
+			</p:column>
+			
+			<p:column sortBy="#{ass.postazione.nome}" rendered="#{loggedUser.hasPerm('MODEL.ASSMEZZO.POSTAZIONE.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.assmezzo.postazione']}"/></f:facet>
+	   			<h:outputText value="#{ass.postazione.nome}"/>
+			</p:column>
+			
+			<p:column sortBy="#{ass.postazione.nome}" rendered="#{loggedUser.hasPerm('MODEL.ASSMEZZO.POSTAZIONE.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.assmezzo.area']}"/></f:facet>
+	   			<h:outputText value="#{ass.postazione.area.nome}"/>
+			</p:column>
+			
+			<p:column sortBy="#{ass.postazione.nome}" rendered="#{loggedUser.hasPerm('MODEL.ASSMEZZO.POSTAZIONE.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.assmezzo.provincia']}"/></f:facet>
+	   			<h:outputText value="#{ass.postazione.area.provincia.sigla}"/>
+			</p:column>
+			
+			<p:column sortBy="#{ass.dataInizio}" rendered="#{loggedUser.hasPerm('MODEL.ASSMEZZO.DATAINIZIO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.assmezzo.datain']}"/></f:facet>
+	   			<h:outputText value="#{ass.dataInizio}">
+	   				<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+	   			</h:outputText>
+			</p:column>
+			
+			<p:column sortBy="#{ass.dataFine}" rendered="#{loggedUser.hasPerm('MODEL.ASSMEZZO.DATAFINE.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.assmezzo.datafin']}"/></f:facet>
+	   			<h:outputText value="#{ass.dataFine}">
+	   				<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+	   			</h:outputText>
+			</p:column>		
+			
+			<p:column sortBy="#{ass.statoSerbatoio}" rendered="#{loggedUser.hasPerm('MODEL.ASSMEZZO.SERBATOIO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.assmezzo.serb']}"/></f:facet>
+	   			<h:outputText value="#{bundles.messages['serbatoio.stato.'.concat(ass.statoSerbatoio)]}"/>
+			</p:column>
+			
+			<p:column sortBy="#{ass.statoSerbatoio}" rendered="#{loggedUser.hasPerm('MODEL.ASSMEZZO.CHILOMETRI.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.assmezzo.km']}"/></f:facet>
+	   			<h:outputText value="#{ass.chilometraggio}">
+	   				<f:convertNumber />
+	   			</h:outputText>
+			</p:column>
+			
+			<p:column style="width:40px">
+				<p:commandLink oncomplete="confirmDelete.show()" rendered="#{empty ass.dataFine and loggedUser.hasPerm('ACTION.MEZZO.ASSEGNA')}">
+					<f:setPropertyActionListener value="#{ass}" target="#{mezzoHome.assToRemove}" /> 
+					<h:graphicImage value="/resources/img/trash.png" atl="#{bundles.messages['image.title.delete']}" title="#{bundles.messages['image.title.delete']}"/>
+				</p:commandLink> 
+    		</p:column> 
+	</p:dataTable>
+	
+	<p:confirmDialog  
+		widgetVar="confirmDelete" 
+		message="#{bundles.messages['message.assmezzo.confirmdelete']}">  
+              
+        <p:commandButton 
+        	id="confirm" 
+        	value="#{bundles.messages['button.confirm']}" 
+        	oncomplete="confirmDelete.hide()"  
+            actionListener="#{mezzoHome.deassegna}"
+            update="messages,tlbAssegnazioni" />  
+		
+		<p:commandButton 
+			id="decline" 
+			value="#{bundles.messages['button.calcel']}" 
+			onclick="confirmDelete.hide()"
+   			 type="button" />   
+              
+    </p:confirmDialog >
+            
+</ui:composition>

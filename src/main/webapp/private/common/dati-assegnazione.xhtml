@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org"
+	xmlns:d="http://java.sun.com/jsf/composite/components">
+
+	<d:output label="#{bundles.messages['label.rifornimento.competenza']}" rendered="#{showPostazione}">
+		<h:outputText value="#{assegnazione.postazione.nome}" />
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.area.nome']}" rendered="#{showArea}">
+		<h:outputText value="#{assegnazione.postazione.area.nome}" />
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.provincia.sigla']}" rendered="#{showProvincia}">
+		<h:outputText value="#{assegnazione.postazione.area.provincia.sigla}" />
+	</d:output>
+
+</ui:composition>

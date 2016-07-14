@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui">
+	<h:form id="crumbForm" rendered="#{breadcrumbsManager.hasElement()}">
+		<ul id="crumbs">
+			<ui:repeat value="#{breadcrumbsManager.crumbs}" var="crumb">
+				<li>
+					<h:commandLink value="#{crumb.name}" action="#{viewChain.goBack(crumb.position)}" rendered="#{not crumb.last}"/>
+					<h:outputText value="#{crumb.name}" rendered="#{crumb.last}"/>
+				</li>
+			</ui:repeat>
+		</ul>
+	</h:form>
+</ui:composition>

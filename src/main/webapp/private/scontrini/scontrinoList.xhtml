@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form id="form">
+		
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+			
+			<rich:panel>
+				<f:facet name="header">#{bundles.messages['label.search.criteria']}</f:facet>
+				
+				<d:input label="#{bundles.messages['label.report.postazione']}" key="MODEL.POSTAZIONE.NOME.VIEW" rendered="#{loggedUser.hasMoreVisiblePostazioni()}">
+					<h:selectOneMenu value="#{scontrinoList.postazione}">
+						<f:selectItem noSelectionOption="true" itemLabel="#{bundles.messages['label.search.select']}" />
+						<f:selectItems  value="#{loggedUser.visiblePostazioni}" var="pos" itemLabel="#{pos.nome}" itemValue="#{pos}"/>
+						<s:objectConverter />
+					</h:selectOneMenu>
+				</d:input>
+			
+				<d:input label="#{bundles.messages['label.scontrino.mezzo']}" key="MODEL.SCONTRINO.MEZZO.VIEW">
+						<h:inputText value="#{scontrinoList.targa}" />
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.scontrino.carta']}" key="MODEL.SCONTRINO.CARTA.VIEW">
+						<h:inputText value="#{scontrinoList.carta}" />
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.rifornimento.codiceOperatore']}" key="MODEL.SCONTRINO.PINCARD.VIEW">
+					<h:inputText value="#{scontrinoList.codiceOperatore}" />
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.rifornimento.codiceBusta']}" key="MODEL.SCONTRINO.PINCARD.VIEW">
+					<h:inputText value="#{scontrinoList.codiceBusta}" />
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.rifornimento.gestore']}" key="MODEL.SCONTRINO.GESTORE.VIEW">
+					<h:selectOneMenu value="#{scontrinoList.gestore}">
+						<f:selectItem noSelectionOption="true"/>
+						<f:selectItems value="#{cartaCarburanteList.gestori}" var="gest" itemValue="#{gest}" itemLabel="#{bundles.messages['gestore.'.concat(gest)]}"/>
+					</h:selectOneMenu>
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.status.status']}" key="MODEL.SCONTRINO.STATI.VIEW">
+					<h:selectOneMenu value="#{scontrinoList.stato}">
+						<f:selectItem noSelectionOption="true"/>
+						<f:selectItems value="#{scontrinoList.stati}" var="st" itemValue="#{st}" itemLabel="#{bundles.messages['scontrino.stato.'.concat(st)]}"/>
+					</h:selectOneMenu>
+				</d:input>
+				
+				<ui:include src="/private/common/period.xhtml">
+					<ui:param name="period" value="#{scontrinoList.period}" />	
+					<ui:param name="showFrom" value="true" />
+					<ui:param name="showTo" value="true" />
+				</ui:include>
+				
+			</rich:panel>
+			
+			<div class="actionButtons">
+				<h:commandButton
+					action="#{scontrinoList.refresh}" 
+					value="#{bundles.messages['button.search']}" />
+					
+				<h:button id="bEdit" outcome="/private/scontrini/ricercaMirata.xhtml"
+					value="#{bundles.messages['button.scon.ricmir']}" 
+					rendered="#{loggedUser.hasPerm('ACTION.SCONTRINO.EDIT')}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+			</div>
+			
+			<rich:panel id="grid">
+				<f:facet name="header">
+					<table class="panelColumns">
+						<tr>
+							<td align="left">
+								#{bundles.messages['label.search.result']}: #{scontrinoList.rowCount}
+							</td>
+							<td align="right">
+								<h:commandLink 
+									action="#{scontrinoList.download}" 
+									rendered="#{not scontrinoList.isEmpty and loggedUser.hasFullAccess}">
+										<h:graphicImage 
+											value="/resources/img/dbexport.png" 
+											atl="#{bundles.messages['image.title.export']}" 
+											title="#{bundles.messages['image.title.export']}"
+											width="12px"/>
+								</h:commandLink>
+							</td>
+						</tr>
+					</table>
+				</f:facet>
+				
+				<div class="myCenter">
+			
+					<ui:include src="/private/common/scontrini.xhtml">
+					 	<ui:param name="scontrini" 	value="#{scontrinoList}" />
+					 	<ui:param name="showId"	value="true" />
+					 	<ui:param name="showKmRif"	value="true" />
+					</ui:include>
+					
+					<ui:include src="/private/common/export.xhtml">
+						<ui:param name="rendered" 		value="#{not scontrinoList.isEmpty}" />
+						<ui:param name="target" 		value="tblScontrini" />
+						<ui:param name="fileName" 		value="#{bundles.messages['file.name.scontrini']}" />
+					</ui:include>
+					
+				</div>
+			</rich:panel>
+			
+		</h:form>
+		
+	</ui:define>
+
+</ui:composition>

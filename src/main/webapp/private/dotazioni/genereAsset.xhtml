@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.genereasset.info']} "/>
+				</f:facet>
+			
+				<d:output label="#{bundles.messages['label.id']}" key="MODEL.GENEREASSET.ID.VIEW">
+					<h:outputText value="#{genereAssetHome.instance.id}" />
+				</d:output>
+			
+				<d:output label="#{bundles.messages['label.genereasset.descrizione']}" key="MODEL.GENEREASSET.DESCRIZIONE.VIEW">
+					<h:outputText value="#{genereAssetHome.instance.descrizione}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.genereasset.tipo']}" key="MODEL.GENEREASSET.TIPO.VIEW">
+					<h:outputText value="#{bundles.messages['asset.tipo.'.concat(genereAssetHome.instance.tipo)]}" />
+				</d:output>
+			
+			</rich:panel>
+			
+			<div class="actionButtons">
+
+				<h:button id="bReturn" outcome="/private/dotazioni/genereAssetList.xhtml"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromEdit}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bBack" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromOuterView}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bCancel" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromList}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bEdit" outcome="/private/dotazioni/genereAssetEdit.xhtml"
+					value="#{bundles.messages['button.edit']}" 
+					rendered="#{not mezzoHome.removed and loggedUser.hasPerm('ACTION.GENEREASSET.EDIT')}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:commandButton
+					id="bDelete" 
+					rendered="#{loggedUser.hasPerm('ACTION.GENEREASSET.DELETE')}"
+					value="#{bundles.messages['button.delete']}"
+					action="#{genereAssetHome.delete}"/>
+					
+			</div>
+			
+		</h:form>
+	</ui:define>
+</ui:composition>

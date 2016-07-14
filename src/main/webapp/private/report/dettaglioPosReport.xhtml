@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<p:dataTable
+	 	id="tlbPosRep" 
+	 	var="rip"
+		value="#{postazioniReport.dataModel}" 
+		paginator="true" 
+		rows="10"
+		rowsPerPageTemplate="10,15,20" 
+		draggableColumns="false"
+		rendered="#{not postazioniReport.isEmpty}"
+		lazy="true"
+		emptyMessage="#{bundles.messages['message.search.empty']}"
+		selection="#{postazioneMezziReport.selectedRiepilogo}"
+		selectionMode="single"
+		rowKey="#{rip.id}">
+		
+		<p:ajax event="rowSelect" update=":form"/>
+		
+		<p:column sortBy="#{rip.postazione.nome}" rendered="#{loggedUser.hasPerm('MODEL.POSTAZIONE.NOME.VIEW')}">
+   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.report.postazione']}"/></f:facet>
+   			<h:outputText value="#{rip.postazione.nome}"/>
+		</p:column>
+		
+		<p:column sortBy="#{rip.postazione.centroCosto}" rendered="#{loggedUser.hasPerm('MODEL.POSTAZIONE.CENTROCOSTO.VIEW')}">
+   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.postazione.centrocosto']}"/></f:facet>
+   			<h:outputText value="#{rip.postazione.centroCosto}"/>
+		</p:column>
+		
+		<p:column sortBy="#{rip.mese}">
+   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.mese']}"/></f:facet>
+   			<h:outputText value="#{rip.mese}"/>
+		</p:column>
+		
+		<p:column sortBy="#{rip.anno}">
+   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.anno']}"/></f:facet>
+   			<h:outputText value="#{rip.anno}"/>
+		</p:column>
+		
+		<p:column sortBy="#{rip.numero}">
+   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.repeport.numero']}"/></f:facet>
+   			<h:outputText value="#{rip.numero}"/>
+		</p:column>
+		
+		<p:column sortBy="#{rip.quantita}">
+   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.repeport.quantita']}"/></f:facet>
+   			<h:outputText value="#{rip.quantita}">
+   				<f:convertNumber pattern="#,###,##0.00"/>
+   			</h:outputText>
+		</p:column>
+		
+		<p:column sortBy="#{rip.importo}">
+   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.repeport.importo']}"/></f:facet>
+   			<h:outputText value="#{rip.importo}">
+   				<f:convertNumber currencyCode="EUR" type="currency" />
+   			</h:outputText>
+		</p:column>
+	
+	</p:dataTable>
+	
+	<ui:include src="/private/common/export.xhtml">
+		<ui:param name="rendered" 		value="#{not postazioniReport.isEmpty}" />
+		<ui:param name="target" 		value="tlbPosRep" />
+		<ui:param name="fileName" 		value="#{bundles.messages['file.name.posrep']}" />
+	</ui:include>
+	
+</ui:composition>

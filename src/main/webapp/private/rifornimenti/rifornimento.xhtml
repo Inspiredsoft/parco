@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.rifornimento.info']} "/>
+				</f:facet>
+				
+				 <ui:include src="/private/common/dati-rifornimento.xhtml">
+				 	<ui:param name="rifornimento" value="#{rifornimentoHome.instance}" />
+				 	<ui:param name="showNumeroScontrino" value="true" />
+				 </ui:include> 
+				
+			</rich:panel>
+			
+			<div class="actionButtons">
+
+				<h:button id="bReturn" outcome="/private/rifornimenti/rifornimentoList.xhtml"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromEdit}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bBack" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromOuterView}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bCancel" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromList}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+					
+			</div>
+			
+			<rich:tabPanel 
+					switchType="client" 
+					rendered="#{( loggedUser.hasPerm('MODEL.RIFORNIMENTO.SCONTRINO.VIEW') or 
+								loggedUser.hasPerm('MODEL.RIFORNIMENTO.EXTRA.VIEW')  or
+								( loggedUser.hasPerm('MODEL.RIFORNIMENTO.ANOMALIE.VIEW') and not anomalieRifornimento.isEmpty ) ) }">
+				 
+				  <rich:tab
+				 		header="#{bundles.messages['header.rifornimento.anomalie']}" 
+				 		rendered="#{loggedUser.hasPerm('MODEL.RIFORNIMENTO.ANOMALIE.VIEW') and not anomalieRifornimento.isEmpty}">
+				 	
+					 	<ui:include src="/private/common/anomalie.xhtml">
+							<ui:param name="anomalie" value="#{anomalieRifornimento}" />
+						</ui:include>
+					
+				 </rich:tab>
+				 
+				 <rich:tab header="#{bundles.messages['header.rifornimento.scontrino']}" rendered="#{loggedUser.hasPerm('MODEL.RIFORNIMENTO.SCONTRINO.VIEW')}"> 	
+				 	
+				 	<d:output label="#{bundles.messages['label.id']}" key="MODEL.SCONTRINO.ID.VIEW">
+						<h:outputText value="#{rifornimentoHome.instance.scontrino.id} "/>
+						<h:commandLink 
+								action="/private/scontrini/scontrino.xhtml" actionListener="#{scontrinoHome.clearInstance}" 
+								rendered="#{loggedUser.verifyPermission('MENU.RIFORNIMENTI.SCONTRINI')}">
+  							<h:graphicImage value="/resources/img/go.png" atl="#{bundles.messages['image.title.open']}" title="#{bundles.messages['image.title.open']}"/>
+  							<f:param name="id" value="#{rifornimentoHome.instance.scontrino.id}" />
+  						</h:commandLink>
+					</d:output>
+					
+				 	<d:output label="#{bundles.messages['label.scontrino.numero']}" key="MODEL.SCONTRINO.NUMERO.VIEW">
+						<h:outputText value="#{rifornimentoHome.instance.scontrino.numero}"/>
+					</d:output>
+					
+					<d:output label="#{bundles.messages['label.scontrino.kmret']}" key="MODEL.SCONTRINO.KMRET.VIEW" rendered="#{not empty rifornimentoHome.instance.scontrino.chilometraggioRettificato}">
+						<h:outputText value="#{rifornimentoHome.instance.scontrino.chilometraggioRettificato}"  />
+					</d:output>
+					
+					<d:output label="#{bundles.messages['label.scontrino.mezzoret']}" key="MODEL.SCONTRINO.MEZZORET.VIEW" rendered="#{not empty rifornimentoHome.instance.scontrino.mezzoRettificato}">
+						<h:outputText value="#{rifornimentoHome.instance.scontrino.mezzoRettificato.targa}"/>
+					</d:output>
+					
+					<d:output label="#{bundles.messages['label.status.status']}" key="MODEL.SCONTRINO.STATO.VIEW">
+						<h:outputText value="#{bundles.messages['scontrino.stato.'.concat(rifornimentoHome.instance.scontrino.stato.stato)]}"/>
+					</d:output>
+				 </rich:tab>
+				 
+				 <rich:tab
+			 		header="#{bundles.messages['header.rifornimento.mezzo']}">
+					 	<ui:include src="/private/common/info-mezzo.xhtml">
+							<ui:param name="mezzo" value="#{rifornimentoHome.instance.mezzo}" />
+						</ui:include>
+				 </rich:tab>
+				 
+				 <rich:tab header="#{bundles.messages['header.pincard']}">
+				 	<ui:include src="/private/common/info-pincard.xhtml">
+				 		<ui:param name="pincard" value="#{rifornimentoHome.instance.pinCard}" />
+				 	</ui:include>	
+				 </rich:tab>
+				 
+				 <rich:tab
+			 		header="#{bundles.messages['header.rifornimento.tmezzo']}">
+					 	<ui:include src="/private/common/dati-tipoMezzo.xhtml">
+				 			<ui:param name="tipoMezzo" value="#{rifornimentoHome.instance.mezzo.tipoMezzo}" />
+				 		</ui:include>
+				 </rich:tab>
+				 
+				 <rich:tab
+			 		header="#{bundles.messages['header.rifornimento.consumi']}"
+			 		rendered="#{not consumiRifornimento.isEmpty}">
+					 	<ui:include src="/private/common/consumi.xhtml">
+				 			<ui:param name="consumi" value="#{consumiRifornimento}" />
+				 		</ui:include>
+				 </rich:tab>
+				 
+				 <rich:tab 
+				 		header="#{bundles.messages['header.rifornimento.extra.agip']}" 
+				 		rendered="#{loggedUser.hasPerm('MODEL.RIFORNIMENTO.EXTRA.VIEW') and rifornimentoHome.instance.agip}"> 	
+				 
+					 <ui:include src="extraAgip.xhtml"/>
+					 
+				 </rich:tab>
+				
+				 <rich:tab 
+				 		header="#{bundles.messages['header.rifornimento.extra.q8']}" 
+				 		rendered="#{loggedUser.hasPerm('MODEL.RIFORNIMENTO.EXTRA.VIEW') and rifornimentoHome.instance.q8}"> 	
+				 
+					 <ui:include src="extraQ8.xhtml"/> 
+					 
+				 </rich:tab>
+				 
+			</rich:tabPanel>
+			
+		</h:form>
+	</ui:define>
+</ui:composition>

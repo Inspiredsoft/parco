@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui">
+		<p:dataTable
+			rowStyleClass="#{polizza.current ? 'rowEmphasis' : ''}"
+		 	id="tlbPolizze" 
+		 	var="polizza"
+			value="#{polizze.dataModel}" 
+			paginator="true" 
+			rows="10"
+			rowsPerPageTemplate="10,15,20" 
+			draggableColumns="false"
+			rendered="#{not polizze.isEmpty}"
+			lazy="true"
+			emptyMessage="#{bundles.messages['message.search.empty']}">
+			
+			<p:column sortBy="#{polizza.id}" rendered="#{showId and loggedUser.hasPerm('MODEL.POLIZZA.ID.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.id']}"/></f:facet>
+	   			<h:outputText value="#{polizza.id}"/>
+			</p:column>
+			
+			<p:column sortBy="#{polizza.numero}" rendered="#{loggedUser.hasPerm('MODEL.POLIZZA.NUMERO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.polizza.numero']}"/></f:facet>
+	   			<h:outputText value="#{polizza.numero}"/>
+			</p:column>
+			
+			<p:column sortBy="#{polizza.compagnia.nome}" rendered="#{loggedUser.hasPerm('MODEL.POLIZZA.ASSICURAZIONE.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.polizza.assicurazione']}"/></f:facet>
+	   			<h:outputText value="#{polizza.compagnia.nome}"/>
+			</p:column>
+			
+			<p:column sortBy="#{polizza.mezzo.targa}" rendered="#{loggedUser.hasPerm('MODEL.POLIZZA.MEZZO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.polizza.mezzo']}"/></f:facet>
+	   			<h:outputText value="#{polizza.mezzo.targa}"/>
+			</p:column>
+			
+			<p:column sortBy="#{polizza.dataDecorrenza}" rendered="#{loggedUser.hasPerm('MODEL.POLIZZA.DECORRENZA.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.polizza.decorrenza']}"/></f:facet>
+	   			<h:outputText value="#{polizza.dataDecorrenza}">
+					<f:convertDateTime pattern="#{configManager.shortDateFormat}"/>
+	   			</h:outputText>
+			</p:column>
+			
+			<p:column sortBy="#{polizza.dataScadenza}" rendered="#{loggedUser.hasPerm('MODEL.POLIZZA.SCADENZA.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.polizza.scadenza']}"/></f:facet>
+	   			<h:outputText value="#{polizza.dataScadenza}">
+	   				<f:convertDateTime pattern="#{configManager.shortDateFormat}"/>
+	   			</h:outputText>
+			</p:column>
+			
+			<p:column style="width:40px" exportable="false">
+  				<h:commandLink action="/private/assicurazioni/polizza.xhtml" actionListener="#{polizzaHome.clearInstance}">
+  					<h:graphicImage value="/resources/img/search.png" atl="#{bundles.messages['image.title.open']}" title="#{bundles.messages['image.title.open']}"/>
+  					<f:param name="id" value="#{polizza.id}" />
+  				</h:commandLink>
+    		</p:column>
+		</p:dataTable>
+</ui:composition>
+
+					
+			

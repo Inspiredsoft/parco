@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.mezzo.edit']}"	rendered="#{mezzoHome.managed}" />
+					<h:outputText value="#{bundles.messages['header.mezzo.new']}"   rendered="#{not mezzoHome.managed}" />
+				</f:facet>
+				
+					<d:output label="#{bundles.messages['label.id']}" key="MODEL.MEZZO.ID.VIEW" rendered="#{mezzoHome.managed}">
+						<h:outputText value="#{mezzoHome.instance.id}" />
+					</d:output>
+					
+					<d:input label="#{bundles.messages['label.mezzo.targa']}" key="MODEL.MEZZO.TARGA.EDIT">
+						<h:inputText value="#{mezzoHome.instance.targa}" required="true" validator="#{mezzoHome.validateTarga}">
+							<f:converter converterId="upperCaseConverter"/>
+						</h:inputText>
+					</d:input>
+					
+					<d:input label="#{bundles.messages['label.mezzo.codiceradio']}" key="MODEL.MEZZO.CODICE_RADIO.EDIT">
+						<h:inputText value="#{mezzoHome.instance.codiceRadio}" >
+							<f:validator validatorId="numberValidator"/>
+						</h:inputText>
+					</d:input>
+					
+					<d:input label="#{bundles.messages['label.mezzo.tipo']}" key="MODEL.MEZZO.TIPO.EDIT">
+						<h:selectOneMenu value="#{mezzoHome.instance.tipoMezzo}" required="true">
+							<f:selectItems value="#{mezzoHome.tipiMezzo}" var="tipo" itemValue="#{tipo}" itemLabel="#{tipo.descrizione}"/>
+							<s:objectConverter />
+						</h:selectOneMenu>
+					</d:input>
+					
+					<d:input label="#{bundles.messages['label.mezzo.scadenzabol']}" key="MODEL.MEZZO.SCADENZA_BOLLO.EDIT">
+						<rich:calendar 
+							value="#{mezzoHome.instance.scadenzaBollo}" 
+							popup="true" 
+							datePattern="#{configManager.shortDateFormat}">
+				        </rich:calendar>
+					</d:input>	
+					
+					<d:input label="#{bundles.messages['label.mezzo.scadenzarev']}" key="MODEL.MEZZO.SCADENZA_REVISIONE.EDIT">
+						<rich:calendar 
+							value="#{mezzoHome.instance.scadenzaRevisione}" 
+							popup="true" 
+							datePattern="#{configManager.shortDateFormat}">
+				        </rich:calendar>
+					</d:input>
+					
+					<d:input label="#{bundles.messages['label.mezzo.note']}" key="MODEL.MEZZO.NOTE.EDIT">
+						<h:inputTextarea value="#{mezzoHome.instance.note}" rows="5"/>
+					</d:input>	
+					
+			</rich:panel>
+			
+			<div class="actionButtons">
+				<h:button id="bCancel" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.calcel']}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:commandButton id="bSave"
+					value="#{bundles.messages['button.save']}"
+					action="#{mezzoHome.save}" 
+					rendered="#{loggedUser.hasPerm('ACTION.MEZZO.EDIT')}"
+					/>
+			</div>
+			
+		</h:form>
+	</ui:define>
+</ui:composition>

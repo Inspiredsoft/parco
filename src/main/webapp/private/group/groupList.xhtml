@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+
+		<h:messages id="messages" globalOnly="true" styleClass="message" />
+
+		<h:form>
+
+			<rich:panel>
+				<f:facet name="header">#{bundles.messages['label.search.criteria']}</f:facet>
+			
+				<d:input label="#{bundles.messages['label.group.name']}">
+					<h:inputText value="#{groupList.name}" />
+				</d:input>
+			</rich:panel>
+			
+			<div class="actionButtons">
+				<h:commandButton
+					action="#{groupList.refresh}" 
+					value="#{bundles.messages['button.search']}" />
+				
+				<h:commandButton 
+					value="#{bundles.messages['button.new']}" 
+					action="/private/group/groupEdit.xhtml" 
+					actionListener="#{groupHome.clearInstance}"/>
+			</div>
+			
+			<rich:panel>
+				<f:facet name="header">#{bundles.messages['label.search.result']}: #{groupList.resultCount}</f:facet>
+				
+				<div class="myCenter">
+					
+					<h:outputText value="#{bundles.messages['message.search.empty']}" rendered="#{groupList.isEmpty}"/>
+				
+					<p:dataTable 
+							rendered="#{not groupList.isEmpty}"
+							id="tbl" 
+							value="#{groupList.dataModel}" 
+							var="group" 
+							paginator="true" 
+							rows="10" 
+							lazy="true" 
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="10,15,20"
+							draggableColumns="false"
+							emptyMessage="#{bundles.messages['message.search.empty']}">
+					
+						<p:column sortBy="#{group.id}">
+		        			<f:facet name="header"><h:outputText value="#{bundles.messages['label.id']}"/></f:facet>
+		        			<h:outputText value="#{group.id}"/>
+		    			</p:column>
+		    			
+		    			<p:column sortBy="#{group.name}">
+		        			<f:facet name="header"><h:outputText value="#{bundles.messages['label.group.name']}"/></f:facet>
+		        			<h:outputText value="#{group.name}"/>
+		    			</p:column>
+		    			
+		    			<p:column sortBy="#{group.description}">
+		        			<f:facet name="header"><h:outputText value="#{bundles.messages['label.group.description']}"/></f:facet>
+		        			<h:outputText value="#{group.description}"/>
+		    			</p:column>
+						
+						<p:column style="width:40px" exportable="false">
+		    				<h:commandLink action="/private/group/group.xhtml" actionListener="#{groupHome.clearInstance}">
+		    					<h:graphicImage value="/resources/img/search.png" atl="#{bundles.messages['image.title.open']}" title="#{bundles.messages['image.title.open']}"/>
+		    					<f:param name="id" value="#{group.id}" />
+		    				</h:commandLink> 
+        				</p:column> 
+		    			
+					</p:dataTable>
+					
+					<ui:include src="/private/common/export.xhtml">
+						<ui:param name="rendered" 		value="#{not groupList.isEmpty}" />
+						<ui:param name="target" 		value="tbl" />
+						<ui:param name="fileName" 		value="#{bundles.messages['file.name.groups']}" />
+					</ui:include>
+					
+				</div>
+			</rich:panel>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

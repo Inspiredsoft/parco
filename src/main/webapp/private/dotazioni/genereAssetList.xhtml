@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form id="form">
+		
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+			
+			<rich:panel>
+				<f:facet name="header">#{bundles.messages['label.search.criteria']}</f:facet>
+				
+				<d:input label="#{bundles.messages['label.genereasset.descrizione']}" key="MODEL.GENEREASSET.DESCRIZIONE.VIEW">
+					<h:inputText value="#{genereAssetList.descrizione}" />
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.genereasset.tipo']}" key="MODEL.GENEREASSET.TIPO.VIEW">
+					<h:selectOneMenu value="#{genereAssetList.tipo}">
+						<f:selectItem noSelectionOption="true" itemLabel="#{bundles.messages['label.search.select']}" />
+						<f:selectItems  value="#{genereAssetList.tipi}" var="tipo" itemLabel="#{bundles.messages['asset.tipo.'.concat(tipo)]}" itemValue="#{tipo}"/>
+					</h:selectOneMenu>
+				</d:input>
+				
+			</rich:panel>
+			
+			<div class="actionButtons">
+				<h:commandButton
+					action="#{genereAssetList.refresh}" 
+					value="#{bundles.messages['button.search']}" />
+					
+				<h:commandButton value="#{bundles.messages['button.new']}"
+					action="/private/dotazioni/genereAssetEdit.xhtml"
+					actionListener="#{genereAssetHome.clearInstance}" 
+					rendered="#{loggedUser.hasPerm('ACTION.GENEREASSET.EDIT')}"/>
+			</div>
+			
+			<rich:panel id="grid">
+				<f:facet name="header">
+					#{bundles.messages['label.search.result']}: #{genereAssetList.rowCount}
+				</f:facet>
+				
+				<p:dataTable
+					 	id="tlbGenereAsset" 
+					 	var="genere"
+						value="#{genereAssetList.dataModel}" 
+						paginator="true" 
+						rows="10"
+						rowsPerPageTemplate="10,15,20" 
+						draggableColumns="false"
+						rendered="#{not genereAssetList.isEmpty}"
+						lazy="true"
+						emptyMessage="#{bundles.messages['message.search.empty']}">
+						
+					<p:column sortBy="#{genere.id}" rendered="#{loggedUser.hasPerm('MODEL.GENEREASSET.ID.VIEW')}">
+			   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.id']}"/></f:facet>
+			   			<h:outputText value="#{genere.id}"/>
+					</p:column>
+					
+					<p:column sortBy="#{genere.descrizione}" rendered="#{loggedUser.hasPerm('MODEL.GENEREASSET.DESCRIZIONE.VIEW')}">
+			   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.genereasset.descrizione']}"/></f:facet>
+			   			<h:outputText value="#{genere.descrizione}"/>
+					</p:column>
+					
+					<p:column sortBy="#{genere.tipo}" rendered="#{loggedUser.hasPerm('MODEL.GENEREASSET.TIPO.VIEW')}">
+			   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.genereasset.tipo']}"/></f:facet>
+			   			<h:outputText value="#{bundles.messages['asset.tipo.'.concat(genere.tipo)]}"/>
+					</p:column>
+			
+					<p:column style="width:40px" exportable="false">
+		  				<h:commandLink action="/private/dotazioni/genereAsset.xhtml" actionListener="#{genereAssetHome.clearInstance}">
+		  					<h:graphicImage value="/resources/img/search.png" atl="#{bundles.messages['image.title.open']}" title="#{bundles.messages['image.title.open']}"/>
+		  					<f:param name="id" value="#{genere.id}" />
+		  				</h:commandLink>
+		    		</p:column> 
+				</p:dataTable>
+			</rich:panel>
+			
+		</h:form>
+		
+	</ui:define>
+	
+</ui:composition>

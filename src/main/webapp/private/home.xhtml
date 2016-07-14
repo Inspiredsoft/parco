@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:p="http://primefaces.org/ui"
+	template="/private/layout/basic.xhtml">
+
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message"/>
+			
+			<rich:panel>
+				<f:facet name="header">#{bundles.messages['header.user.info']}</f:facet>
+				
+				<d:output label="#{bundles.messages['label.user']}">
+					<h:outputText value="#{loggedUser.user.fullName}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.user.lastAccess']}">
+					<h:outputText value="#{loggedUser.user.lastAccess}" >
+						<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+					</h:outputText>
+				</d:output>
+				 
+			</rich:panel>
+			
+			<div class="actionButtons"/>
+			
+			<p:growl id="chartmsg" for="chartmsg" escape="false" rendered="#{parco.dashboardEnabled and loggedUser.hasPerm('DASHBOARD.VIEW')}"/>
+			
+			<rich:panel rendered="#{parco.dashboardEnabled and loggedUser.hasPerm('DASHBOARD.VIEW')}">
+				<f:facet name="header">#{bundles.messages['header.dashboard']}</f:facet>
+				
+				<h:outputScript>
+				function ext() {
+				  this.cfg.seriesDefaults.rendererOptions.varyBarColor = true;
+				  
+				} 
+				</h:outputScript>
+				
+				<table width="100%">
+					<tr>
+						<td width="50%">
+							<p:barChart legendPosition="ne" value="#{dashboard.chartNumero}" extender="ext" animate="true" >
+								<p:ajax event="itemSelect" listener="#{dashboard.itemSelect}" update="chartmsg" />
+							</p:barChart>				
+						</td>
+						<td width="50%">
+							<p:barChart legendPosition="ne" value="#{dashboard.chartImporto}" extender="ext" animate="true">
+								<p:ajax event="itemSelect" listener="#{dashboard.itemSelect}" update="chartmsg" />
+							</p:barChart>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p:barChart legendPosition="ne" value="#{dashboard.chartQuantita}" extender="ext" animate="true">
+								<p:ajax event="itemSelect" listener="#{dashboard.itemSelect}" update="chartmsg" />
+							</p:barChart>
+						</td>
+						<td>
+							<p:barChart legendPosition="ne" value="#{dashboard.chartAnomalie}" extender="ext" animate="true">
+								<p:ajax event="itemSelect" listener="#{dashboard.itemSelect}" update="chartmsg" />
+							</p:barChart>
+						</td>
+					</tr>				
+				</table>
+						
+			</rich:panel>
+		</h:form>
+		
+	</ui:define>	
+	
+</ui:composition>

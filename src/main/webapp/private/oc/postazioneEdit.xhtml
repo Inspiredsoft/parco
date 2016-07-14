@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.postazione.edit']}"	rendered="#{postazioneHome.managed}" />
+					<h:outputText value="#{bundles.messages['header.postazione.new']}"   rendered="#{not postazioneHome.managed}" />
+				</f:facet>
+				
+				<d:output label="#{bundles.messages['label.id']}" key="MODEL.POSTAZIONE.ID.VIEW" rendered="#{postazioneHome.managed}">
+					<h:outputText value="#{postazioneHome.instance.id}" />
+				</d:output>
+				
+				<d:input label="#{bundles.messages['label.postazione.area']}" key="MODEL.POSTAZIONE.AREA.EDIT">
+					<h:selectOneMenu value="#{postazioneHome.instance.area}" required="true">
+						<f:selectItems  value="#{postazioneList.aree}" var="area" itemLabel="#{area.nome}" itemValue="#{area}"/>
+						<s:objectConverter />
+					</h:selectOneMenu>
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.postazione.nome']}" key="MODEL.POSTAZIONE.NOME.EDIT">
+					<h:inputText value="#{postazioneHome.instance.nome}" >
+						<f:converter converterId="upperCaseConverter"/>
+					</h:inputText>
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.postazione.descrizione']}" key="MODEL.POSTAZIONE.DESCRIZIONE.EDIT">
+					<h:inputText value="#{postazioneHome.instance.descrizione}" >
+					</h:inputText>
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.postazione.centrocosto']}" key="MODEL.POSTAZIONE.CENTROCOSTO.EDIT">
+					<h:inputText value="#{postazioneHome.instance.centroCosto}" >
+					</h:inputText>
+				</d:input>
+			</rich:panel>
+			
+			<div class="actionButtons">
+				<h:button id="bCancel" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.calcel']}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:commandButton id="bSave"
+					value="#{bundles.messages['button.save']}"
+					action="#{postazioneHome.save}" 
+					rendered="#{loggedUser.hasPerm('ACTION.POSTAZIONE.EDIT')}"
+					/>
+			</div>
+			
+		</h:form>
+	</ui:define>
+</ui:composition>

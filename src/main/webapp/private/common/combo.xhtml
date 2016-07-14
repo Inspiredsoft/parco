@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components">
+
+	<d:output
+		label="#{bundles.messages['label.customer']}"
+		rendered="#{showCustomer and not empty comboManager.customers}">
+		
+		<h:selectOneMenu value="#{comboManager.selectedCustomer}" >
+			<f:selectItem noSelectionOption="true" itemLabel="#{bundles.messages['label.search.select']}"/>
+			<f:selectItems  value="#{comboManager.customers}" var="customer" itemLabel="#{customer.name}" itemValue="#{customer}"/>
+			<s:objectConverter />
+			<a4j:ajax execute="@this" render="#{rerenderid},spgRepeat" />
+		</h:selectOneMenu>
+		
+	</d:output>
+
+	<a4j:repeat 
+		id="spgRepeat"
+		value="#{comboManager.groupOptions}"
+		var="option"
+		rendered="#{showGroup and not empty comboManager.groupOptions}">
+		
+		<d:output label="#{option.label}">
+		
+			<h:selectOneMenu value="#{option.group}">
+				<f:selectItem noSelectionOption="true" itemLabel="#{bundles.messages['label.search.select']}"/>
+				<f:selectItems  value="#{option.items}" var="group" itemLabel="#{group.name}" itemValue="#{group}"/>
+				<s:objectConverter />
+				<a4j:ajax execute="@this" render="#{rerenderid}" />
+			</h:selectOneMenu>
+					
+		</d:output>
+		
+	</a4j:repeat>
+		
+	<d:output
+		label="#{bundles.messages['label.salepoint']}"
+		rendered="#{showSalePoint and not empty comboManager.salePoints}">
+		
+		<h:selectOneMenu value="#{comboManager.selectedSalePoint}" >
+			<f:selectItem noSelectionOption="true" itemLabel="#{bundles.messages['label.search.select']}"/>
+			<f:selectItems  value="#{comboManager.salePoints}" var="point" itemLabel="#{point.name} [#{point.fullAddress}]" itemValue="#{point}"/>
+			<s:objectConverter />
+			<a4j:ajax execute="@this" render="#{rerenderid}" />
+		</h:selectOneMenu>
+	</d:output>
+	
+	<d:output
+		label="#{bundles.messages['label.safe']}"
+		rendered="#{showSafe and not empty comboManager.safes}">
+		
+		<h:selectOneMenu value="#{comboManager.selectedSafe}" >
+			<f:selectItem noSelectionOption="true" itemLabel="#{bundles.messages['label.search.select']}"/>
+			<f:selectItems  value="#{comboManager.safes}" var="safe" itemLabel="#{safe.serial}" itemValue="#{safe}"/>
+			<s:objectConverter />
+			<a4j:ajax execute="@this" render="#{rerenderid}" />
+		</h:selectOneMenu>
+	</d:output>
+	
+	<d:output
+		label="#{bundles.messages['label.operator']}"
+		rendered="#{showOperator and not empty comboManager.operators}">
+		
+		<h:selectOneMenu value="#{comboManager.selectedOperator}" >
+			<f:selectItem noSelectionOption="true" itemLabel="#{bundles.messages['label.search.select']}"/>
+			<f:selectItems  value="#{comboManager.operators}" var="oper" itemLabel="#{oper.fullName}" itemValue="#{oper}"/>
+			<s:objectConverter />
+			<a4j:ajax execute="@this" render="#{rerenderid}" />
+		</h:selectOneMenu>
+		
+	</d:output>
+	
+</ui:composition>

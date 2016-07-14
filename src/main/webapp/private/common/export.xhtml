@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:panelGrid columns="4" rendered="#{rendered}" styleClass="centered">  
+        <h:commandLink>  
+            <p:graphicImage value="/resources/img/excel.png" />  
+            <p:dataExporter type="xls" target="#{target}" fileName="#{fileName}"/>    
+        </h:commandLink> 
+        <h:commandLink>  
+            <p:graphicImage value="/resources/img/pdf.png" />  
+            <p:dataExporter type="pdf" target="#{target}" fileName="#{fileName}"/>  
+        </h:commandLink>
+        <h:commandLink>  
+            <p:graphicImage value="/resources/img/csv.png" />  
+            <p:dataExporter type="csv" target="#{target}" fileName="#{fileName}"/>    
+        </h:commandLink>
+        <h:commandLink>  
+            <p:graphicImage value="/resources/img/xml.png" />  
+            <p:dataExporter type="xml" target="#{target}" fileName="#{fileName}"/>  
+        </h:commandLink>
+	</h:panelGrid> 
+	
+</ui:composition>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<p:dataTable
+		 	id="tlbDotazioni" 
+		 	var="dot"
+			value="#{dotazioni.dataModel}" 
+			paginator="true" 
+			rows="10"
+			rowsPerPageTemplate="10,15,20" 
+			draggableColumns="false"
+			rendered="#{not dotazioni.isEmpty}"
+			lazy="true"
+			emptyMessage="#{bundles.messages['message.search.empty']}">
+		
+		<p:column sortBy="#{dot.id}" rendered="#{loggedUser.hasPerm('MODEL.DOTAZIONE.ID.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.id']}"/></f:facet>
+	   			<h:outputText value="#{dot.id}"/>
+			</p:column>
+		
+		<p:column sortBy="#{dot.genere.descrizione}" rendered="#{loggedUser.hasPerm('MODEL.DOTAZIONE.GENERE.VIEW')}">
+			<f:facet name="header"><h:outputText value="#{bundles.messages['label.dotazione.genere']}" /></f:facet>
+			<h:outputText value="#{dot.genere.descrizione}"/>
+		</p:column>
+		
+		<p:column sortBy="#{dot.tipo}" rendered="#{showTipo and loggedUser.hasPerm('MODEL.DOTAZIONE.TIPO.VIEW')}">
+			<f:facet name="header"><h:outputText value="#{bundles.messages['label.dotazione.tipo']}" /></f:facet>
+			<h:outputText value="#{bundles.messages['asset.tipo.'.concat(dot.tipo)]}"/>
+		</p:column>
+		
+		<p:column rendered="#{showAssegnazione}">
+			<f:facet name="header"><h:outputText value="#{bundles.messages['label.dotazione.ass']}" /></f:facet>
+			<h:outputText value="#{dot.mezzo.targa}" rendered="#{dot.dotazioneMezzo and loggedUser.hasPerm('MODEL.MEZZO.TARGA.VIEW')}"/>
+			<h:outputText value="#{dot.postazione.nome}" rendered="#{dot.dotazionePostazione and loggedUser.hasPerm('MODEL.POSTAZIONE.NOME.VIEW')}"/>
+		</p:column>
+		
+		<p:column sortBy="#{dot.seriale}" rendered="#{loggedUser.hasPerm('MODEL.DOTAZIONE.MATRICOLA.VIEW')}">
+			<f:facet name="header"><h:outputText value="#{bundles.messages['label.dotazione.matricola']}" /></f:facet>
+			<h:outputText value="#{dot.matricola}"/>
+		</p:column>
+		
+		<p:column style="width:40px" exportable="false">  
+			<h:commandLink action="/private/mezzi/dotazione.xhtml" actionListener="#{dotazioneHome.clearInstance}">
+				<h:graphicImage value="/resources/img/search.png" atl="#{bundles.messages['image.title.open']}" title="#{bundles.messages['image.title.open']}"/>
+				<f:param name="id" value="#{dot.id}" />
+			</h:commandLink>
+   		</p:column> 
+			
+	</p:dataTable>
+		
+</ui:composition>

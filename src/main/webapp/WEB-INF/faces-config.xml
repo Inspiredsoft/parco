@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+	
+	<name>PARCO</name>
+	
+	<application>
+		<message-bundle>messages</message-bundle>
+	</application>
+	
+	<navigation-rule>
+		<from-view-id>/public/login.xhtml</from-view-id>
+		<navigation-case>
+			<from-action>#{identity.login}</from-action>
+			<from-outcome>success</from-outcome>
+			<to-view-id>/private/home.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/private/*</from-view-id>
+		<navigation-case>
+			<from-outcome>saved</from-outcome>
+			<to-view-id>#{viewChain.backPage}</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/private/*</from-view-id>
+		<navigation-case>
+			<from-outcome>deleted</from-outcome>
+			<to-view-id>#{viewChain.listPage}</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/*</from-view-id>
+		<navigation-case>
+			<from-outcome>logout</from-outcome>
+			<to-view-id>/public/login.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+</faces-config>

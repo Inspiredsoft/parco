@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui">
+		<p:dataTable
+			rowStyleClass="#{mezzo.removed ? 'rowRemoved' : ''}"
+		 	id="tblRifornimenti" 
+		 	var="rif"
+			value="#{rifornimenti.dataModel}" 
+			paginator="true" 
+			rows="10"
+			rowsPerPageTemplate="10,15,20" 
+			draggableColumns="false"
+			rendered="#{not rifornimenti.isEmpty}"
+			lazy="true"
+			emptyMessage="#{bundles.messages['message.search.empty']}">
+			
+			<p:column sortBy="#{rif.id}" rendered="#{showId and loggedUser.hasPerm('MODEL.RIFORNIMENTO.ID.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.id']}"/></f:facet>
+	   			<h:outputText value="#{rif.id}"/>
+			</p:column>
+			
+			<p:column sortBy="#{rif.gestore}" rendered="#{loggedUser.hasPerm('MODEL.RIFORNIMENTO.GESTORE.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.rifornimento.gestore']}"/></f:facet>
+	   			<h:outputText value="#{bundles.messages['gestore.'.concat(rif.gestore)]}"/>
+			</p:column>
+			
+			<p:column sortBy="#{rif.data}" rendered="#{loggedUser.hasPerm('MODEL.RIFORNIMENTO.DATA.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.rifornimento.data']}"/></f:facet>
+	   			<h:outputText value="#{rif.data}">
+	   				<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+	   			</h:outputText>
+			</p:column>
+			
+			<p:column sortBy="#{rif.mezzo.targa}" rendered="#{loggedUser.hasPerm('MODEL.RIFORNIMENTO.MEZZO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.rifornimento.mezzo']}"/></f:facet>
+	   			<h:outputText value="#{rif.mezzo.targa}"/>
+			</p:column>
+			
+			<p:column rendered="#{loggedUser.hasPerm('MODEL.RIFORNIMENTO.POSTAZIONE.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.rifornimento.competenza']}"/></f:facet>
+	   			<h:outputText value="#{rif.assegnazione.postazione.nome}"/>
+			</p:column>
+			
+			<p:column sortBy="#{rif.carta.numero}" rendered="#{loggedUser.hasPerm('MODEL.RIFORNIMENTO.CARTA.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.rifornimento.carta']}"/></f:facet>
+	   			<h:outputText value="#{rif.carta.numero}"/>
+			</p:column>	
+			
+			<p:column sortBy="#{rif.pinCard.codiceOperatore}" rendered="#{loggedUser.hasPerm('MODEL.RIFORNIMENTO.PINCARD.VIEW')}">
+				<f:facet name="header"><h:outputText value="#{bundles.messages['label.rifornimento.codiceOperatore']}"/></f:facet>
+				<h:outputText value="#{rif.pinCard.codiceOperatore}"/>
+			</p:column>
+			
+			<p:column sortBy="#{rif.pinCard.codiceBusta}" rendered="#{showCodiceBusta and loggedUser.hasPerm('MODEL.RIFORNIMENTO.PINCARD.VIEW')}">
+				<f:facet name="header"><h:outputText value="#{bundles.messages['label.rifornimento.codiceBusta']}"/></f:facet>
+				<h:outputText value="#{rif.pinCard.codiceBusta}"/>
+			</p:column>
+			
+			<p:column sortBy="#{rif.numeroScontrino}" rendered="#{loggedUser.hasPerm('MODEL.RIFORNIMENTO.NUMERO_SCONTRINO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.rifornimento.numscon']}"/></f:facet>
+	   			<h:outputText value="#{rif.numeroScontrino}"/>
+			</p:column>	
+			
+			<p:column sortBy="#{rif.quantita}" rendered="#{showQuantita and loggedUser.hasPerm('MODEL.RIFORNIMENTO.QUANTITA.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.rifornimento.quantita']}"/></f:facet>
+	   			<h:outputText value="#{rif.quantita}"/>
+			</p:column>	
+			
+			<p:column sortBy="#{rif.importo}" rendered="#{showImporto and loggedUser.hasPerm('MODEL.RIFORNIMENTO.IMPORTO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.rifornimento.importo']}"/></f:facet>
+	   			<h:outputText value="#{rif.importo}"/>
+			</p:column>	
+			
+			<p:column style="width:40px" exportable="false">
+  				<h:commandLink action="/private/rifornimenti/rifornimento.xhtml" actionListener="#{rifornimentoHome.clearInstance}">
+  					<h:graphicImage value="/resources/img/search.png" atl="#{bundles.messages['image.title.open']}" title="#{bundles.messages['image.title.open']}"/>
+  					<f:param name="id" value="#{rif.id}" />
+  				</h:commandLink>
+    		</p:column> 
+			
+		</p:dataTable>
+</ui:composition>
+
+					
+			

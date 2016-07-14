@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+	
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.soccorso.info']} "/>
+				</f:facet>
+				
+				<d:output label="#{bundles.messages['label.id']}" key="MODEL.SOCCORSO.ID.VIEW">
+					<h:outputText value="#{soccorsoHome.instance.id}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.soccorso.mezzo']}" key="MODEL.SOCCORSO.MEZZO.VIEW">
+					<h:outputText value="#{soccorsoHome.instance.mezzo.targa}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.mezzo.codiceradio']}" key="MODEL.SOCCORSO.MEZZO.VIEW">
+					<h:outputText value="#{soccorsoHome.instance.mezzo.codiceRadio}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.soccorso.mese']}" key="MODEL.SOCCORSO.PERIODO.VIEW">
+					<h:outputText value="#{bundles.messages['calendar.month.'.concat(soccorsoHome.instance.mese)]}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.soccorso.anno']}" key="MODEL.SOCCORSO.PERIODO.VIEW">
+					<h:outputText value="#{soccorsoHome.instance.anno}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.soccorso.numero']}" key="MODEL.SOCCORSO.NUMERO.VIEW">
+					<h:outputText value="#{soccorsoHome.instance.numero}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.soccorso.media']}" key="MODEL.SOCCORSO.MEDIA.VIEW">
+					<h:outputText value="#{soccorsoHome.instance.mediaChilometri}" />
+				</d:output>
+				
+			</rich:panel>
+			
+			<div class="actionButtons">
+
+				<h:button id="bReturn" outcome="/private/soccorsi/soccorsoList.xhtml"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromEdit}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bBack" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromOuterView}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bCancel" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromList}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+				
+			</div>
+			
+			<rich:tabPanel 
+					switchType="client" >
+				
+				<rich:tab 
+				 	header="#{bundles.messages['header.mezzo']}">
+					<ui:include src="/private/common/info-mezzo.xhtml">
+				 		<ui:param name="mezzo" value="#{soccorsoHome.instance.mezzo}" />
+				 	</ui:include>
+				 </rich:tab>
+				 
+				<rich:tab
+			 		header="#{bundles.messages['header.soccorso.primo']}"
+			 		rendered="#{loggedUser.hasPerm('MODEL.SOCCORSO.RIFORNIMENTI.VIEW') and not empty soccorsoHome.instance.rifInizio}">
+				 	
+					 	<ui:include src="/private/common/dati-rifornimento.xhtml">
+							<ui:param name="rifornimento" value="#{soccorsoHome.instance.rifInizio}" />
+						</ui:include>
+				 </rich:tab>	
+				 
+				 <rich:tab
+			 		header="#{bundles.messages['header.soccorso.ultimo']}"
+			 		rendered="#{loggedUser.hasPerm('MODEL.SOCCORSO.RIFORNIMENTI.VIEW') and not empty soccorsoHome.instance.rifFine}">
+				 	
+					 	<ui:include src="/private/common/dati-rifornimento.xhtml">
+							<ui:param name="rifornimento" value="#{soccorsoHome.instance.rifFine}" />
+						</ui:include>
+				 </rich:tab>	
+				 
+			</rich:tabPanel>
+			
+		</h:form>
+		
+	</ui:define>
+	
+</ui:composition>

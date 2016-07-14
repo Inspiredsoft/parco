@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<p:dataTable
+		 	id="tlbStatus" 
+		 	var="status"
+			value="#{statuses}" 
+			paginator="true" 
+			rows="10"
+			rowsPerPageTemplate="10,15,20" 
+			draggableColumns="false"
+			rendered="#{not empty statuses}"
+			emptyMessage="#{bundles.messages['message.search.empty']}">
+	
+		<p:column sortBy="#{status.stato}" rendered="#{showStatus}">
+			<f:facet name="header">
+				<h:outputText value="#{bundles.messages['label.status.status']}" />
+			</f:facet>
+			<h:outputText value="#{bundles.messages[bundlePrefix.concat(status.stato)]}"/>
+		</p:column>
+		
+		<p:column sortBy="#{status.dataInizio}" rendered="#{showStart}">
+			<f:facet name="header">
+				<h:outputText value="#{bundles.messages['label.status.date']}" />
+			</f:facet>
+			<h:outputText value="#{status.dataInizio}" rendered="#{longDate}">
+				<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+			</h:outputText>
+			<h:outputText value="#{status.dataInizio}" rendered="#{not longDate}">
+				<f:convertDateTime pattern="#{configManager.shortDateFormat}"/>
+			</h:outputText>
+		</p:column>
+		
+		<p:column sortBy="#{status.dataFine}" rendered="#{showEnd}">
+			<f:facet name="header">
+				<h:outputText value="#{bundles.messages['label.status.end']}" />
+			</f:facet>
+			<h:outputText value="#{status.dataFine}" rendered="#{longDate}">
+				<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+			</h:outputText>
+			<h:outputText value="#{status.dataFine}" rendered="#{not longDate}">
+				<f:convertDateTime pattern="#{configManager.shortDateFormat}"/>
+			</h:outputText>
+		</p:column>
+		
+		<p:column sortBy="#{status.utente}" rendered="#{showUser}">
+			<f:facet name="header">
+				<h:outputText value="#{bundles.messages['label.status.user']}" />
+			</f:facet>
+			<h:outputText value="#{status.utente.fullName}" />
+		</p:column>
+		
+		<p:column sortBy="#{status.note}"  rendered="#{showNote}">
+			<f:facet name="header">
+				<h:outputText value="#{bundles.messages['label.status.note']}" />
+			</f:facet>
+			<h:outputText value="#{status.note}" />
+		</p:column>
+				
+	</p:dataTable>
+</ui:composition>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<p:dataTable
+			rowStyleClass="#{mezzo.removed ? 'rowRemoved' : ''}"
+		 	id="tlbMezzi" 
+		 	var="mezzo"
+			value="#{mezzi.dataModel}" 
+			paginator="true" 
+			rows="10"
+			rowsPerPageTemplate="10,15,20" 
+			draggableColumns="false"
+			rendered="#{not mezzi.isEmpty}"
+			lazy="true"
+			emptyMessage="#{bundles.messages['message.search.empty']}">
+			
+			<p:column sortBy="#{mezzo.id}" rendered="#{showId and loggedUser.hasPerm('MODEL.MEZZO.ID.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.id']}"/></f:facet>
+	   			<h:outputText value="#{mezzo.id}"/>
+			</p:column>
+			
+			<p:column sortBy="#{mezzo.targa}" rendered="#{loggedUser.hasPerm('MODEL.MEZZO.TARGA.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.mezzo.targa']}"/></f:facet>
+	   			<h:outputText value="#{mezzo.targa}"/>
+			</p:column>
+			
+			<p:column sortBy="#{mezzo.codiceRadio}" rendered="#{showCodice and loggedUser.hasPerm('MODEL.MEZZO.CODICE_RADIO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.mezzo.codiceradio']}"/></f:facet>
+	   			<h:outputText value="#{mezzo.codiceRadio}"/>
+			</p:column>
+			
+			<p:column sortBy="#{mezzo.tipoMezzo.descrizione}" rendered="#{showTipo and loggedUser.hasPerm('MODEL.MEZZO.TIPO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.mezzo.tipo']}"/></f:facet>
+	   			<h:outputText value="#{mezzo.tipoMezzo.descrizione}"/>
+			</p:column>
+			
+			<p:column sortFunction="#{mezzo.assegnazione.postazione.nome}" rendered="#{loggedUser.hasPerm('MODEL.MEZZO.ASSEGNAZIONI.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.mezzo.assegnazione']}"/></f:facet>
+	   			<h:outputText value="#{mezzo.assegnazione.postazione.nome}" rendered="#{not empty mezzo.assegnazione}"/>
+			</p:column>
+			
+			<p:column sortBy="#{mezzo.scadenzaBollo}" rendered="#{showBollo and loggedUser.hasPerm('MODEL.MEZZO.SCADENZA_BOLLO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.mezzo.scadenzabol']}"/></f:facet>
+	   			<h:outputText value="#{mezzo.scadenzaBollo}" >
+	   				<f:convertDateTime pattern="#{configManager.shortDateFormat}"/>
+	   			</h:outputText>
+			</p:column>
+			
+			<p:column sortBy="#{mezzo.scadenzaRevisione}" rendered="#{showRev and loggedUser.hasPerm('MODEL.MEZZO.SCADENZA_REVISIONE.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.mezzo.scadenzarev']}"/></f:facet>
+	   			<h:outputText value="#{mezzo.scadenzaRevisione}" >
+	   				<f:convertDateTime pattern="#{configManager.shortDateFormat}"/>
+	   			</h:outputText>
+			</p:column>
+			
+			<p:column sortBy="#{mezzo.stato.stato}" rendered="#{loggedUser.hasPerm('MODEL.MEZZO.STATI.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.status.status']}"/></f:facet>
+	   			<h:outputText value="#{bundles.messages['mezzo.stato.'.concat(mezzo.stato.stato)]}" />
+			</p:column>
+			
+			<p:column style="width:40px" exportable="false">
+  				<h:commandLink action="/private/mezzi/mezzo.xhtml" actionListener="#{mezzoHome.clearInstance}">
+  					<h:graphicImage value="/resources/img/search.png" atl="#{bundles.messages['image.title.open']}" title="#{bundles.messages['image.title.open']}"/>
+  					<f:param name="id" value="#{mezzo.id}" />
+  				</h:commandLink>
+    		</p:column> 
+			
+		</p:dataTable>
+</ui:composition>
+
+					
+			

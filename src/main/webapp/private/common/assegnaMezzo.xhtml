@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:s="http://jboss.org/seam/faces">
+	
+	<rich:popupPanel 
+		id="popupassmezzo" 
+		modal="true" 
+		onmaskclick="#{rich:component('popupassmezzo')}.hide()"
+		domElementAttachment="form"
+		autosized="true"> 
+		
+		<f:facet name="header"> 
+			<h:outputText value="#{bundles.messages['header.mezzo.assegna']}" /> 
+		</f:facet> 
+		<f:facet name="controls"> 
+			<h:outputLink value="#" onclick="#{rich:component('popupassmezzo')}.hide(); return false;"> X </h:outputLink> 
+		</f:facet>
+		
+		<d:input label="#{bundles.messages['label.assmezzo.postazione']}">
+			<p:selectOneMenu value="#{newAssegnazione.postazione}" required="true">
+				<f:selectItems value="#{mezzoHome.allowedPostazioni}" var="ps" itemValue="#{ps}" itemLabel="#{ps.nome}"/>
+				<s:objectConverter/>
+			</p:selectOneMenu>
+		</d:input>
+		
+		<d:input label="#{bundles.messages['label.assmezzo.datain']}">
+			<p:calendar 
+				required="true"
+				value="#{newAssegnazione.dataInizio}" 
+				mindate="#{mindate}"
+				pattern="#{configManager.longDateFormat}"
+				showButtonPanel="true"/>
+	    </d:input>
+
+		<d:input label="#{bundles.messages['label.assmezzo.serb']}">
+			<p:selectOneMenu value="#{newAssegnazione.statoSerbatoio}" required="true">
+				<f:selectItems value="#{mezzoHome.statiSerbatoio}" var="ss" itemValue="#{ss}" itemLabel="#{bundles.messages['serbatoio.stato.'.concat(ss)]}"/>
+			</p:selectOneMenu>
+		</d:input>
+		
+		<d:input label="#{bundles.messages['label.assmezzo.km']}">
+			<p:inputText value="#{newAssegnazione.chilometraggio}" />
+		</d:input>
+		
+		<ui:insert name="okbutton"/>
+	
+</rich:popupPanel>
+	
+	
+</ui:composition>

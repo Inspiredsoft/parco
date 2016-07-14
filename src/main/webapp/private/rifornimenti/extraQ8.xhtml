@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<d:output label="#{bundles.messages['label.rifornimento.impnonsco']}">
+		<h:outputText value="#{rifornimentoHome.instance.importoNonScontato}">
+			<f:convertNumber currencyCode="EUR" type="currency" />
+		</h:outputText>
+	</d:output>
+
+	<d:output label="#{bundles.messages['label.rifornimento.impsco']}">
+		<h:outputText value="#{rifornimentoHome.instance.importoScontato}" >
+			<f:convertNumber currencyCode="EUR" type="currency" />
+		</h:outputText>
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.rifornimento.preznonsco']}">
+		<h:outputText value="#{rifornimentoHome.instance.prezzoNonScontato}" >
+			<f:convertNumber currencyCode="EUR" type="currency" />
+		</h:outputText>
+	</d:output>
+
+	<d:output label="#{bundles.messages['label.rifornimento.prezsco']}">
+		<h:outputText value="#{rifornimentoHome.instance.prezzoScontato}" >
+			<f:convertNumber currencyCode="EUR" type="currency" />
+		</h:outputText>
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.rifornimento.util']}">
+		<h:outputText value="#{rifornimentoHome.instance.utilizzatore}" />
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.rifornimento.terminale']}">
+		<h:outputText value="#{rifornimentoHome.instance.codiceTerminale}" />
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.rifornimento.cartissima']}">
+		<h:outputText value="#{rifornimentoHome.instance.cartissima}" />
+	</d:output>
+</ui:composition>

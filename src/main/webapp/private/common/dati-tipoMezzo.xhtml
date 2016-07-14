@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org"
+	xmlns:d="http://java.sun.com/jsf/composite/components">
+	
+	<d:output label="#{bundles.messages['label.id']}" key="MODEL.TIPOMEZZO.ID.VIEW">
+		<h:outputText value="#{tipoMezzo.id}" />
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.tipomezzo.descrizione']}" key="MODEL.TIPOMEZZO.DESCRIZIONE.VIEW">
+		<h:outputText value="#{tipoMezzo.descrizione}" />
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.tipomezzo.serbatoio']}" key="MODEL.TIPOMEZZO.SERBATOIO.VIEW">
+		<h:outputText value="#{tipoMezzo.serbatoio}" />
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.tipomezzo.consumo.urb']}" key="MODEL.TIPOMEZZO.CONSUMO_URBANO.VIEW">
+		<h:outputText value="#{tipoMezzo.consumoUrbano}" />
+	</d:output>
+
+	<d:output label="#{bundles.messages['label.tipomezzo.consumo.ex']}" key="MODEL.TIPOMEZZO.CONSUMO_EXTRAURBANO.VIEW">
+		<h:outputText value="#{tipoMezzo.consumoExtraurbano}" />
+	</d:output>	
+	
+	<d:output label="#{bundles.messages['label.tipomezzo.carbutante']}" key="MODEL.TIPOMEZZO.TIPO_CARBURANTE.VIEW">
+		<h:outputText value="#{bundles.messages['carburante.tipo.'.concat(tipoMezzo.tipoCarburante)]}" rendered="#{not empty tipoMezzo.tipoCarburante}" />
+	</d:output>	
+				
+</ui:composition>

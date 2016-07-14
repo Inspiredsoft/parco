@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.provincia.edit']}"	rendered="#{provinciaHome.managed}" />
+					<h:outputText value="#{bundles.messages['header.provincia.new']}"   rendered="#{not provinciaHome.managed}" />
+				</f:facet>
+				
+				<d:output label="#{bundles.messages['label.id']}" key="MODEL.PROVINCIA.ID.VIEW" rendered="#{provinciaHome.managed}">
+					<h:outputText value="#{provinciaHome.instance.id}" />
+				</d:output>
+				
+				<d:input label="#{bundles.messages['label.provincia.sigla']}" key="MODEL.PROVINCIA.SIGLA.EDIT">
+					<h:inputText value="#{provinciaHome.instance.sigla}" required="true" >
+						<f:converter converterId="upperCaseConverter"/>
+					</h:inputText>
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.provincia.descrizione']}" key="MODEL.PROVINCIA.DESCRIZIONE.EDIT">
+					<h:inputText value="#{provinciaHome.instance.descrizione}" >
+					</h:inputText>
+				</d:input>
+			</rich:panel>
+			
+			<div class="actionButtons">
+				<h:button id="bCancel" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.calcel']}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:commandButton id="bSave"
+					value="#{bundles.messages['button.save']}"
+					action="#{provinciaHome.save}" 
+					rendered="#{loggedUser.hasPerm('ACTION.PROVINCIA.EDIT')}"
+					/>
+			</div>
+			
+		</h:form>
+	</ui:define>
+</ui:composition>

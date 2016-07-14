@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+			
+			<rich:tabPanel>
+			
+				<rich:tab header="#{bundles.messages['header.config.general']}">
+					
+					<d:input label="#{bundles.messages['label.config.responsabile.uo']}">
+						<h:inputText value="#{configManager.responsabile}" />
+					</d:input>
+					
+					<d:input label="#{bundles.messages['label.config.import.path']}">
+						<h:inputText value="#{configManager.importPath}" />
+					</d:input>
+					
+				</rich:tab>
+			
+				<rich:tab header="#{bundles.messages['header.config.data']}">
+					
+					<d:input label="#{bundles.messages['label.config.date.short']}">
+						<h:inputText value="#{configManager.shortDateFormat}" />
+					</d:input>
+					
+					<d:input label="#{bundles.messages['label.config.date.long']}">
+						<h:inputText value="#{configManager.longDateFormat}" />
+					</d:input>
+				
+				</rich:tab>
+				
+				<rich:tab header="#{bundles.messages['header.config.job']}">
+				
+					<d:input label="#{bundles.messages['label.config.job.enabled']}">
+						<h:selectOneMenu value="#{configManager.jobEnabled}">
+							<f:selectItem itemLabel="#{bundles.messages['label.yes']}" itemValue="true" />
+							<f:selectItem itemLabel="#{bundles.messages['label.no']}"  itemValue="false" />
+						</h:selectOneMenu>
+					</d:input>
+					
+					<d:input label="#{bundles.messages['label.config.job.delay']}">
+						<rich:inputNumberSpinner value="#{configManager.jobDelay}" minValue="1" maxValue="60" enableManualInput="false"/>
+					</d:input>
+				
+					<d:input label="#{bundles.messages['label.config.job.tries']}">
+						<rich:inputNumberSpinner value="#{configManager.jobTries}" minValue="1" maxValue="60" enableManualInput="false"/>
+					</d:input>
+				
+					<d:input label="#{bundles.messages['label.config.job.keep']}">
+						<rich:inputNumberSpinner value="#{configManager.jobKeep}" minValue="1" maxValue="365" enableManualInput="false"/>
+					</d:input>
+					
+				</rich:tab>
+				
+				<rich:tab header="#{bundles.messages['header.config.mail']}">
+				
+					<h:panelGrid columns="3" styleClass="panelColumns">
+					
+						<h:panelGroup>
+
+							<d:input label="#{bundles.messages['label.config.mail.enabled']}">
+								<h:selectOneMenu value="#{configManager.mailEnabled}">
+									<f:selectItem itemLabel="#{bundles.messages['label.yes']}" itemValue="true" />
+									<f:selectItem itemLabel="#{bundles.messages['label.no']}"  itemValue="false" />
+								</h:selectOneMenu>
+							</d:input>
+
+							<d:input label="#{bundles.messages['label.config.mail.delay']}">
+								<rich:inputNumberSpinner value="#{configManager.mailDelay}" minValue="1" maxValue="60" enableManualInput="false"/>
+							</d:input>
+						
+							<d:input label="#{bundles.messages['label.config.mail.tries']}">
+								<rich:inputNumberSpinner value="#{configManager.mailTries}" minValue="1" maxValue="60" enableManualInput="false"/>
+							</d:input>
+						
+							<d:input label="#{bundles.messages['label.config.mail.keep']}">
+								<rich:inputNumberSpinner value="#{configManager.mailKeep}" minValue="1" maxValue="365" enableManualInput="false"/>
+							</d:input>										
+
+						</h:panelGroup>
+						
+						<h:panelGroup>							
+		
+							<d:input label="#{bundles.messages['label.config.mail.serverhost']}">
+								<h:inputText value="#{configManager.mailServerHost}" />
+							</d:input>
+							
+							<d:input label="#{bundles.messages['label.config.mail.serverport']}">
+								<h:inputText value="#{configManager.mailServerPort}" />
+							</d:input>
+							
+							<d:input label="#{bundles.messages['label.config.mail.sender']}">
+								<h:inputText value="#{configManager.mailSender}" />
+							</d:input>
+							
+							<d:input label="#{bundles.messages['label.config.mail.username']}">
+								<h:inputText value="#{configManager.mailUsername}" />
+							</d:input>
+							
+							<d:input label="#{bundles.messages['label.config.mail.password']}">
+								<h:inputText value="#{configManager.mailPassword}" />
+							</d:input>
+									
+							<d:input label="#{bundles.messages['label.config.mail.domainName']}">
+								<h:inputText value="#{configManager.mailDomainName}" />
+							</d:input>			
+		
+						</h:panelGroup>
+						
+						<h:panelGroup>							
+							
+							<d:input label="#{bundles.messages['label.config.mail.auth']}">
+								<h:selectOneMenu value="#{configManager.mailAuth}">
+									<f:selectItem itemLabel="#{bundles.messages['label.yes']}" itemValue="true" />
+									<f:selectItem itemLabel="#{bundles.messages['label.no']}"  itemValue="false" />
+								</h:selectOneMenu>
+							</d:input>
+			
+							<d:input label="#{bundles.messages['label.config.mail.enableSsl']}">
+								<h:selectOneMenu value="#{configManager.mailEnableSsl}">
+									<f:selectItem itemLabel="#{bundles.messages['label.yes']}" itemValue="true" />
+									<f:selectItem itemLabel="#{bundles.messages['label.no']}"  itemValue="false" />
+								</h:selectOneMenu>
+							</d:input>	
+							
+							<d:input label="#{bundles.messages['label.config.mail.requireTls']}">
+								<h:selectOneMenu value="#{configManager.mailRequireTls}">
+									<f:selectItem itemLabel="#{bundles.messages['label.yes']}" itemValue="true" />
+									<f:selectItem itemLabel="#{bundles.messages['label.no']}"  itemValue="false" />
+								</h:selectOneMenu>
+							</d:input>
+							
+							<d:input label="#{bundles.messages['label.config.mail.enableTls']}">
+								<h:selectOneMenu value="#{configManager.mailEnableTls}">
+									<f:selectItem itemLabel="#{bundles.messages['label.yes']}" itemValue="true" />
+									<f:selectItem itemLabel="#{bundles.messages['label.no']}"  itemValue="false" />
+								</h:selectOneMenu>
+							</d:input>
+												
+						</h:panelGroup>
+						
+					</h:panelGrid>
+													
+				</rich:tab>
+			
+			</rich:tabPanel>
+			
+			<div class="actionButtons">
+			
+				<h:commandButton
+					id="bSave" 
+					value="#{bundles.messages['button.save']}"
+					action="#{configManager.save}"/>
+				
+				<h:commandButton
+					id="bTestEmail" 
+					value="#{bundles.messages['button.testemail']}"
+					action="#{configManager.sendTestEmail}"/>
+			</div>
+			
+		</h:form>
+		
+	</ui:define>
+	
+</ui:composition>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/seam/faces"
+	template="/private/layout/simple.xhtml">
+
+	<ui:define name="content">
+
+		<br/>
+		<br/>
+		<br/>
+		<div style="height: 550px; width:250px">
+
+			<h:messages id="messages" globalOnly="true" styleClass="message"/>
+
+			<h:form id="loginForm">
+
+				<rich:panel>
+					<f:facet name="header">#{bundles.messages['label.login']}</f:facet>
+
+					<div>
+						<h:panelGrid columns="2">
+							<h:outputLabel for="username">#{bundles.messages['label.user.username']}</h:outputLabel>
+							<h:inputText id="username" value="#{credentials.username}" />
+							<h:outputLabel for="password">#{bundles.messages['label.user.password']}</h:outputLabel>
+							<h:inputSecret id="password" value="#{credentials.password}" />
+						</h:panelGrid>
+					</div>
+
+				</rich:panel>
+
+				<div class="buttons">
+					<h:commandButton id="login" value="LOGIN" action="#{identity.login}" />
+				</div>
+			</h:form>
+		</div>
+
+	</ui:define>
+
+</ui:composition>

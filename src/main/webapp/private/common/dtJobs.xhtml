@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dataTable
+		 	id="tlbJob" 
+		 	var="job"
+			value="#{jobs.dataModel}" 
+			paginator="true" 
+			rows="10"
+			rowsPerPageTemplate="10,15,20" 
+			draggableColumns="false"
+			rendered="#{not jobs.isEmpty}"
+			lazy="true"
+			emptyMessage="#{bundles.messages['message.search.empty']}">
+
+		<p:column sortBy="#{job.id}" rendered="#{showId}">
+			<f:facet name="header">
+				<h:outputText value="#{bundles.messages['label.id']}" />
+			</f:facet>
+			<h:outputText value="#{job.id}" />
+		</p:column>
+		
+		<p:column sortBy="#{job.javaClass}" rendered="#{loggedUser.hasPerm('MODEL.JOB.JAVACLASS.VIEW')}">
+			<f:facet name="header"><h:outputText value="#{bundles.messages['label.job.class']}"/></f:facet>
+			<h:outputText value="#{bundles.messages[job.javaClass]}"/>
+		</p:column>
+		
+		<p:column sortBy="#{job.user.surname}" rendered="#{loggedUser.hasPerm('MODEL.JOB.USER.VIEW')}">
+			<f:facet name="header"><h:outputText value="#{bundles.messages['label.job.user']}"/></f:facet>
+			<h:outputText value="#{job.user.fullName}"/>
+		</p:column>
+		
+		<p:column sortBy="#{job.addDate}" rendered="#{loggedUser.hasPerm('MODEL.JOB.ADDDATE.VIEW')}">
+			<f:facet name="header"><h:outputText value="#{bundles.messages['label.job.adddate']}" /></f:facet>
+			<h:outputText value="#{job.addDate}">
+				<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+			</h:outputText>
+		</p:column>
+		
+		<p:column sortBy="#{job.exeTime}" rendered="#{loggedUser.hasPerm('MODEL.JOB.EXETIME.VIEW')}">
+			<f:facet name="header"><h:outputText value="#{bundles.messages['label.job.exetime']}" /></f:facet>
+			<h:outputText value="#{job.exeTimeStr}"/>
+		</p:column>
+		
+		<p:column sortBy="#{job.status}" rendered="#{loggedUser.hasPerm('MODEL.JOB.STATUS.VIEW')}">
+			<f:facet name="header">
+				<h:outputText value="#{bundles.messages['label.job.status']}" />
+			</f:facet>
+			<h:outputText value="#{bundles.messages['job.status.'.concat(job.status)]}" />
+		</p:column>
+
+		<p:column style="width:40px">
+			<h:commandLink action="/private/job/job.xhtml"
+				actionListener="#{jobHome.clearInstance}">
+				<h:graphicImage value="/resources/img/search.png"  atl="#{bundles.messages['image.title.open']}" title="#{bundles.messages['image.title.open']}" />
+				<f:param name="id" value="#{job.id}" />
+			</h:commandLink>
+		</p:column>
+	</p:dataTable>
+
+</ui:composition>

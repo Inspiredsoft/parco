@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form id="form">
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.pincard.info']}"/>
+					<h:outputText value="(#{bundles.messages['message.removed']})" styleClass="entityRemoved" rendered="#{pinCartaHome.instance.removed}"/>
+				</f:facet>
+				
+				<d:output label="#{bundles.messages['label.id']}" key="MODEL.PINCARD.ID.VIEW">
+					<h:outputText value="#{pinCartaHome.instance.id}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.pincard.codiceOperatore']}" key="MODEL.PINCARD.CODICE.OPERATORE.VIEW">
+					<h:outputText value="#{pinCartaHome.instance.codiceOperatore}"/>
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.pincard.codiceBusta']}" key="MODEL.PINCARD.CODICE.BUSTA.VIEW">
+					<h:outputText value="#{pinCartaHome.instance.codiceBusta}"/>
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.pincard.gestore']}" key="MODEL.PINCARD.GESTORE.VIEW">
+					<h:outputText value="#{bundles.messages['gestore.'.concat(pinCartaHome.instance.gestore)]}"/>
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.pincard.note']}" key="MODEL.PINCARD.NOTE.VIEW" rendered="#{not empty pinCartaHome.instance.note}">
+					<h:outputText value="#{pinCartaHome.instance.note}"/>
+				</d:output>	
+				
+				<fieldset>
+					<legend>#{bundles.messages['label.status.status']}</legend>
+				
+					<d:output label="#{bundles.messages['label.status.status']}" key="MODEL.PINCARD.STATO.VIEW">
+						<h:outputText value="#{bundles.messages['pin.stato.'.concat(pinCartaHome.instance.stato.stato)]}"/>
+					</d:output>
+					
+					<d:output label="#{bundles.messages['label.status.user']}" key="MODEL.PINCARD.STATO.VIEW">
+						<h:outputText value="#{pinCartaHome.instance.stato.utenteStato.fullName}"/>
+					</d:output>
+					
+					<d:output label="#{bundles.messages['label.status.date']}" key="MODEL.PINCARD.STATO.VIEW">
+						<h:outputText value="#{pinCartaHome.instance.stato.dataStato}">
+							<f:convertDateTime pattern="#{configManager.shortDateFormat}"/>
+						</h:outputText>
+					</d:output>	
+					
+					<d:output label="#{bundles.messages['label.status.note']}" key="MODEL.PINCARD.STATO.VIEW">
+						<h:outputText value="#{pinCartaHome.instance.stato.noteStato}" rendered="#{not empty pinCartaHome.instance.stato.noteStato}"/>
+					</d:output>	
+				</fieldset>
+				
+				
+			</rich:panel>
+			
+			<div class="actionButtons">
+
+				<h:button id="bReturn" outcome="/private/pin/pinCartaList.xhtml"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromEdit}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bBack" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromOuterView}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bCancel" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromList}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bEdit" outcome="/private/pin/pinCartaEdit.xhtml"
+					value="#{bundles.messages['button.edit']}" 
+					rendered="#{not pinCartaHome.removed and loggedUser.hasPerm('ACTION.PINCARD.EDIT')}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+				
+				<h:commandButton
+					id="bDelete" 
+					rendered="#{not pinCartaHome.removed and loggedUser.hasPerm('ACTION.PINCARD.DELETE')}"
+					value="#{bundles.messages['button.delete']}"
+					action="#{pinCartaHome.delete}"/>
+						
+				<h:commandButton
+					id="bUndelete" 
+					rendered="#{pincartaHome.removed and loggedUser.hasPerm('ACTION.PINCARD.DELETE')}"
+					value="#{bundles.messages['button.undelete']}"
+					action="#{pinCartaHome.undelete}"/>
+				
+				<h:button id="bConsegna" outcome="/private/pin/consegnaPin.xhtml"
+					value="#{bundles.messages['button.consegna']}" 
+					rendered="#{not pinCartaHome.removed and not pinCartaHome.instance.consegnato and loggedUser.hasPerm('ACTION.PINCARD.EDIT')}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+				
+				<h:button id="bRiconsegna" outcome="/private/pin/riconsegnaPin.xhtml"
+					value="#{bundles.messages['button.riconsegna']}" 
+					rendered="#{not pinCartaHome.removed and pinCartaHome.instance.consegnato and loggedUser.hasPerm('ACTION.PINCARD.EDIT')}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+				
+				<h:commandButton 
+					value="#{bundles.messages['button.chstatus']}"
+					rendered="#{not pinCartaHome.removed and loggedUser.hasPerm('ACTION.PINCARD.EDIT')}"> 
+					<rich:componentControl target="popupstato" operation="show" /> 
+				</h:commandButton>
+			</div>
+			
+			<rich:tabPanel 
+					switchType="client" 
+					rendered="#{(not empty pinCartaHome.instance.movimenti) or
+								(loggedUser.hasPerm('MODEL.PINCARD.MOVIMENTI.VIEW') and not empty pinCartaHome.instance.stati)}">
+					
+					<rich:tab 
+				 		header="#{bundles.messages['header.dotazione.movimenti']}" 
+			 			rendered="#{not empty pinCartaHome.instance.movimenti}"> 
+				 			
+				 			<ui:include src="/private/common/movimentiAsset.xhtml">
+				 				<ui:param name="movimenti" value="#{pinCartaHome.instance.movimenti}" />
+				 				<ui:param name="lastMovimento" value="#{pinCartaHome.instance.lastMovimentoAsset}"/>
+				 				<ui:param name="selectedMovimento" value="#{pinCartaHome.selectedMovimento}"/>
+				 			</ui:include>
+				 			
+				 	 </rich:tab>
+					
+					<rich:tab 
+				 		header="#{bundles.messages['header.statuses']}" 
+						rendered="#{loggedUser.hasPerm('MODEL.PINCARD.STATO.VIEW') and not empty pinCartaHome.instance.stati}"> 
+			
+						<ui:include src="/private/common/statusInfoList.xhtml">
+						 	<ui:param name="statuses" value="#{pinCartaHome.instance.stati}" />
+						 	<ui:param name="bundlePrefix" value="pin.stato." />
+						 	<ui:param name="showStatus" value="true"/>
+						 	<ui:param name="showStart" value="true" />
+						 	<ui:param name="showEnd" value="true"/>
+						 	<ui:param name="showUser" value="true"/>
+						 	<ui:param name="showNote" value="true"/>
+						 </ui:include>
+						 
+	 				</rich:tab>
+						
+			</rich:tabPanel>
+			
+			<p:confirmDialog  
+				widgetVar="confirmDeleteMov" 
+				message="#{bundles.messages['message.movasset.confirmdelete']}">  
+		              
+		        <p:commandButton 
+		        	id="confirm" 
+		        	value="#{bundles.messages['button.confirm']}" 
+		        	oncomplete="confirmDeleteMov.hide()"  
+		            actionListener="#{pinCartaHome.rimuoviMovimento}"
+		            update="form" />  
+				
+				<p:commandButton 
+					id="decline" 
+					value="#{bundles.messages['button.calcel']}" 
+					onclick="confirmDeleteMov.hide()"
+		   			 type="button" />   
+		              
+		    </p:confirmDialog >
+			
+			<ui:decorate template="/private/common/changeStatusPopup.xhtml">
+				<ui:param name="statusInfo" value="#{pinCartaHome.newStatus}" />
+				<ui:param name="mindate"	value="#{pinCartaHome.minStatusDate}" />
+				<ui:param name="statuses" value="#{pinCartaHome.statiDisponibili}" />
+				<ui:param name="bundlePrefix" value="pin.stato." />
+				<ui:define name="okbutton">
+					<h:commandButton value="#{bundles.messages['button.chstatus']}" action="#{pinCartaHome.changeStatus}" />
+				</ui:define>
+			</ui:decorate>
+		
+		</h:form>
+		
+	</ui:define>
+	
+</ui:composition>

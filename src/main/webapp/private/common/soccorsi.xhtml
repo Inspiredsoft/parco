@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui">
+		<p:dataTable
+			rowStyleClass="#{soc.mezzo.removed ? 'rowRemoved' : ''}"
+		 	id="tlbSoccorsi" 
+		 	var="soc"
+			value="#{soccorsi.dataModel}" 
+			paginator="true" 
+			rows="10"
+			rowsPerPageTemplate="10,15,20" 
+			draggableColumns="false"
+			rendered="#{not soccorsi.isEmpty}"
+			lazy="true"
+			emptyMessage="#{bundles.messages['message.search.empty']}">
+			
+			<p:column sortBy="#{soc.id}" rendered="#{showId and loggedUser.hasPerm('MODEL.SOCCORSO.ID.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.id']}"/></f:facet>
+	   			<h:outputText value="#{soc.id}"/>
+			</p:column>
+			
+			<p:column sortBy="#{soc.mezzo.targa}" rendered="#{loggedUser.hasPerm('MODEL.SOCCORSO.MEZZO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.soccorso.mezzo']}"/></f:facet>
+	   			<h:outputText value="#{soc.mezzo.targa}"/>
+			</p:column>
+			
+			<p:column sortBy="#{soc.mezzo.codiceRadio}" rendered="#{loggedUser.hasPerm('MODEL.SOCCORSO.MEZZO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.mezzo.codiceradio']}"/></f:facet>
+	   			<h:outputText value="#{soc.mezzo.codiceRadio}"/>
+			</p:column>
+			
+			<p:column 
+				rendered="#{loggedUser.hasPerm('MODEL.MEZZO.ASSEGNZIONE.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.mezzo.assegnazione']}"/></f:facet>
+	   			<h:outputText value="#{soc.mezzo.assegnazione.postazione.nome}" rendered="#{not empty soc.mezzo.assegnazione}"/>
+			</p:column>
+			
+			<p:column sortBy="#{soc.mese}" rendered="#{loggedUser.hasPerm('MODEL.SOCCORSO.PERIODO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.mese']}"/></f:facet>
+	   			<h:outputText value="#{bundles.messages['calendar.month.'.concat(soc.mese)]}"/>
+			</p:column>
+			
+			<p:column sortBy="#{soc.anno}" rendered="#{loggedUser.hasPerm('MODEL.SOCCORSO.PERIODO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.anno']}"/></f:facet>
+	   			<h:outputText value="#{soc.anno}"/>
+			</p:column>
+			
+			<p:column sortBy="#{soc.numero}" rendered="#{loggedUser.hasPerm('MODEL.SOCCORSO.NUMERO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.soccorso.numero']}"/></f:facet>
+	   			<h:outputText value="#{soc.numero}"/>
+			</p:column>
+			
+			<p:column sortBy="#{soc.mediaChilometri}" rendered="#{loggedUser.hasPerm('MODEL.SOCCORSO.MEDIA.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.soccorso.media']}"/></f:facet>
+	   			<h:outputText value="#{soc.mediaChilometri}"/>
+			</p:column>
+			
+			<p:column style="width:40px" exportable="false">
+  				<h:commandLink action="/private/soccorsi/soccorso.xhtml" actionListener="#{soccorsoHome.clearInstance}">
+  					<h:graphicImage value="/resources/img/search.png" atl="#{bundles.messages['image.title.open']}" title="#{bundles.messages['image.title.open']}"/>
+  					<f:param name="id" value="#{soc.id}" />
+  				</h:commandLink>
+    		</p:column> 
+			
+		</p:dataTable>
+</ui:composition>
+
+					
+			

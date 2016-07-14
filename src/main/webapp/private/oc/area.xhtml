@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.area.info']} "/>
+				</f:facet>
+				
+				<d:output label="#{bundles.messages['label.id']}" key="MODEL.AREA.ID.VIEW">
+					<h:outputText value="#{areaHome.instance.id}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.area.provincia']}" key="MODEL.AREA.PROVINCIA.VIEW">
+					<h:outputText value="#{areaHome.instance.provincia.sigla}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.area.nome']}" key="MODEL.AREA.NOME.VIEW">
+					<h:outputText value="#{areaHome.instance.nome}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.area.descrizione']}" key="MODEL.AREA.DESCRIZIONE.VIEW">
+					<h:outputText value="#{areaHome.instance.descrizione}" />
+				</d:output>
+				
+			</rich:panel>
+			
+			<div class="actionButtons">
+
+				<h:button id="bReturn" outcome="/private/oc/areaList.xhtml"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromEdit}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bBack" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromOuterView}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bCancel" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromList}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bEdit" outcome="/private/oc/areaEdit.xhtml"
+					value="#{bundles.messages['button.edit']}" rendered="#{loggedUser.hasPerm('ACTION.AREA.EDIT')}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:commandButton id="bDelete" rendered="#{loggedUser.hasPerm('ACTION.AREA.DELETE')}"
+					value="#{bundles.messages['button.delete']}"
+					action="#{areaHome.delete}" />
+					
+			</div>
+			
+			<rich:tabPanel 
+					switchType="client"
+					rendered="#{not empty areaHome.instance.postazioni}" >
+					
+					 <rich:tab
+				 		header="#{bundles.messages['header.area.posts']}">
+				 		<p:dataTable
+						 	var="pos"
+							value="#{areaHome.instance.postazioni}" 
+							emptyMessage="#{bundles.messages['message.search.empty']}">
+						
+							<p:column sortBy="#{pos.id}" rendered="#{loggedUser.hasPerm('MODEL.POSTAZIONE.ID.VIEW')}">
+					   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.id']}"/></f:facet>
+					   			<h:outputText value="#{pos.id}"/>
+							</p:column>
+							
+							<p:column sortBy="#{pos.nome}" rendered="#{loggedUser.hasPerm('MODEL.POSTAZIONE.NOME.VIEW')}">
+					   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.postazione.nome']}"/></f:facet>
+					   			<h:outputText value="#{pos.nome}"/>
+							</p:column>
+							
+							<p:column sortBy="#{pos.descrizione}" rendered="#{loggedUser.hasPerm('MODEL.POSTAZIONE.DESCRIZIONE.VIEW')}">
+					   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.postazione.descrizione']}"/></f:facet>
+					   			<h:outputText value="#{pos.descrizione}"/>
+							</p:column>
+							
+							<p:column style="width:40px" exportable="false">
+				  				<h:commandLink action="/private/oc/postazione.xhtml" actionListener="#{postazioneHome.clearInstance}">
+				  					<h:graphicImage value="/resources/img/search.png" atl="#{bundles.messages['image.title.open']}" title="#{bundles.messages['image.title.open']}"/>
+				  					<f:param name="id" value="#{pos.id}" />
+				  				</h:commandLink>
+				    		</p:column>
+				    	</p:dataTable> 
+					</rich:tab>				
+			</rich:tabPanel> 
+			
+		</h:form>
+	</ui:define>
+</ui:composition>

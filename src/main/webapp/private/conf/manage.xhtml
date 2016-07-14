@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+	        <a4j:poll id="poll" interval="#{configManager.refreshInterval}" render="poll,form" />
+	    </h:form>
+		
+		<h:form id="form">
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+			
+			
+			<rich:panel header="#{bundles.messages['header.manage']}">	
+				
+				<h:panelGrid columns="2" style="width:100%">
+				
+					<p:fieldset legend="Job Manager every #{jobManager.nth} #{jobManager.interval}">
+						<d:output label="#{bundles.messages['label.startDate']}">
+							<h:outputText value="#{jobManager.startDate}">
+								<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+							</h:outputText>
+						</d:output>
+						
+						<d:output label="#{bundles.messages['label.lastExec']}">
+							<h:outputText value="#{jobManager.lastExecution}">
+								<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+							</h:outputText>
+						</d:output>
+						
+						<d:output label="#{bundles.messages['label.executions']}">
+							<h:outputText value="#{jobManager.executions}" />
+						</d:output>
+					</p:fieldset>
+					
+					<p:fieldset legend="Mail Manager every #{mailManager.nth} #{mailManager.interval}">
+						<d:output label="#{bundles.messages['label.startDate']}">
+							<h:outputText value="#{mailManager.startDate}">
+								<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+							</h:outputText>
+						</d:output>
+						
+						<d:output label="#{bundles.messages['label.lastExec']}">
+							<h:outputText value="#{mailManager.lastExecution}">
+								<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+							</h:outputText>
+						</d:output>
+						
+						<d:output label="#{bundles.messages['label.executions']}">
+							<h:outputText value="#{mailManager.executions}" />
+						</d:output>
+					</p:fieldset>
+					
+					<p:fieldset legend="Cleaner every #{cleanerManager.nth} #{cleanerManager.interval}">
+						<d:output label="#{bundles.messages['label.startDate']}">
+							<h:outputText value="#{cleanerManager.startDate}">
+								<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+							</h:outputText>
+						</d:output>
+						
+						<d:output label="#{bundles.messages['label.lastExec']}">
+							<h:outputText value="#{cleanerManager.lastExecution}">
+								<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+							</h:outputText>
+						</d:output>
+						
+						<d:output label="#{bundles.messages['label.executions']}">
+							<h:outputText value="#{cleanerManager.executions}" />
+						</d:output>
+					</p:fieldset>
+				
+				</h:panelGrid>
+
+		</rich:panel>
+			
+		</h:form>
+		
+	</ui:define>
+	
+</ui:composition>

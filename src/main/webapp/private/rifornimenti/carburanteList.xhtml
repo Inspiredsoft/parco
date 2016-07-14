@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form id="form">
+		
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+			
+
+			<rich:panel>
+				<f:facet name="header">#{bundles.messages['label.search.criteria']}</f:facet>
+				
+				<d:input label="#{bundles.messages['label.codcarb.tipo']}" key="MODEL.CODCARB.TIPO.VIEW">
+					<h:selectOneMenu value="#{codificaCarburanteList.tipo}">
+						<f:selectItem noSelectionOption="true"/>						
+						<f:selectItems value="#{codificaCarburanteList.tipi}" var="tipo" itemValue="#{tipo}" itemLabel="#{bundles.messages['carburante.tipo.'.concat(tipo)]}"/>
+					</h:selectOneMenu>
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.codcarb.valore']}" key="MODEL.CODCARB.VALORE.VIEW">
+					<h:inputText value="#{codificaCarburanteList.valore}" />
+				</d:input>
+				
+			</rich:panel>
+			
+			<div class="actionButtons">
+				<h:commandButton
+					action="#{codificaCarburanteList.refresh}" 
+					value="#{bundles.messages['button.search']}" />
+					
+			</div>
+			
+			<rich:panel id="grid">
+				<f:facet name="header">#{bundles.messages['label.search.result']}: #{codificaCarburanteList.resultCount}</f:facet>
+				
+				<div class="myCenter">
+			
+					<p:dataTable
+						editable="true"
+					 	id="tlbCodCarb" 
+					 	var="cod"
+						value="#{codificaCarburanteList.dataModel}" 
+						paginator="true" 
+						rows="10"
+						rowsPerPageTemplate="10,15,20" 
+						draggableColumns="false"
+						rendered="#{not codificaCarburanteList.isEmpty}"
+						lazy="true"
+						emptyMessage="#{bundles.messages['message.search.empty']}">
+						
+							<p:ajax event="rowEdit" listener="#{codificaCarburanteList.onEdit}" update=":form:messages"/>
+						
+							<p:column sortBy="#{cod.id}" rendered="#{loggedUser.hasPerm('MODEL.CODCARB.ID.VIEW')}">
+					   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.id']}"/></f:facet>
+					   			<h:outputText value="#{cod.id}"/>
+							</p:column>
+							
+							<p:column sortBy="#{cod.valore}" rendered="#{loggedUser.hasPerm('MODEL.CODCARB.VALORE.VIEW')}">
+					   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.codcarb.valore']}"/></f:facet>
+					   			<h:outputText value="#{cod.valore}"/>
+							</p:column>
+							
+							<p:column
+								sortBy="#{cod.tipo}" 
+								rendered="#{loggedUser.hasPerm('MODEL.CODCARB.VALORE.VIEW')}">
+					   			<f:facet name="header">
+					   				<h:outputText value="#{bundles.messages['label.codcarb.tipo']}"/>
+					   			</f:facet>
+					   			<p:cellEditor>
+						   			<f:facet name="output">  
+					                    <h:outputText value="#{bundles.messages['carburante.tipo.'.concat(cod.tipo)]}" rendered="#{not empty cod.tipo}"/>  
+					                </f:facet>  
+					                <f:facet name="input">  
+					                    <h:selectOneMenu value="#{cod.tipo}">
+											<f:selectItem noSelectionOption="true"/>						
+											<f:selectItems value="#{codificaCarburanteList.tipi}" var="tipo" itemValue="#{tipo}" itemLabel="#{bundles.messages['carburante.tipo.'.concat(tipo)]}"/>
+										</h:selectOneMenu>
+					                </f:facet>  
+					   			</p:cellEditor>
+					   			<p:rowEditor rendered="#{loggedUser.hasPerm('MODEL.CODCARB.VALORE.EDIT')}"/>
+							</p:column>
+							
+							<p:column
+								rendered="#{loggedUser.hasPerm('MODEL.CODCARB.CONSENTITO.VIEW')}">
+					   			<f:facet name="header">
+					   				<h:outputText value="#{bundles.messages['label.codcarb.cons']}"/>
+					   			</f:facet>
+					   			<h:outputText value="#{bundles.messages['label.yes']}" rendered="#{cod.consentito}"/>
+					   			<h:outputText value="#{bundles.messages['label.no']}" rendered="#{not cod.consentito}"/>
+							</p:column>
+							
+							<p:column style="width:40px" exportable="false">
+				  				<h:commandLink action="/private/rifornimenti/carburante.xhtml" actionListener="#{codificaCarburanteHome.clearInstance}">
+				  					<h:graphicImage value="/resources/img/search.png" atl="#{bundles.messages['image.title.open']}" title="#{bundles.messages['image.title.open']}"/>
+				  					<f:param name="id" value="#{cod.id}" />
+				  				</h:commandLink>
+				    		</p:column> 
+							
+					</p:dataTable>
+					
+					<ui:include src="/private/common/export.xhtml">
+						<ui:param name="rendered" 		value="#{not codificaCarburanteList.isEmpty}" />
+						<ui:param name="target" 		value="tlbCodCarb" />
+						<ui:param name="fileName" 		value="#{bundles.messages['file.name.codcarb']}" />
+					</ui:include>
+					
+				</div>
+			</rich:panel>
+		</h:form>
+		
+	</ui:define>
+	
+</ui:composition>

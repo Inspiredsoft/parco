@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+		
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+		
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+			
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.user.info']} "/>
+					<h:outputText value="(#{bundles.messages['message.removed']})" styleClass="entityRemoved" rendered="#{userHome.instance.removed}"/>
+				</f:facet>
+				
+				<d:output label="#{bundles.messages['label.id']}">
+					<h:outputText value="#{userHome.instance.id}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.user.username']}">
+					<h:outputText value="#{userHome.instance.username}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.user.name']}">
+					<h:outputText value="#{userHome.instance.name}" />
+				</d:output>
+			
+				<d:output label="#{bundles.messages['label.user.surname']}">
+					<h:outputText value="#{userHome.instance.surname}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.user.email']}">
+					<h:outputText value="#{userHome.instance.email}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.user.phone']}">
+					<h:outputText value="#{userHome.instance.phone}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.user.active']}">
+					<h:outputText value="#{bundles.messages['label.yes']}" rendered="#{userHome.instance.active}"/>
+					<h:outputText value="#{bundles.messages['label.no']}" rendered="#{not userHome.instance.active}"/>
+				</d:output>
+				
+			</rich:panel>
+			
+			<div class="actionButtons">
+			
+				<h:button
+					id="bReturn"
+					outcome="/private/user/userList.xhtml"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromEdit}">
+						<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+				
+				<h:button
+					id="bCalcel"
+					outcome="#{viewChain.backPage}" 
+					value="#{bundles.messages['button.back']}" 
+					rendered="#{viewChain.fromList}">
+						<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+			
+				<h:button
+					id="bEdit"
+					rendered="#{not userHome.removed}"
+					outcome="/private/user/userEdit.xhtml" 
+					value="#{bundles.messages['button.edit']}">
+						<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+				
+				<h:commandButton
+					id="bDelete" 
+					rendered="#{not userHome.removed and loggedUser.hasPerm('ACTION.USER.REMOVE')}"
+					value="#{bundles.messages['button.delete']}"
+					action="#{userHome.delete}"/>
+					
+				<h:commandButton
+					id="bUndelete" 
+					rendered="#{userHome.removed and loggedUser.hasPerm('ACTION.USER.REMOVE')}"
+					value="#{bundles.messages['button.undelete']}"
+					action="#{userHome.undelete}"/>
+					
+				<h:button
+					id="bNewPwd" 
+					outcome="/private/user/changePwd.xhtml"
+					value="#{bundles.messages['button.newpwd']}"
+					rendered="#{not userHome.removed}">
+						<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+				
+				<h:commandButton
+					id="bManageGroupEntity" 
+					value="#{bundles.messages['label.user.groups']}"
+					rendered="#{not userHome.removed}"
+					action="/private/user/manageGroupsEdit.xhtml"/>
+					
+				<h:commandButton
+					id="bAssignedEntity" 
+					value="#{bundles.messages['label.user.allowedEntity']}"
+					rendered="#{not userHome.removed}"
+					action="/private/user/assignedEntityEdit.xhtml"/>
+			
+			</div>
+			
+		</h:form>
+		
+	</ui:define>
+	
+	
+    
+</ui:composition>

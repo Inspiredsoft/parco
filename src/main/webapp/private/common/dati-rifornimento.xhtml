@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org"
+	xmlns:d="http://java.sun.com/jsf/composite/components">
+	
+	<d:output label="#{bundles.messages['label.id']}" key="MODEL.RIFORNIMENTO.ID.VIEW">
+		<h:outputText value="#{rifornimento.id}" />
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.rifornimento.gestore']}" key="MODEL.RIFORNIMENTO.GESTORE.VIEW">
+		<h:outputText value="#{bundles.messages['gestore.'.concat(rifornimento.gestore)]}" />
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.rifornimento.data']}" key="MODEL.RIFORNIMENTO.DATA.VIEW">
+		<h:outputText value="#{rifornimento.data}" >
+			<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+		</h:outputText>
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.rifornimento.mezzo']}" key="MODEL.RIFORNIMENTO.MEZZO.VIEW">
+		<h:outputText value="#{rifornimento.mezzo.targa}" />
+		<h:outputText 
+			value=" rettificato in #{rifornimento.scontrino.mezzoRettificato.targa}" 
+			rendered="#{loggedUser.hasPerm('MODEL.SCONTRINO.MEZZORET.VIEW') and not empty rifornimento.scontrino.mezzoRettificato}"/>
+	</d:output>
+	
+	 <ui:include src="/private/common/dati-assegnazione.xhtml">
+	 	<ui:param name="assegnazione" value="#{rifornimento.assegnazione}" />
+	 	<ui:param name="showPostazione" value="true" />
+	 	<ui:param name="showArea" value="true" />
+	 	<ui:param name="showProvincia" value="true" />
+	 </ui:include> 
+
+	<d:output label="#{bundles.messages['label.rifornimento.carta']}" key="MODEL.RIFORNIMENTO.CARTA.VIEW">
+		<h:outputText value="#{rifornimento.carta.numero}"/>
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.rifornimento.codiceOperatore']}" key="MODEL.RIFORNIMENTO.PINCARD.VIEW">
+		<h:outputText value="#{rifornimento.pinCard.codiceOperatore}"/>
+	</d:output>		
+	
+	<d:output label="#{bundles.messages['label.rifornimento.codiceBusta']}" key="MODEL.RIFORNIMENTO.PINCARD.VIEW">
+		<h:outputText value="#{rifornimento.pinCard.codiceBusta}"/>
+	</d:output>	
+	
+	<d:output label="#{bundles.messages['label.rifornimento.numscon']}" key="MODEL.RIFORNIMENTO.NUMERO_SCONTRINO.VIEW" rendered="#{showNumeroScontrino}">
+		<h:outputText value="#{rifornimento.numeroScontrino}"/>
+	</d:output>	
+	
+	<d:output label="#{bundles.messages['label.rifornimento.distr']}" key="MODEL.RIFORNIMENTO.DISTRIBUTORE.VIEW">
+		<h:outputText value="#{rifornimento.distributore.fullAddress}"/>
+	</d:output>	
+	
+	<d:output label="#{bundles.messages['label.rifornimento.km']}" key="MODEL.RIFORNIMENTO.CHILOMETRAGGIO.VIEW">
+		<h:outputText value="#{rifornimento.chilometraggio}">
+			<f:convertNumber />
+		</h:outputText>
+		<h:panelGroup rendered="#{loggedUser.hasPerm('MODEL.SCONTRINO.KMRET.VIEW') and not empty rifornimento.scontrino.chilometraggioRettificato}">
+			<h:outputText value=" rettificato in "/>
+			<h:outputText value="#{rifornimento.scontrino.chilometraggioRettificato}">
+				<f:convertNumber />
+			</h:outputText>
+		</h:panelGroup>
+		
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.rifornimento.prodotto']}">
+		<h:outputText value="#{rifornimento.prodotto}" />
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.rifornimento.carb']}" key="MODEL.RIFORNIMENTO.TIPO_CARBURANTE.VIEW">
+		<h:outputText value="#{bundles.messages['carburante.tipo.'.concat(rifornimento.tipoCarburante)]}" rendered="#{not empty rifornimento.tipoCarburante}"/>
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.rifornimento.quantita']}" key="MODEL.RIFORNIMENTO.QUANTITA.VIEW">
+		<h:outputText value="#{rifornimento.quantita}">
+			<f:convertNumber pattern="#,###,##0.00"/>
+		</h:outputText>
+	</d:output>
+	
+	<d:output label="#{bundles.messages['label.rifornimento.importo']}" key="MODEL.RIFORNIMENTO.IMPORTO.VIEW">
+		<h:outputText value="#{rifornimento.importo}">
+			<f:convertNumber currencyCode="EUR" type="currency" />
+		</h:outputText>
+	</d:output>
+	
+</ui:composition>

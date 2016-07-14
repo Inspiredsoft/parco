@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.mezzo.info']} "/>
+					<h:outputText value="(#{bundles.messages['message.removed']})" styleClass="entityRemoved" rendered="#{mezzoHome.instance.removed}"/>
+				</f:facet>
+				
+					<ui:include src="/private/common/dati-mezzo.xhtml">
+				 		<ui:param name="mezzo" value="#{mezzoHome.instance}" />
+				 	</ui:include>
+					
+					<fieldset>
+						<legend>#{bundles.messages['label.status.status']}</legend>
+						
+						<d:output label="#{bundles.messages['label.status.status']}" key="MODEL.MEZZO.STATI.VIEW">
+							<h:outputText value="#{bundles.messages['mezzo.stato.'.concat(mezzoHome.instance.stato.stato)]}"/>
+						</d:output>	
+						
+						<d:output label="#{bundles.messages['label.status.user']}" key="MODEL.MEZZO.STATI.VIEW">
+							<h:outputText value="#{mezzoHome.instance.stato.utenteStato.fullName}"/>
+						</d:output>
+						
+						<d:output label="#{bundles.messages['label.status.date']}" key="MODEL.MEZZO.STATI.VIEW">
+							<h:outputText value="#{mezzoHome.instance.stato.dataStato}">
+								<f:convertDateTime pattern="#{configManager.shortDateFormat}"/>
+							</h:outputText>
+						</d:output>	
+						
+						<d:output label="#{bundles.messages['label.status.note']}" key="MODEL.MEZZO.STATI.VIEW">
+							<h:outputText value="#{mezzoHome.instance.stato.noteStato}" rendered="#{not empty mezzoHome.instance.stato.noteStato}"/>
+						</d:output>	
+						
+					</fieldset>
+					
+			</rich:panel>
+			
+			<div class="actionButtons">
+
+				<h:button id="bReturn" outcome="/private/mezzi/mezzoList.xhtml"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromEdit}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bBack" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromOuterView}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bCancel" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}"
+					rendered="#{viewChain.fromList}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:button id="bEdit" outcome="/private/mezzi/mezzoEdit.xhtml"
+					value="#{bundles.messages['button.edit']}" 
+					rendered="#{not mezzoHome.removed and loggedUser.hasPerm('ACTION.MEZZO.EDIT')}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+				
+				<h:commandButton
+					id="bDelete" 
+					rendered="#{not mezzoHome.removed and loggedUser.hasPerm('ACTION.MEZZO.DELETE')}"
+					value="#{bundles.messages['button.delete']}"
+					action="#{mezzoHome.delete}"/>
+						
+				<h:commandButton
+					id="bUndelete" 
+					rendered="#{mezzoHome.removed and loggedUser.hasPerm('ACTION.MEZZO.DELETE')}"
+					value="#{bundles.messages['button.undelete']}"
+					action="#{mezzoHome.undelete}"/>
+					
+				<h:commandButton 
+						value="#{bundles.messages['button.chstatus']}"
+						rendered="#{not mezzoHome.removed and loggedUser.hasPerm('ACTION.MEZZO.CHANGESTATUS')}"> 
+					<rich:componentControl target="popupstato" operation="show" /> 
+				</h:commandButton>
+				
+				<h:commandButton value="#{bundles.messages['button.mezzo.dotazione.new']}"
+					action="/private/mezzi/dotazioneEdit.xhtml"
+					actionListener="#{dotazioneHome.clearForMezzo}" 
+					rendered="#{not mezzoHome.removed and loggedUser.hasPerm('ACTION.MEZZO.DOTAZIONE.EDIT')}"/>
+				
+				<h:commandButton 
+						value="#{bundles.messages['button.assegna']}"
+						rendered="#{not mezzoHome.removed and loggedUser.hasPerm('ACTION.MEZZO.ASSEGNA')}"> 
+					<rich:componentControl target="popupassmezzo" operation="show" /> 
+				</h:commandButton>
+					
+			</div>
+
+			<rich:tabPanel 
+					switchType="client" 
+					rendered="#{ ( loggedUser.hasPerm('MODEL.MEZZO.RIFORNIMENTI.VIEW') and not rifornimentiMezzo.isEmpty ) or
+								( loggedUser.hasPerm('MODEL.MEZZO.POLIZZE.VIEW') and not polizzeMezzo.isEmpty ) or
+								( loggedUser.hasPerm('MODEL.MEZZO.CARTE.VIEW') and not carteMezzo.isEmpty ) or
+								( loggedUser.hasPerm('MODEL.MEZZO.STATI.VIEW') and not empty mezzoHome.instance.stati ) or 
+								( loggedUser.hasPerm('MODEL.MEZZO.SOCCORSI.VIEW') and not soccorsiMezzo.isEmpty ) or
+								( loggedUser.hasPerm('MODEL.MEZZO.ASSEGNAZIONI.VIEW') and not empty mezzoHome.instance.assegnazioni ) or
+								( loggedUser.hasPerm('MODEL.MEZZO.DOTAZIONI.VIEW') and not empty mezzoHome.instance.dotazioni ) }">
+				
+				 <rich:tab 
+				 		header="#{bundles.messages['header.mezzo.rif']}" 
+			 			rendered="#{loggedUser.hasPerm('MODEL.MEZZO.RIFORNIMENTI.VIEW') and not rifornimentiMezzo.isEmpty}"> 			 
+				 	<ui:include src="/private/common/rifornimenti.xhtml">
+						<ui:param name="rifornimenti" value="#{rifornimentiMezzo}" />
+					</ui:include>
+				 </rich:tab>
+					
+				 <rich:tab 
+				 		header="#{bundles.messages['header.mezzo.polizze']}" 
+			 			rendered="#{loggedUser.hasPerm('MODEL.MEZZO.POLIZZE.VIEW') and not polizzeMezzo.isEmpty}"> 			 
+				 	<ui:include src="/private/common/polizze.xhtml">
+						<ui:param name="polizze" value="#{polizzeMezzo}" />
+					</ui:include>
+				 </rich:tab>
+				 
+				  <rich:tab 
+				 		header="#{bundles.messages['header.mezzo.carte']}" 
+			 			rendered="#{loggedUser.hasPerm('MODEL.MEZZO.CARTE.VIEW') and not carteMezzo.isEmpty}"> 			 
+				 	<ui:include src="/private/common/carte.xhtml">
+						<ui:param name="carte" value="#{carteMezzo}" />
+					</ui:include>
+				 </rich:tab>
+				 
+				  <rich:tab 
+				 		header="#{bundles.messages['header.mezzo.socc']}" 
+			 			rendered="#{loggedUser.hasPerm('MODEL.MEZZO.SOCCORSI.VIEW') and not soccorsiMezzo.isEmpty}"> 			 
+				 	<ui:include src="/private/common/soccorsi.xhtml">
+						<ui:param name="soccorsi" value="#{soccorsiMezzo}" />
+					</ui:include>
+				 </rich:tab>
+				 
+				  <rich:tab 
+				 		header="#{bundles.messages['header.mezzo.ass']}" 
+				 		rendered="#{loggedUser.hasPerm('MODEL.MEZZO.ASSEGNAZIONI.VIEW') and not empty mezzoHome.instance.assegnazioni}">
+
+				 		<ui:include src="/private/common/assegnazioni.xhtml">
+							<ui:param name="assegnazioni" value="#{mezzoHome.instance.assegnazioni}" />
+						</ui:include>	
+					
+				 </rich:tab>
+				 
+				  <rich:tab 
+				 		header="#{bundles.messages['header.dotazioni']}" 
+						rendered="#{loggedUser.hasPerm('MODEL.MEZZO.DOTAZIONI.VIEW') and not empty mezzoHome.instance.dotazioni}">
+						
+						<ui:include src="/private/common/dotazioni.xhtml">
+							<ui:param name="dotazioni" value="#{mezzoHome.instance.dotazioni}" />
+						</ui:include>	
+						
+				</rich:tab>
+				 
+				 <rich:tab 
+				 		header="#{bundles.messages['header.statuses']}" 
+						rendered="#{loggedUser.hasPerm('MODEL.MEZZO.STATI.VIEW') and not empty mezzoHome.instance.stati}">
+						
+						<ui:include src="/private/common/statusInfoList.xhtml">
+						 	<ui:param name="statuses" value="#{mezzoHome.instance.stati}" />
+						 	<ui:param name="bundlePrefix" value="mezzo.stato." />
+						 	<ui:param name="showStatus" value="true"/>
+						 	<ui:param name="showStart" value="true" />
+						 	<ui:param name="showEnd" value="true"/>
+						 	<ui:param name="showUser" value="true"/>
+						 	<ui:param name="showNote" value="true"/>
+						 </ui:include>
+			 
+				</rich:tab>
+			 
+			</rich:tabPanel>
+			
+			<ui:decorate template="/private/common/changeStatusPopup.xhtml">
+				<ui:param name="statusInfo" value="#{mezzoHome.newStatus}" />
+				<ui:param name="mindate"	value="#{mezzoHome.minStatusDate}" />
+				<ui:param name="statuses" value="#{mezzoHome.statiDisponibili}" />
+				<ui:param name="bundlePrefix" value="mezzo.stato." />
+				<ui:define name="okbutton">
+					<h:commandButton value="#{bundles.messages['button.chstatus']}" action="#{mezzoHome.changeStatus}" />
+				</ui:define>
+			</ui:decorate>
+			
+			<ui:decorate template="/private/common/assegnaMezzo.xhtml">
+				<ui:param name="mindate"	value="#{mezzoHome.minAssDate}" />
+				<ui:param name="newAssegnazione" value="#{mezzoHome.newAssegnazione}" />
+				<ui:define name="okbutton">
+					<h:commandButton value="#{bundles.messages['button.assegna']}" action="#{mezzoHome.assegna}" />
+				</ui:define>
+			</ui:decorate>
+			
+		</h:form>
+	</ui:define>
+</ui:composition>

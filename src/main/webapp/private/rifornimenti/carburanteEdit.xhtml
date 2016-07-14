@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.codcar.edit']}"/>
+				</f:facet>
+				
+				<d:output label="#{bundles.messages['label.id']}" key="MODEL.CODCARB.ID.VIEW">
+					<h:outputText value="#{codificaCarburanteHome.instance.id}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.codcarb.valore']}" key="MODEL.CODCARB.VALORE.VIEW">
+					<h:outputText value="#{codificaCarburanteHome.instance.valore}" />
+				</d:output>
+				
+				<d:input label="#{bundles.messages['label.codcarb.tipo']}" key="MODEL.CODCARB.TIPO.EDIT">
+					<h:selectOneMenu value="#{codificaCarburanteHome.instance.tipo}">
+						<f:selectItem noSelectionOption="true"/>						
+						<f:selectItems value="#{codificaCarburanteList.tipi}" var="tipo" itemValue="#{tipo}" itemLabel="#{bundles.messages['carburante.tipo.'.concat(tipo)]}"/>
+					</h:selectOneMenu>
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.codcarb.cons']}" key="MODEL.CODCARB.CONSENTITO.VIEW">
+					<h:selectOneMenu value="#{codificaCarburanteHome.instance.consentito}">
+						<f:selectItem itemLabel="#{bundles.messages['label.yes']}" itemValue="true"/>
+						<f:selectItem itemLabel="#{bundles.messages['label.no']}" itemValue="false"/>	
+					</h:selectOneMenu>
+				</d:input>
+
+			</rich:panel>
+			
+			<div class="actionButtons">
+				<h:button id="bCancel" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.calcel']}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:commandButton id="bSave"
+					value="#{bundles.messages['button.save']}"
+					action="#{codificaCarburanteHome.save}" 
+					rendered="#{loggedUser.hasPerm('ACTION.CODCARB.EDIT')}"
+					/>
+			</div>
+		</h:form>
+		
+	</ui:define>
+	
+</ui:composition>

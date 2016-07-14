@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	xmlns:s="http://jboss.org/seam/faces"
+	template="/private/layout/basic.xhtml">
+
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+
+		<h:messages id="messages" globalOnly="true" styleClass="message" />
+
+		<h:form>
+
+			<rich:tabPanel switchType="client">
+       			
+       			<rich:tab header="#{bundles.messages['header.user.manage.groups']}">
+					
+					<rich:pickList
+							styleClass="picklist"
+							value="#{manageGroupsHome.assignedGroups}" 
+							var="group"
+							listWidth="100%" 
+							listHeight="350px"
+							addText="#{bundles.messages['label.add']}"
+							addAllText="#{bundles.messages['label.addAll']}"
+							removeAllText="#{bundles.messages['label.removeAll']}"
+							removeText="#{bundles.messages['label.remove']}"
+							switchByDblClick="true"
+							>
+		               
+		               	<f:selectItems value="#{manageGroupsHome.assignableGroups}" />
+        			    <s:objectConverter />
+							
+		                <rich:column>
+		                    <f:facet name="header">#{bundles.messages['label.id']}</f:facet>
+		                    #{group.id}
+		                </rich:column>
+		                
+		                <rich:column>
+		                    <f:facet name="header">#{bundles.messages['label.group.name']}</f:facet>
+		                    #{group.name}
+		                </rich:column>
+		                
+		                <rich:column>
+		                    <f:facet name="header">#{bundles.messages['label.group.description']}</f:facet>
+		                    #{group.description}
+		                </rich:column>
+		               
+            		</rich:pickList>	
+					
+				</rich:tab>
+				
+			</rich:tabPanel>
+			
+			<div class="actionButtons">
+				<h:button 
+					id="bBack" 
+					outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.back']}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:commandButton 
+					id="bSave"
+					value="#{bundles.messages['button.save']}"
+					action="#{manageGroupsHome.save}" />
+			</div>
+			
+		</h:form>
+		
+	</ui:define>
+	
+</ui:composition>

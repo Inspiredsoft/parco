@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	xmlns:p="http://primefaces.org/ui">
+	
+		 <p:growl 
+		 	id="msgGrowl" 
+			for="msgGrowl"
+			showDetail="false"
+			showSummary="true" />
+		
+		<p:dataTable
+		 	id="tblScontrini" 
+		 	var="scon"
+			value="#{scontrini.dataModel}" 
+			paginator="true" 
+			rows="10"
+			rowsPerPageTemplate="10,15,20" 
+			draggableColumns="false"
+			rendered="#{not scontrini.isEmpty}"
+			lazy="true"
+			emptyMessage="#{bundles.messages['message.search.empty']}"
+			editable="true">
+			
+			<p:ajax event="rowEdit" listener="#{scontrinoInlineEdit.onEdit}" update=":form:messages, :form:msgGrowl" />
+			
+			<p:column sortBy="#{scon.id}" rendered="#{showId and loggedUser.hasPerm('MODEL.SCONTRINO.ID.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.id']}"/></f:facet>
+	   			<h:outputText value="#{scon.id}"/>
+			</p:column>
+			
+			<p:column sortBy="#{scon.rifornimento.mezzo.targa}" rendered="#{loggedUser.hasPerm('MODEL.SCONTRINO.MEZZO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.scontrino.mezzo']}"/></f:facet>
+	   			<h:outputText value="#{scon.rifornimento.mezzo.targa}"/>
+			</p:column>
+			
+			<p:column rendered="#{loggedUser.hasPerm('MODEL.RIFORNIMENTO.POSTAZIONE.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.rifornimento.competenza']}"/></f:facet>
+	   			<h:outputText value="#{scon.rifornimento.assegnazione.postazione.nome}"/>
+			</p:column>
+			
+			<p:column sortBy="#{scon.rifornimento.gestore}" rendered="#{loggedUser.hasPerm('MODEL.SCONTRINO.GESTORE.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.scontrino.gestore']}"/></f:facet>
+	   			<h:outputText value="#{bundles.messages['gestore.'.concat(scon.rifornimento.gestore)]}"/>
+			</p:column>
+			
+			<p:column sortBy="#{scon.rifornimento.data}" rendered="#{loggedUser.hasPerm('MODEL.RIFORNIMENTO.DATA.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.rifornimento.data']}"/></f:facet>
+	   			<h:outputText value="#{scon.rifornimento.data}">
+	   				<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+	   			</h:outputText>
+			</p:column>
+			
+			<p:column sortBy="#{scon.rifornimento.carta.numero}" rendered="#{loggedUser.hasPerm('MODEL.SCONTRINO.CARTA.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.scontrino.carta']}"/></f:facet>
+	   			<h:outputText value="#{scon.rifornimento.carta.numero}"/>
+			</p:column>
+			
+			<p:column sortBy="#{scon.rifornimento.pinCard.codice}" rendered="#{loggedUser.hasPerm('MODEL.SCONTRINO.PINCARD.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.rifornimento.codiceOperatore']}"/></f:facet>
+	   			<h:outputText value="#{scon.rifornimento.pinCard.codiceOperatore}"/>
+			</p:column>
+			
+			<p:column
+				id ="idcol"
+				styleClass="#{scon.wrongNumber ? 'cellError' : ''}"
+				sortBy="#{scon.numero}" 
+				rendered="#{loggedUser.hasPerm('MODEL.SCONTRINO.NUMERO.VIEW')}">
+	   			<f:facet name="header">
+	   				<h:outputText value="#{bundles.messages['label.scontrino.numero']}"/>
+	   			</f:facet>
+	   			<p:cellEditor>
+		   			<f:facet name="output">  
+	                    <h:outputText value="#{scon.numero}" />
+	                    <h:graphicImage value="/resources/img/attention.png" rendered="#{scon.anomalo and scon.daGiustificare}" title="#{bundles.messages['image.title.attano']}" alt="#{bundles.messages['image.title.attano']}"/>  
+	                </f:facet>  
+	                <f:facet name="input">  
+	                    <p:inputText value="#{scon.numero}"/>
+	                </f:facet>  
+	   			</p:cellEditor>
+	   			<p:rowEditor rendered="#{not scon.anomalo and scon.daGiustificare and loggedUser.hasPerm('MODEL.SCONTRINO.NUMERO.EDIT')}" />
+			</p:column>
+			
+			<p:column 
+				sortBy="#{scon.rifornimento.chilometraggio}" 
+				rendered="#{showKmRif and loggedUser.hasPerm('MODEL.RIFORNIMENTO.CHILOMETRAGGIO.VIEW')}">
+	   			<f:facet name="header">
+	   				<h:outputText value="#{bundles.messages['label.scontrino.kmrif']}"/>
+	   			</f:facet>
+	   			<h:outputText value="#{scon.rifornimento.chilometraggio}">
+	   				<f:convertNumber />
+	   			</h:outputText>
+			</p:column>
+			
+			<p:column 
+				sortBy="#{scon.chilometraggioRettificato}" 
+				rendered="#{loggedUser.hasPerm('MODEL.SCONTRINO.KMRET.VIEW')}">
+	   			<f:facet name="header">
+	   				<h:outputText value="#{bundles.messages['label.scontrino.kmret']}"/>
+	   			</f:facet>
+	   			<h:outputText value="#{scon.chilometraggioRettificato}">
+	   				<f:convertNumber />
+	   			</h:outputText>
+			</p:column>
+			
+			<p:column 
+				sortBy="#{scon.mezzoRettificato.targa}" 
+				rendered="#{loggedUser.hasPerm('MODEL.SCONTRINO.MEZZORET.VIEW')}">
+	   			<f:facet name="header">
+	   				<h:outputText value="#{bundles.messages['label.scontrino.mezzoret']}"/>
+	   			</f:facet>
+	   			<h:outputText value="#{scon.mezzoRettificato.targa}" rendered="#{not empty scon.mezzoRettificato}"/>
+			</p:column>
+			
+			<p:column sortBy="#{scon.stato.stato}" rendered="#{loggedUser.hasPerm('MODEL.SCONTRINO.STATI.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.status.status']}"/></f:facet>
+	   			<h:outputText value="#{bundles.messages['scontrino.stato.'.concat(scon.stato.stato)]}"/>
+			</p:column>	
+			
+			<p:column style="width:40px" exportable="false">
+  				<h:commandLink action="/private/scontrini/scontrinoEdit.xhtml" actionListener="#{scontrinoHome.clearInstance}" 
+  						rendered="#{loggedUser.hasPerm('ACTION.SCONTRINO.EDIT') and scon.daGiustificare }">
+  					<h:graphicImage value="/resources/img/edit.png" atl="#{bundles.messages['image.title.edit']}" title="#{bundles.messages['image.title.edit']}"/>
+  					<f:param name="id" value="#{scon.id}" />
+  				</h:commandLink>
+    		</p:column>
+    		
+    		<p:column style="width:40px" exportable="false">
+  				<h:commandLink action="/private/scontrini/scontrino.xhtml" actionListener="#{scontrinoHome.clearInstance}">
+  					<h:graphicImage value="/resources/img/search.png" atl="#{bundles.messages['image.title.open']}" title="#{bundles.messages['image.title.open']}"/>
+  					<f:param name="id" value="#{scon.id}" />
+  				</h:commandLink>
+    		</p:column>
+		</p:dataTable>
+</ui:composition>
+
+					
+			

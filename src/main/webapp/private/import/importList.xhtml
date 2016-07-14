@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+		
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+			
+
+			<rich:panel>
+				<f:facet name="header">#{bundles.messages['label.search.criteria']}</f:facet>
+				
+				<d:input label="#{bundles.messages['label.import.tipo']}" key="MODEL.TIPOMEZZO.DESCRIZIONE.VIEW">
+					<h:selectOneMenu value="#{importList.tipo}" required="false">
+						<f:selectItem noSelectionOption="true" itemLabel="#{bundles.messages['label.search.select']}"/>
+						<f:selectItems  value="#{importList.tipi}" var="tipo" itemLabel="#{bundles.messages['import.tipo.'.concat(tipo)]}" itemValue="#{tipo}"/>
+						<s:objectConverter />
+					</h:selectOneMenu>
+				</d:input>
+				
+			</rich:panel>
+			
+			<div class="actionButtons">
+				<h:commandButton
+					action="#{importList.refresh}" 
+					value="#{bundles.messages['button.search']}" />
+					
+				<h:commandButton 
+						value="#{bundles.messages['button.import.q8']}"
+						rendered="#{loggedUser.hasPerm('ACTION.IMPORT.UPLOAD')}"> 
+					<rich:componentControl target="popupq8" operation="show" /> 
+				</h:commandButton> 
+				
+				<h:commandButton 
+						value="#{bundles.messages['button.import.agip']}"
+						rendered="#{loggedUser.hasPerm('ACTION.IMPORT.UPLOAD')}"> 
+					<rich:componentControl target="popupagip" operation="show" /> 
+				</h:commandButton> 
+				
+				<h:commandButton 
+						value="#{bundles.messages['button.import.socc']}"
+						rendered="#{loggedUser.hasPerm('ACTION.IMPORT.UPLOAD')}"> 
+					<rich:componentControl target="popupsoccorsi" operation="show" /> 
+				</h:commandButton>
+				
+				<h:commandButton 
+						value="#{bundles.messages['button.import.ana']}"
+						rendered="#{loggedUser.hasPerm('ACTION.IMPORT.UPLOAD')}"> 
+					<rich:componentControl target="popupanagrafica" operation="show" /> 
+				</h:commandButton>
+
+			</div>
+			
+			<rich:panel id="grid">
+				<f:facet name="header">#{bundles.messages['label.search.result']}: #{importList.resultCount}</f:facet>
+				
+				<div class="myCenter">
+			
+					<p:dataTable
+					 	id="tlb" 
+					 	var="import"
+						value="#{importList.dataModel}" 
+						paginator="true" 
+						rows="10"
+						rowsPerPageTemplate="10,15,20" 
+						draggableColumns="false"
+						rendered="#{not importList.isEmpty}"
+						lazy="true"
+						emptyMessage="#{bundles.messages['message.search.empty']}">
+						
+						<p:column sortBy="#{import.id}" rendered="#{loggedUser.hasPerm('MODEL.IMPORT.ID.VIEW')}">
+				   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.id']}"/></f:facet>
+				   			<h:outputText value="#{import.id}"/>
+						</p:column>
+						
+						<p:column sortBy="#{import.data}" rendered="#{loggedUser.hasPerm('MODEL.IMPORT.DATA.VIEW')}">
+				   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.import.data']}"/></f:facet>
+				   			<h:outputText value="#{import.data}">
+				   				<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+				   			</h:outputText>
+						</p:column>
+						
+						<p:column sortBy="#{import.tipo}" rendered="#{loggedUser.hasPerm('MODEL.IMPORT.TIPO.VIEW')}">
+				   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.import.tipo']}"/></f:facet>
+				   			<h:outputText value="#{bundles.messages['import.tipo.'.concat(import.tipo)]}"/>
+						</p:column>
+						
+						<p:column sortBy="#{import.file}" rendered="#{loggedUser.hasPerm('MODEL.IMPORT.FILE.VIEW')}">
+				   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.import.file']}"/></f:facet>
+				   			<h:outputText value="#{import.file}"/>
+						</p:column>
+						
+						<p:column sortBy="#{import.utente.surname}" rendered="#{loggedUser.hasPerm('MODEL.IMPORT.UTENTE.VIEW')}">
+				   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.import.utente']}"/></f:facet>
+				   			<h:outputText value="#{import.utente.fullName}"/>
+						</p:column>
+						
+						<p:column sortBy="#{import.dataInizio}" rendered="#{loggedUser.hasPerm('MODEL.IMPORT.DATAINIZIO.VIEW')}">
+				   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.import.inizio']}"/></f:facet>
+				   			<h:outputText value="#{import.dataInizio}">
+				   				<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+				   			</h:outputText>
+						</p:column>
+						
+						<p:column sortBy="#{import.dataFine}" rendered="#{loggedUser.hasPerm('MODEL.IMPORT.DATAFINE.VIEW')}">
+				   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.import.fine']}"/></f:facet>
+				   			<h:outputText value="#{import.dataFine}">
+				   				<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+				   			</h:outputText>
+						</p:column>
+						
+						<p:column sortBy="#{import.job.status}" rendered="#{loggedUser.hasPerm('MODEL.JOB.STATUS.VIEW')}">
+				   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.import.stato']}"/></f:facet>
+				   			<p:dataList value="#{import.jobs}" var="job" itemType="square" rendered="#{not empty import.jobs}" >  
+							    #{bundles.messages['job.status.'.concat(job.status)]}  
+							</p:dataList> 
+						</p:column>
+						
+						<p:column style="width:40px"> 
+							<p:commandLink oncomplete="confirmDelete.show()" rendered="#{not import.anagrafica}">
+								<f:setPropertyActionListener value="#{import}" target="#{importHome.instance}" /> 
+								<h:graphicImage value="/resources/img/trash.png" atl="#{bundles.messages['image.title.delete']}" title="#{bundles.messages['image.title.delete']}"/>
+							</p:commandLink> 
+			    		</p:column> 
+						
+					</p:dataTable>
+					
+				</div>
+			</rich:panel>
+			
+			<p:confirmDialog  
+				widgetVar="confirmDelete" 
+				message="#{bundles.messages['message.import.confirmdelete']}">  
+                
+                <p:commandButton 
+                	id="confirm" 
+                	value="#{bundles.messages['button.confirm']}" 
+                	oncomplete="confirmDelete.hide()"  
+                    actionListener="#{importHome.removeJob}"
+                    update="messages,grid" />  
+        		
+        		<p:commandButton 
+        			id="decline" 
+        			value="#{bundles.messages['button.calcel']}" 
+        			onclick="confirmDelete.hide()"
+           			 type="button" />   
+                
+            </p:confirmDialog >
+			
+			<rich:popupPanel 
+					id="popupq8" 
+					modal="true" 
+					onmaskclick="#{rich:component('popup8')}.hide()"
+					domElementAttachment="form"
+					autosized="true"> 
+				<f:facet name="header"> 
+					<h:outputText value="#{bundles.messages['header.import.q8']}" /> 
+				</f:facet> 
+				<f:facet name="controls"> 
+					<h:outputLink value="#" onclick="#{rich:component('popupq8')}.hide(); return false;"> X </h:outputLink> 
+				</f:facet>
+				
+				<rich:fileUpload
+					ontyperejected="alert('Solo file XLS sono accettati');"
+					fileUploadListener="#{rifornimentoFileUpload.listenerQ8}" 
+					id="fuploadq8" 
+					acceptedTypes="xls"
+	               	maxFilesQuantity="1"
+	               	render="@form">
+            	</rich:fileUpload> 
+			</rich:popupPanel>
+			
+			<rich:popupPanel 
+					id="popupagip" 
+					modal="true" 
+					onmaskclick="#{rich:component('popupagip')}.hide()"
+					domElementAttachment="form"
+					autosized="true"> 
+				<f:facet name="header"> 
+					<h:outputText value="#{bundles.messages['header.import.agip']}" /> 
+				</f:facet> 
+				<f:facet name="controls"> 
+					<h:outputLink value="#" onclick="#{rich:component('popupagip')}.hide(); return false;"> X </h:outputLink> 
+				</f:facet>
+				
+				<rich:fileUpload
+					ontyperejected="alert('Solo file TXT sono accettati');"
+					fileUploadListener="#{rifornimentoFileUpload.listenerAgip}" 
+					id="fuploadagip" 
+					acceptedTypes="txt"
+	               	maxFilesQuantity="1"
+	               	render="@form">
+            	</rich:fileUpload> 
+			</rich:popupPanel>
+			
+			<rich:popupPanel 
+					id="popupsoccorsi" 
+					modal="true" 
+					onmaskclick="#{rich:component('popupsoccorsi')}.hide()"
+					domElementAttachment="form"
+					autosized="true"> 
+				<f:facet name="header"> 
+					<h:outputText value="#{bundles.messages['header.import.socc']}" /> 
+				</f:facet> 
+				<f:facet name="controls"> 
+					<h:outputLink value="#" onclick="#{rich:component('popupsoccorsi')}.hide(); return false;"> X </h:outputLink> 
+				</f:facet>
+				
+				<h:panelGrid columns="2" styleClass="panelColumnsMiddle" >
+				
+					<h:outputLabel value="#{bundles.messages['label.mese']}"/>
+					
+					<h:selectOneMenu value="#{soccorsiFileUpload.month}" required="true">
+						<f:selectItems  value="#{soccorsiFileUpload.months}" var="month" itemLabel="#{bundles.messages['calendar.month.'.concat(month)]}" itemValue="#{month}"/>
+						<a4j:ajax execute="@this" />
+					</h:selectOneMenu>
+					
+					<h:outputLabel value="#{bundles.messages['label.anno']}"/>
+						
+					<rich:inputNumberSpinner value="#{soccorsiFileUpload.year}" minValue="1900" maxValue="3000" enableManualInput="false">
+						<a4j:ajax execute="@this" />
+					</rich:inputNumberSpinner>	
+				
+				</h:panelGrid>
+				
+				
+				<rich:fileUpload
+					ontyperejected="alert('Solo file XLS sono accettati');"
+					fileUploadListener="#{soccorsiFileUpload.listenerSoccorsi}" 
+					id="fuploadsoccorsi" 
+					acceptedTypes="xls"
+	               	maxFilesQuantity="1"
+	               	render="@form">
+            	</rich:fileUpload> 
+			</rich:popupPanel>
+			
+			<rich:popupPanel 
+					id="popupanagrafica" 
+					modal="true" 
+					onmaskclick="#{rich:component('popupanagrafica')}.hide()"
+					domElementAttachment="form"
+					autosized="true"> 
+				<f:facet name="header"> 
+					<h:outputText value="#{bundles.messages['header.import.ana']}" /> 
+				</f:facet> 
+				<f:facet name="controls"> 
+					<h:outputLink value="#" onclick="#{rich:component('popupanagrafica')}.hide(); return false;"> X </h:outputLink> 
+				</f:facet>
+				Template: <a href="import.xls" >import.xls</a>
+				<rich:fileUpload
+					ontyperejected="alert('Solo file XLS sono accettati');"
+					fileUploadListener="#{anagraficaFileUpload.listenerAnagrafica}" 
+					id="fuploadanagrafica" 
+					acceptedTypes="xls"
+	               	maxFilesQuantity="1"
+	               	render="@form">
+            	</rich:fileUpload> 
+			</rich:popupPanel>
+			
+		</h:form>
+		
+	</ui:define>
+	
+</ui:composition>

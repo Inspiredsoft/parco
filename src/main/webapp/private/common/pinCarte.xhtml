@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<p:dataTable
+			rowStyleClass="#{pin.removed ? 'rowRemoved' : ''}"
+		 	id="tlbPin" 
+		 	var="pin"
+			value="#{pins.dataModel}" 
+			paginator="true" 
+			rows="10"
+			rowsPerPageTemplate="10,15,20" 
+			draggableColumns="false"
+			rendered="#{not pins.isEmpty}"
+			lazy="true"
+			emptyMessage="#{bundles.messages['message.search.empty']}">
+			
+			<p:column sortBy="#{pin.id}" rendered="#{loggedUser.hasPerm('MODEL.PINCARD.ID.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.id']}"/></f:facet>
+	   			<h:outputText value="#{pin.id}"/>
+			</p:column>
+			
+			<p:column sortBy="#{pin.codiceOperatore}" rendered="#{loggedUser.hasPerm('MODEL.PINCARD.CODICE.OPERATORE.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.pincard.codiceOperatore']}"/></f:facet>
+	   			<h:outputText value="#{pin.codiceOperatore}"/>
+			</p:column>
+			
+			<p:column sortBy="#{pin.codiceBusta}" rendered="#{loggedUser.hasPerm('MODEL.PINCARD.CODICE.BUSTA.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.pincard.codiceBusta']}"/></f:facet>
+	   			<h:outputText value="#{pin.codiceBusta}"/>
+			</p:column>
+			
+			<p:column sortBy="#{pin.gestore}" rendered="#{loggedUser.hasPerm('MODEL.PINCARD.GESTORE.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.pincard.gestore']}"/></f:facet>
+	   			<h:outputText value="#{bundles.messages['gestore.'.concat(pin.gestore)]}"/>
+			</p:column>
+			
+			<p:column sortBy="#{pin.stato.stato}" rendered="#{loggedUser.hasPerm('MODEL.PINCARD.STATO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.status.status']}"/></f:facet>
+	   			<h:outputText value="#{bundles.messages['pin.stato.'.concat(pin.stato.stato)]}"/>
+			</p:column>
+				
+    		<p:column style="width:40px" exportable="false">  
+  				<h:commandLink action="/private/pin/pinCarta.xhtml" actionListener="#{pinCartaHome.clearInstance}">
+  					<h:graphicImage value="/resources/img/search.png" atl="#{bundles.messages['image.title.open']}" title="#{bundles.messages['image.title.open']}"/>
+  					<f:param name="id" value="#{pin.id}" />
+  				</h:commandLink>
+    		</p:column> 
+			
+	</p:dataTable>
+	
+	
+</ui:composition>

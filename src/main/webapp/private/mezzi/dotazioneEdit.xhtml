@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.dotazione.edit']}"	rendered="#{dotazioneHome.managed}" />
+					<h:outputText value="#{bundles.messages['header.dotazione.new']}"   rendered="#{not dotazioneHome.managed}" />
+				</f:facet>
+				
+				<d:output label="#{bundles.messages['label.id']}" key="MODEL.DOTAZIONE.ID.VIEW" rendered="#{dotazioneHome.managed}">
+					<h:outputText value="#{dotazioneHome.instance.id}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.dotazione.mezzo']}" key="MODEL.MEZZO.TARGA.VIEW" rendered="#{dotazioneHome.instance.dotazioneMezzo}">
+					<h:outputText value="#{dotazioneHome.instance.mezzo.targa}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.dotazione.postazione']}" key="MODEL.POSTAZIONE.NOME.VIEW" rendered="#{dotazioneHome.instance.dotazionePostazione}">
+					<h:outputText value="#{dotazioneHome.instance.postazione.nome}" />
+				</d:output>
+				
+				<d:output label="#{bundles.messages['label.dotazione.genere']}" key="MODEL.DOTAZIONE.GENERE.VIEW" rendered="#{dotazioneHome.managed}">
+					<h:outputText value="#{dotazioneHome.instance.genere.descrizione}" />
+				</d:output>
+				
+				<d:input label="#{bundles.messages['label.dotazione.genere']}" key="MODEL.DOTAZIONE.GENERE.EDIT" rendered="#{not dotazioneHome.managed}">
+					<h:selectOneMenu value="#{dotazioneHome.instance.genere}" required="true">
+						<f:selectItems value="#{dotazioneHome.generi}" var="genere" itemValue="#{genere}" itemLabel="#{genere.descrizione}"/>
+						<s:objectConverter />
+					</h:selectOneMenu>
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.dotazione.matricola']}" key="MODEL.DOTAZIONE.MATRICOLA.EDIT">
+					<h:inputText value="#{dotazioneHome.instance.matricola}" required="true" />
+				</d:input>
+
+			</rich:panel>
+			
+			<div class="actionButtons">
+				<h:button id="bCancel" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.calcel']}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:commandButton id="bSave"
+					value="#{bundles.messages['button.save']}"
+					action="#{dotazioneHome.save}" 
+					rendered="#{loggedUser.hasPerm('ACTION.MEZZO.DOTAZIONE.EDIT')}"
+					/>
+			</div>
+			
+			<rich:tabPanel 
+					switchType="client">
+				
+				<rich:tab
+					rendered="#{dotazioneHome.instance.dotazioneMezzo}" 
+				 	header="#{bundles.messages['header.mezzo']}">
+					<ui:include src="/private/common/info-mezzo.xhtml">
+				 		<ui:param name="mezzo" value="#{dotazioneHome.instance.mezzo}" />
+				 	</ui:include>				 		
+				 </rich:tab>
+				 
+				 <rich:tab 
+				 	rendered="#{dotazioneHome.instance.dotazionePostazione}"
+				 	header="#{bundles.messages['header.postazione']}">
+					<ui:include src="/private/common/info-postazione.xhtml">
+				 		<ui:param name="postazione" value="#{dotazioneHome.instance.postazione}" />
+				 	</ui:include>				 		
+				 </rich:tab>
+				
+			</rich:tabPanel>
+		</h:form>
+		
+	</ui:define>
+	
+</ui:composition>

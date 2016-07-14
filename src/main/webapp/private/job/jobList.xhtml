@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+	        <a4j:poll id="poll" interval="#{configManager.refreshInterval}" render="poll,grid" />
+	    </h:form>
+		
+		<h:form>
+		
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+			
+
+			<rich:panel>
+				<f:facet name="header">#{bundles.messages['label.search.criteria']}</f:facet>
+				
+				<d:input label="#{bundles.messages['label.job.status']}" key="MODEL.JOB.STATUS.VIEW">
+					<h:selectOneMenu value="#{jobList.status}" required="false">
+						<f:selectItem noSelectionOption="true" itemLabel="#{bundles.messages['label.search.select']}"/>
+						<f:selectItems  value="#{jobList.statuses}" var="status" itemLabel="#{bundles.messages['job.status.'.concat(status)]}" itemValue="#{status}"/>
+						<s:objectConverter />
+					</h:selectOneMenu>
+				</d:input>
+				
+			</rich:panel>
+			
+			<div class="actionButtons">
+				<h:commandButton
+					action="#{jobList.refresh}" 
+					value="#{bundles.messages['button.search']}" />
+					
+				<h:commandButton value="#{bundles.messages['button.new']}"
+					action="/private/job/newJob.xhtml"
+					actionListener="#{newJob.init}" 
+					rendered="#{loggedUser.hasPerm('ACTION.JOB.NEW')}"/>
+			</div>
+			
+			<rich:panel id="grid">
+				<f:facet name="header">#{bundles.messages['label.search.result']}: #{jobList.resultCount}</f:facet>
+				
+				<div class="myCenter">
+					
+					<h:outputText value="#{bundles.messages['message.search.empty']}" rendered="#{jobList.isEmpty}"/>
+					
+					<ui:include src="/private/common/dtJobs.xhtml" >
+						<ui:param name="jobs" 			value="#{jobList}" />
+						<ui:param name="showId" 		value="true" />
+					</ui:include>
+					
+				</div>
+			</rich:panel>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

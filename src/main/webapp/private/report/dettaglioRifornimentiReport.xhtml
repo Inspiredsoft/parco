@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:commandLink 
+		action="#{rifornimentiReport.clear}" 
+		value="INDIETRO DA #{(postazioneMezziReport.selected ? postazioneMezziReport.selectedRiepilogo.postazione.nome : '')} [#{rifornimentiReport.mese}/#{rifornimentiReport.anno} - #{rifornimentiReport.mezzo.targa}]">
+		<f:ajax render="form"/>
+	</h:commandLink>
+
+	
+	<ui:include src="/private/common/rifornimenti.xhtml">
+	 	<ui:param name="rifornimenti" 	value="#{rifornimentiReport}" />
+	 	<ui:param name="showId"	value="false" />
+	 	<ui:param name="showQuantita"	value="true" />
+	 	<ui:param name="showImporto"	value="true" />
+	</ui:include>
+	
+	<ui:include src="/private/common/export.xhtml">
+		<ui:param name="rendered" 		value="#{not rifornimentiReport.isEmpty}" />
+		<ui:param name="target" 		value="tblRifornimenti" />
+		<ui:param name="fileName" 		value="#{bundles.messages['file.name.rifornimenti']}" />
+	</ui:include>
+</ui:composition>

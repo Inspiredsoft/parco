@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+		
+	<ui:define name="content">
+	
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+		
+			<rich:panel>	
+				<f:facet name="header">
+					<h:outputText value="#{bundles.messages['header.polizza.edit']}"	rendered="#{polizzaHome.managed}" />
+					<h:outputText value="#{bundles.messages['header.polizza.new']}"   rendered="#{not polizzaHome.managed}" />
+				</f:facet>
+				
+				<d:output label="#{bundles.messages['label.id']}" key="MODEL.POLIZZA.ID.VIEW" rendered="#{polizzaHome.managed}">
+					<h:outputText value="#{polizzaHome.instance.id}" />
+				</d:output>
+				
+				<d:input label="#{bundles.messages['label.polizza.assicurazione']}" key="MODEL.POLIZZA.ASSICURAZIONE.EDIT">
+					<h:selectOneMenu value="#{polizzaHome.instance.compagnia}" required="true">
+						<f:selectItems value="#{polizzaHome.compagnie}" var="comp" itemValue="#{comp}" itemLabel="#{comp.nome}"/>
+						<s:objectConverter/>
+					</h:selectOneMenu>
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.polizza.numero']}" key="MODEL.POLIZZA.NUMERO.EDIT">
+					<h:inputText value="#{polizzaHome.instance.numero}" required="true"/>
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.polizza.mezzo']}" key="MODEL.POLIZZA.MEZZO.EDIT">
+					<rich:autocomplete 
+						required="true"
+						mode="cachedAjax" 
+						minChars="1" 
+						autocompleteMethod="#{polizzaHome.autocompleteMezzo}"
+						value="#{polizzaHome.targa}"
+						var="mezzo"
+						fetchValue="#{mezzo.targa}"
+						layout="table"
+					 	selectFirst="true">
+						<rich:column>
+					 	 	<f:facet name="header">
+								<h:outputText value="#{bundles.messages['label.mezzo.targa']}" />
+							</f:facet>
+							<b>#{mezzo.targa}</b>
+			            </rich:column>
+			            <f:validator validatorId="targaValidator"/>
+					</rich:autocomplete>
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.polizza.decorrenza']}" key="MODEL.POLIZZA.DECORRENZA.EDIT">
+					<rich:calendar 
+						required="true"
+						value="#{polizzaHome.instance.dataDecorrenza}" 
+						popup="true" 
+						datePattern="#{configManager.shortDateFormat}">
+			        </rich:calendar>
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.polizza.scadenza']}" key="MODEL.POLIZZA.SCADENZA.EDIT">
+					<rich:calendar 
+						required="true"
+						value="#{polizzaHome.instance.dataScadenza}" 
+						popup="true" 
+						datePattern="#{configManager.shortDateFormat}">
+			        </rich:calendar>	
+				</d:input>
+				
+			</rich:panel>
+			
+			<div class="actionButtons">
+				<h:button id="bCancel" outcome="#{viewChain.backPage}"
+					value="#{bundles.messages['button.calcel']}">
+					<f:param name="cid" value="#{conversation.id}" />
+				</h:button>
+
+				<h:commandButton id="bSave"
+					value="#{bundles.messages['button.save']}"
+					action="#{polizzaHome.save}" 
+					rendered="#{loggedUser.hasPerm('ACTION.POLIZZA.EDIT')}"
+					/>
+			</div>
+			
+			<rich:tabPanel switchType="client" rendered="#{polizzaHome.managed}">
+				<rich:tab 
+				 	header="#{bundles.messages['header.mezzo']}"
+				 	rendered="#{polizzaHome.managed}">
+					
+					<ui:include src="/private/common/info-mezzo.xhtml">
+				 		<ui:param name="mezzo" value="#{polizzaHome.instance.mezzo}" />
+				 	</ui:include>
+				 					 		
+				 </rich:tab>
+			</rich:tabPanel> 
+			
+		</h:form>
+	</ui:define>
+</ui:composition>

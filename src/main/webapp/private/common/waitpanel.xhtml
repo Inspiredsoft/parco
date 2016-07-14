@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<a4j:status id="ajaxStatus"
+   		onstart="#{rich:component('waitPanel')}.show('',{top:'40px', left:'80px',height:'100px', width:'200px'})"
+   		onstop="#{rich:component('waitPanel')}.hide()" />
+ 
+	<rich:popupPanel id="waitPanel" modal="true" autosized="true" resizeable="false">
+	  	<h:graphicImage value="/resources/img/wait.gif" height="15" width="15"/>
+	</rich:popupPanel>
+	
+</ui:composition>

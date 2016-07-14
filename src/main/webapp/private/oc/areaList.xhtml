@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:s="http://jboss.org/seam/faces"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:d="http://java.sun.com/jsf/composite/components"
+	template="/private/layout/basic.xhtml">
+
+	<ui:define name="content">
+
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{viewChain.begin}" />
+		</f:metadata>
+		
+		<h:form>
+		
+			<h:messages id="messages" globalOnly="true" styleClass="message" />
+			
+
+			<rich:panel>
+				<f:facet name="header">#{bundles.messages['label.search.criteria']}</f:facet>
+				
+				<d:input label="#{bundles.messages['label.area.nome']}" key="MODEL.AREA.NOME.VIEW">
+						<h:inputText value="#{areaList.nome}" />
+				</d:input>
+				
+				<d:input label="#{bundles.messages['label.area.provincia']}" key="MODEL.AREA.PROVINCIA.VIEW">
+					<h:selectOneMenu value="#{areaList.provincia}" required="false">
+						<f:selectItem noSelectionOption="true" itemLabel="#{bundles.messages['label.search.select']}"/>
+						<f:selectItems  value="#{areaList.province}" var="provincia" itemLabel="#{provincia.sigla}" itemValue="#{provincia}"/>
+						<s:objectConverter />
+					</h:selectOneMenu>
+				</d:input>
+				
+			</rich:panel>
+			
+			<div class="actionButtons">
+				<h:commandButton
+					action="#{areaList.refresh}" 
+					value="#{bundles.messages['button.search']}" />
+					
+				<h:commandButton value="#{bundles.messages['button.new']}"
+					action="/private/oc/areaEdit.xhtml"
+					actionListener="#{areaHome.clearInstance}" 
+					rendered="#{loggedUser.hasPerm('ACTION.AREA.EDIT')}"/>
+			</div>
+			
+			<rich:panel id="grid">
+				<f:facet name="header">#{bundles.messages['label.search.result']}: #{areaList.resultCount}</f:facet>
+				
+				<div class="myCenter">
+			
+					<p:dataTable
+					 	id="tlb" 
+					 	var="area"
+						value="#{areaList.dataModel}" 
+						paginator="true" 
+						rows="10"
+						rowsPerPageTemplate="10,15,20" 
+						draggableColumns="false"
+						rendered="#{not areaList.isEmpty}"
+						lazy="true"
+						emptyMessage="#{bundles.messages['message.search.empty']}">
+						
+						<p:column sortBy="#{area.id}" rendered="#{loggedUser.hasPerm('MODEL.AREA.ID.VIEW')}">
+				   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.id']}"/></f:facet>
+				   			<h:outputText value="#{area.id}"/>
+						</p:column>
+						
+						<p:column sortBy="#{area.provincia.sigla}" rendered="#{loggedUser.hasPerm('MODEL.AREA.PROVINCIA.VIEW')}">
+				   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.area.provincia']}"/></f:facet>
+				   			<h:outputText value="#{area.provincia.sigla}"/>
+						</p:column>
+						
+						<p:column sortBy="#{area.nome}" rendered="#{loggedUser.hasPerm('MODEL.AREA.NOME.VIEW')}">
+				   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.area.nome']}"/></f:facet>
+				   			<h:outputText value="#{area.nome}"/>
+						</p:column>
+						
+						<p:column sortBy="#{area.descrizione}" rendered="#{loggedUser.hasPerm('MODEL.AREA.DESCRIZIONE.VIEW')}">
+				   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.area.descrizione']}"/></f:facet>
+				   			<h:outputText value="#{area.descrizione}"/>
+						</p:column>
+						
+						<p:column style="width:40px" exportable="false">
+			  				<h:commandLink action="/private/oc/area.xhtml" actionListener="#{areaHome.clearInstance}">
+			  					<h:graphicImage value="/resources/img/search.png" atl="#{bundles.messages['image.title.open']}" title="#{bundles.messages['image.title.open']}"/>
+			  					<f:param name="id" value="#{area.id}" />
+			  				</h:commandLink>
+			    		</p:column> 
+					</p:dataTable>	
+				</div>
+			</rich:panel>
+		</h:form>	
+	</ui:define>
+</ui:composition>

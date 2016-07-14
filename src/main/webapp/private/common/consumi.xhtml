@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<p:dataTable
+			rowStyleClass="#{consumo.mezzo.removed ? 'rowRemoved' : ''}"
+		 	id="tlbConsumiRep" 
+		 	var="consumo"
+			value="#{consumi.dataModel}" 
+			paginator="true" 
+			rows="10"
+			rowsPerPageTemplate="10,15,20" 
+			draggableColumns="false"
+			rendered="#{not consumi.isEmpty}"
+			lazy="true"
+			emptyMessage="#{bundles.messages['message.search.empty']}">
+			
+			<p:column style="width:2%" rendered="#{loggedUser.hasPerm('MODEL.CONSUMI.RIF.VIEW')}" exportable="false">  
+	            <p:rowToggler />  
+	        </p:column>
+	        
+			<p:rowExpansion>
+				<h:panelGrid columns="2" cellpadding="4">
+					
+					<h:panelGroup>
+					
+						<ui:include src="/private/common/dati-rifornimento.xhtml">
+							<ui:param name="rifornimento" value="#{consumo.rifornimento}" />
+						</ui:include>
+					
+					</h:panelGroup>
+					
+					<h:panelGroup>
+						
+						<ui:include src="/private/common/dati-rifornimento.xhtml">
+							<ui:param name="rifornimento" value="#{consumo.rifornimentoPrecedente}" />
+						</ui:include>
+					
+					</h:panelGroup>
+					
+				</h:panelGrid> 
+			</p:rowExpansion>
+			
+			<p:column sortBy="#{consumo.data}" rendered="#{loggedUser.hasPerm('MODEL.CONSUMI.DATA.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.consumo.data']}"/></f:facet>
+	   			<h:outputText value="#{consumo.data}">
+	   				<f:convertDateTime pattern="#{configManager.longDateFormat}"/>
+	   			</h:outputText>
+			</p:column>
+			
+			<p:column sortBy="#{consumo.mezzo.targa}" rendered="#{loggedUser.hasPerm('MODEL.CONSUMI.MEZZO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.consumo.mezzo']}"/></f:facet>
+	   			<h:outputText value="#{consumo.mezzo.targa}"/>
+			</p:column>
+			
+			<p:column 
+				rendered="#{loggedUser.hasPerm('MODEL.MEZZO.ASSEGNZIONE.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.mezzo.assegnazione']}"/></f:facet>
+	   			<h:outputText value="#{consumo.mezzo.assegnazione.postazione.nome}" rendered="#{not empty consumo.mezzo.assegnazione}"/>
+			</p:column>
+			
+			<p:column sortBy="#{consumo.quantita}" rendered="#{loggedUser.hasPerm('MODEL.CONSUMI.QUANTITA.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.consumo.quantita']}"/></f:facet>
+	   			<h:outputText value="#{consumo.quantita}">
+	   				<f:convertNumber pattern="#,###,##0.00"/>
+	   			</h:outputText>
+			</p:column>
+			
+			<p:column sortBy="#{consumo.chilometri}" rendered="#{loggedUser.hasPerm('MODEL.CONSUMI.CHILOMETRI.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.consumo.chilometri']}"/></f:facet>
+	   			<h:outputText value="#{consumo.chilometri}">
+	   				<f:convertNumber />
+	   			</h:outputText>
+			</p:column>
+			
+			<p:column sortBy="#{consumo.consumo}" rendered="#{loggedUser.hasPerm('MODEL.CONSUMI.CONSUMO.VIEW')}">
+	   			<f:facet name="header"><h:outputText value="#{bundles.messages['label.consumo.consumo']}"/></f:facet>
+	   			<h:outputText value="#{consumo.consumo}">
+	   				<f:convertNumber pattern="#,###,##0.00"/>
+	   			</h:outputText>
+			</p:column>
+			
+		</p:dataTable>
+</ui:composition>
