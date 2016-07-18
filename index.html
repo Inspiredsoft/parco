@@ -1,6 +1,139 @@
-<!DOCTYPE html><html lang="en-us">  <head>    <meta content="text/html; charset=UTF-8" http-equiv="content-type">    <title>Parco by Inspiredsoft</title>    <meta name="viewport" content="width=device-width, initial-scale=1">    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet"      type="text/css">    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">  </head>  <body>    <section class="page-header">      <h1 class="project-name">Parco</h1>      <h2 class="project-tagline">PARCO - Gestione Consumi Parco Auto</h2>      <a href="https://github.com/Inspiredsoft/parco" class="btn">View on GitHub</a>      <a href="https://github.com/Inspiredsoft/parco/zipball/master" class="btn">Download
-        .zip</a> <a href="https://github.com/Inspiredsoft/parco/tarball/master"        class="btn">Download
-        .tar.gz</a> </section>    <section class="main-content">      <h3> <a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"          aria-hidden="true"><span            aria-hidden="true"            class="octicon octicon-link"></span></a>PARCO.</h3>      <p style="text-align: justify;"> Sistema per la gestione, il monitoraggio        ed il controllo dei rifornimenti di carburante del parco auto aziendale,        effettuati attraverso l’utilizzo di "carte carburante" rilasciate da Q8        o Agip (ENI).<br>      </p>      <h3> <a id="designer-templates" class="anchor" href="#designer-templates"          aria-hidden="true"><span            aria-hidden="true"            class="octicon octicon-link"></span></a>Funzionalità</h3>      <ul>        <li style="text-align: justify;"> Gestione anagrafica parco auto          aziendale:</li>        <ul style="text-align: justify;">          <li>targa, stato, assegnazione, scadenza bollo/revisione, dotazioni            (tomtom, etc.);</li>          <li>modello, capienza serbatoio, tipo carburante utilizzato, consumo            urbano/extraurbano;</li>        </ul>      </ul>      <ul style="text-align: justify;">        <ul>        </ul>      </ul>      <ul style="text-align: justify;">        <li> Gestione anagrafica carte carburante e carte pin:</li>        <ul>          <li>numero carta, identificativo, associazione al mezzo;</li>          <li>associazione della carta pin alla perona (attualmente disponibile            solo per Agip);</li>        </ul>      </ul>      <ul style="text-align: justify;">      </ul>      <ul style="text-align: justify;">        <li> Acquisizione file dati sui rifornimenti generati dai sistemi di          fatturazione di Agip e Q8;</li>        <li>Elaborazione dati relativi ai rifornimenti effettuati attraverso le          carte carburante al fine di:</li>        <ul>          <li>identificare rifornimenti anomali;</li>          <li>produrre report di consumo e spesa;</li>        </ul>      </ul>      <ul>        <li style="text-align: justify;">Verifica degli scontrini consentendo          agli operatori (periferici) di inserire i numeri di scontrino e          giustificare le anomalie rilevate.<br>        </li>      </ul>      <ul>      </ul>      <ul>      </ul>      <ul>      </ul>      <h3> <a id="creating-pages-manually" class="anchor" href="#creating-pages-manually"          aria-hidden="true"><span            aria-hidden="true"            class="octicon octicon-link"></span></a>Rilevazione
-        Anomalie</h3>      <p style="text-align: justify;">Opportuni task asincroni vengono attivati        a seguito dell’importazione di nuovi dati e al fine di rilevare        eventuali anomalie. Le anomalie rilevabili sono:</p>      <ul>        <li> Anomalie sul chilometraggio dichiarato;</li>        <li>Anomalie sulla frequenza dei rifornimenti;</li>        <li>Anomalie sul consumo (ciclo urbano/extraurbano);</li>        <li>Anomalie sull’utilizzo della carta carburante;</li>        <li>Anomalie sulla tipologia di carburante;</li>        <li>Anomalie sulla capienza del serbatoio;</li>        <li>Anomalia sullo stato di servizio del mezzo; </li>        <li>Anomalie sull'utilizzo della carta pin;</li>      </ul>      <h3> <a id="authors-and-contributors" class="anchor" href="#authors-and-contributors"          aria-hidden="true"><span            aria-hidden="true"            class="octicon octicon-link"></span></a>Report</h3>      <p>Esempi di reportistica generata sono le seguenti:</p>      <ul>        <li>Report sulle scadenze del mese (polizze o bollo);</li>        <li>Report sul consumo medio mensile di carburante;</li>        <li>Report aggregato per area del consumo complessivo          ed importo complessivo;</li>      </ul>      <h3> <a id="support-or-contact" class="anchor" href="#support-or-contact"          aria-hidden="true"><span            aria-hidden="true"            class="octicon octicon-link"></span></a>Shcema        Funzionale</h3>      <div style="text-align: center;"><img style="width: 644px; height: 440px;"          alt="Entità coinvolte"          src="images/entita.png"></div>      <p><br>      </p>      <p><br>      </p>      <footer class="site-footer"> <span class="site-footer-owner"><a href="https://github.com/Inspiredsoft/parco">Parco</a>          is maintained by <a href="https://github.com/Inspiredsoft">Inspiredsoft</a>.</span>        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <title>Parco by Inspiredsoft</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet"
+      type="text/css">
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Parco</h1>
+      <h2 class="project-tagline">PARCO - Gestione Consumi Parco Auto</h2>
+      <a href="https://github.com/Inspiredsoft/parco" class="btn">View on GitHub</a>
+      <a href="https://github.com/Inspiredsoft/parco/zipball/master" class="btn">Download
+        .zip</a> <a href="https://github.com/Inspiredsoft/parco/tarball/master"
+        class="btn">Download
+        .tar.gz</a> </section>
+    <section class="main-content">
+      <h3> <a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"
+          aria-hidden="true"><span
+            aria-hidden="true"
+            class="octicon octicon-link"></span></a>PARCO.</h3>
+      <p style="text-align: justify;"> Sistema per la gestione, il monitoraggio
+        ed il controllo dei rifornimenti di carburante del parco auto aziendale,
+        effettuati attraverso l’utilizzo di "carte carburante" rilasciate da Q8
+        o Agip (ENI).<br>
+      </p>
+      <h3> <a id="designer-templates" class="anchor" href="#designer-templates"
+          aria-hidden="true"><span
+            aria-hidden="true"
+            class="octicon octicon-link"></span></a>Funzionalità</h3>
+      <ul>
+        <li style="text-align: justify;"> Gestione anagrafica parco auto
+          aziendale:</li>
+        <ul style="text-align: justify;">
+          <li>targa, stato, assegnazione, scadenza bollo/revisione, dotazioni
+            (tomtom, etc.);</li>
+          <li>modello, capienza serbatoio, tipo carburante utilizzato, consumo
+            urbano/extraurbano;</li>
+        </ul>
+      </ul>
+      <ul style="text-align: justify;">
+        <ul>
+        </ul>
+      </ul>
+      <ul style="text-align: justify;">
+        <li> Gestione anagrafica carte carburante e carte pin:</li>
+        <ul>
+          <li>numero carta, identificativo, associazione al mezzo;</li>
+          <li>associazione della carta pin alla perona (attualmente disponibile
+            solo per Agip);</li>
+        </ul>
+      </ul>
+      <ul style="text-align: justify;">
+      </ul>
+      <ul style="text-align: justify;">
+        <li> Acquisizione file dati sui rifornimenti generati dai sistemi di
+          fatturazione di Agip e Q8;</li>
+        <li>Elaborazione dati relativi ai rifornimenti effettuati attraverso le
+          carte carburante al fine di:</li>
+        <ul>
+          <li>identificare rifornimenti anomali;</li>
+          <li>produrre report di consumo e spesa;</li>
+        </ul>
+      </ul>
+      <ul>
+        <li style="text-align: justify;">Verifica degli scontrini consentendo
+          agli operatori (periferici) di inserire i numeri di scontrino e
+          giustificare le anomalie rilevate.<br>
+        </li>
+      </ul>
+      <ul>
+      </ul>
+      <ul>
+      </ul>
+      <ul>
+      </ul>
+      <h3> <a id="creating-pages-manually" class="anchor" href="#creating-pages-manually"
+          aria-hidden="true"><span
+            aria-hidden="true"
+            class="octicon octicon-link"></span></a>Rilevazione
+        Anomalie</h3>
+      <p style="text-align: justify;">Opportuni task asincroni vengono attivati
+        a seguito dell’importazione di nuovi dati e al fine di rilevare
+        eventuali anomalie. Le anomalie rilevabili sono:</p>
+      <ul>
+        <li> Anomalie sul chilometraggio dichiarato;</li>
+        <li>Anomalie sulla frequenza dei rifornimenti;</li>
+        <li>Anomalie sul consumo (ciclo urbano/extraurbano);</li>
+        <li>Anomalie sull’utilizzo della carta carburante;</li>
+        <li>Anomalie sulla tipologia di carburante;</li>
+        <li>Anomalie sulla capienza del serbatoio;</li>
+        <li>Anomalia sullo stato di servizio del mezzo; </li>
+        <li>Anomalie sull'utilizzo della carta pin;</li>
+      </ul>
+      <h3> <a id="authors-and-contributors" class="anchor" href="#authors-and-contributors"
+          aria-hidden="true"><span
+            aria-hidden="true"
+            class="octicon octicon-link"></span></a>Report</h3>
+      <p>Esempi di reportistica generata sono le seguenti:</p>
+      <ul>
+        <li>Report sulle scadenze del mese (polizze o bollo);</li>
+        <li>Report sul consumo medio mensile di carburante;</li>
+        <li>Report aggregato per area del consumo complessivo
+          ed importo complessivo;</li>
+      </ul>
+      <h3> <a id="support-or-contact" class="anchor" href="#support-or-contact"
+          aria-hidden="true"><span
+            aria-hidden="true"
+            class="octicon octicon-link"></span></a>Schema
+        Funzionale</h3>
+      <div style="text-align: center;"><img style="width: 644px; height: 440px;"
+          alt="Entità coinvolte"
+          src="images/entita.png"></div>
+          
+          <h3> <a id="support-or-contact" class="anchor" href="#support-or-contact"
+          aria-hidden="true"><span
+            aria-hidden="true"
+            class="octicon octicon-link"></span></a>Requisiti</h3>
+            <li>JBoss 7.1.0</li>
+            <li>Java 1.6+</li>
+            <li>MySQL 5.5</li>
+      <p><br>
+      </p>
+      <p><br>
+      </p>
+      <footer class="site-footer"> <span class="site-footer-owner"><a href="https://github.com/Inspiredsoft/parco">Parco</a>
+          is maintained by <a href="https://github.com/Inspiredsoft">Inspiredsoft</a>.</span>
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub
             Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman
-            theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>      </footer>    </section>  </body></html>
+            theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+    </section>
+  </body>
+</html>
