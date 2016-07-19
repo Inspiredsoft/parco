@@ -3,7 +3,7 @@
   <persistence-unit name="parcoPu" transaction-type="JTA">
     <description>PARCO Persistence Unit</description>
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
-    <jta-data-source>java:jboss/datasources/ParcoDS</jta-data-source>
+    <jta-data-source>java:jboss/datasources/parco</jta-data-source>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>

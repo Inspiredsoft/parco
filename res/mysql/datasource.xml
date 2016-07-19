@@ -1,4 +1,4 @@
-<datasource jndi-name="java:jboss/datasources/ParcoDS" pool-name="ParcoDS" enabled="true" jta="true" use-java-context="true" use-ccm="true">
+<datasource jndi-name="java:jboss/datasources/parco" pool-name="parco" enabled="true" jta="true" use-java-context="true" use-ccm="true">
     <connection-url>
         jdbc:mysql://localhost:3306/parco
     </connection-url>
