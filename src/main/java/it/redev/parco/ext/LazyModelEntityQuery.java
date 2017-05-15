@@ -35,8 +35,8 @@ import org.jboss.solder.logging.Logger;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
-import pl.com.it_crowd.seam.framework.EntityQuery;
-import pl.com.it_crowd.seam.framework.QueryParser;
+import pl.itcrowd.seam3.persistence.EntityQuery;
+import pl.itcrowd.seam3.persistence.QueryParser;
 /**
  * 
  * @author Massimo Romano

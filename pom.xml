@@ -224,11 +224,6 @@
 			<version>2.1.7</version>
 		</dependency>
 		<dependency>
-		    <groupId>pl.com.it-crowd</groupId>
-		    <artifactId>seam3-persistence-framework</artifactId>
-		    <version>1.0.2</version>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.axis2</groupId>
 			<artifactId>axis2-kernel</artifactId>
 			<version>1.6.2</version>
@@ -297,13 +292,6 @@
 		    <url>http://repository.primefaces.org</url>  
 		    <layout>default</layout>  
 		</repository> 
-		<repository>
-	        <id>it-crowd.com.pl</id>
-	        <url>http://artifactory.it-crowd.com.pl/repo</url>
-	        <snapshots>
-	            <enabled>true</enabled>
-	        </snapshots>
-	    </repository>
 	</repositories>
 	
 	<build>

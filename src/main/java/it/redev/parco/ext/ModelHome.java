@@ -40,7 +40,7 @@ import javax.inject.Inject;
 import org.jboss.solder.logging.Logger;
 import org.jboss.solder.servlet.http.RequestParam;
 
-import pl.com.it_crowd.seam.framework.EntityHome;
+import pl.itcrowd.seam3.persistence.EntityHome;
 
 @SuppressWarnings("serial")
 public class ModelHome<T> extends EntityHome<T>
